@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+dist/
+
+# Documentos e entregáveis de clientes nunca entram no repositório (sigilo profissional / LGPD):
+# contratos, extratos, faturas, laudos, planilhas e payloads de casos reais.
+*.pdf
+*.csv
+*.xlsx
+*.xls
+*.docx
+*.html
+/payload*.json
+INTERNO-*.md
+saida/
+casos/
+
+# Configuração local do operador (nome, OAB/CRC) — fica fora do plugin.
+operador.json
+
+# Nomes reais conferidos pela verificação de consistência (local, nunca publicado).
+ferramentas/identidades-locais.txt

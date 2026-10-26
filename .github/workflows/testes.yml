@@ -1,0 +1,26 @@
+name: Testes
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testes:
+    name: Testes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Suíte completa
+        run: uv run --no-project --python 3.12 --with pytest --with openpyxl pytest
+      - name: Consistência (documentos, JSON, motores, manifestos)
+        run: uv run --no-project --python 3.12 --with openpyxl python ferramentas/verificar_consistencia.py
+      - name: Autoteste sem openpyxl (a planilha é pulada, nada falha)
+        run: uv run --no-project --python 3.12 python skills/revisao-bancaria/revisao.py autoteste
+      - name: Python mínimo suportado (3.10)
+        run: uv run --no-project --python 3.10 python skills/revisao-bancaria/revisao.py autoteste

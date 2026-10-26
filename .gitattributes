@@ -1,0 +1,7 @@
+* text=auto
+# Scripts e dados lidos por bash/Python em qualquer sistema: LF sempre.
+*.sh text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.yml text eol=lf

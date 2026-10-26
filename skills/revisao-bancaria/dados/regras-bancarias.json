@@ -1,0 +1,2435 @@
+{
+  "$schema": "regras-bancarias-schema",
+  "versao": "6.0.0",
+  "atualizado_em": "2026-10-26",
+  "descricao": "Motor de regras para análise revisional de contratos bancários. Cada regra codifica uma tese jurídica com teste lógico, corte temporal, fundamentação e consequência. Consumido pelo plugin revisao-bancaria por meio do motor determinístico `motores/regras.py` (`revisao.py regras`) nas camadas L1/L2 e C3 — o agente recebe só as regras aplicáveis ao caso, não este arquivo inteiro.",
+  "notas_de_versao": [
+    {
+      "versao": "1.1.0",
+      "data": "2026-07-23",
+      "alteracoes": [
+        "Inclusão da regra R29 — comissão flat ilegal quando ausente demonstração de contraprestação de serviço autônomo. Ônus de demonstração atribuído à instituição financeira. Consequência com recomposição do valor presente quando a comissão houver sido financiada."
+      ]
+    },
+    {
+      "versao": "1.2.0",
+      "data": "2026-07-23",
+      "alteracoes": [
+        "R23 ganhou implementação quantitativa vinculada (motor-cartao.py::teto_lei_14690).",
+        "Registrado que o valor original da dívida é fixado em gate com o usuário, nunca inferido.",
+        "Registrada a vedação de interpolar competências faltantes e de classificar parcelamento sem confirmação."
+      ]
+    },
+    {
+      "versao": "1.3.0",
+      "data": "2026-08-15",
+      "alteracoes": [
+        "(entradas de metadata do conector movidas para o CHANGELOG na v1.5.0 — estavam superadas e um grep as lia como instrução viva)"
+      ]
+    },
+    {
+      "versao": "1.4.0",
+      "data": "2026-08-15",
+      "alteracoes": [
+        "(entradas de metadata do conector movidas para o CHANGELOG na v1.5.0 — estavam superadas e um grep as lia como instrução viva)"
+      ]
+    },
+    {
+      "versao": "1.5.0",
+      "data": "2026-08-18",
+      "alteracoes": [
+        "SUPERA as notas de metadata da 1.3.0/1.4.0. O conector foi corrigido na origem: listar_series_bacen publica a identidade AUTORITATIVA (nome, unidade, periodicidade, segmento) e a cobertura do cache; consultar_taxa_bacen devolve nome/unidade preenchidos, fator_acumulado, procedencia e ponta. Não há mais o que 'confirmar por segunda tool'.",
+        "REVOGADO o protocolo de probe de identidade por consultar_indice. Ele custava chamada (quota do aluno) e, para as séries 254xx, devolvia identidade PIOR do que a tool que deveria auditar. A identidade vem de listar_series_bacen.",
+        "REVOGADO o teste de não-aliasing 11 x 12. Selic e CDI publicam fator diário muito próximo — isso é o mercado, não defeito do conector; a chave de cache inclui o código da série. O teste produzia alarme falso garantido.",
+        "IDENTIDADE: 226 = TR (diária), NÃO CDI. 12 = CDI diário, 11 = Selic fator diário, 4390 = Selic acumulada no mês (% a.m.), 4189 = Selic acumulada no mês anualizada base 252 (% a.a.), 432 = meta Selic do COPOM. Travado por teste no próprio conector.",
+        "CONFERÊNCIA que resta, e a única obrigatória por análise: conferir_fator(serie, resposta['fator_acumulado']). Pega série carregada pela metade (texto recortado em 60 pontos) e calendário divergente. cobertura() e verificar_ponta_da_serie() NÃO pegam recorte — o corte preserva as duas pontas.",
+        "SÉRIE DIÁRIA: chamar consultar_taxa_bacen com pontos='completos'. No modo padrão o texto lista 60 pontos de N.",
+        "SÉRIE MENSAL: data_inicial no dia 1º da competência — o ponto do mês é datado no primeiro dia e uma data posterior o deixa fora da janela."
+      ]
+    },
+    {
+      "versao": "1.5.1",
+      "data": "2026-08-18",
+      "alteracoes": [
+        "As instruções de metadata já superadas saíram deste arquivo e foram para o CHANGELOG.md. Motivo: este é o único arquivo que a skill carrega como DADO ESTRUTURADO, e um prefixo '[SUPERADO]' protege um leitor humano, não um agente que faz grep. Regra morta aqui vira instrução viva na prática.",
+        "Nada de regra de negócio mudou: marcos, categorias, súmulas, teses e o mapeamento modalidade->série seguem idênticos."
+      ]
+    },
+    {
+      "versao": "5.0",
+      "data": "2026-08-26",
+      "alteracoes": [
+        "Registro retroativo (a v5.0 alterou o arquivo sem nota): R30 capitalização de juros moratórios; R31 multa sobre base com juros; R32 honorários extrajudiciais cumulados; R33 encargo com base indeterminável — as quatro com status sem_precedente_consolidado.",
+        "R03 ganhou regime_por_marco (consequência própria pós-MT04).",
+        "Numeração alinhada ao CHANGELOG da skill: o JSON deixou de versionar em 1.x e passou a acompanhar a versão do pacote."
+      ]
+    },
+    {
+      "versao": "5.1",
+      "data": "2026-09-20",
+      "alteracoes": [
+        "R15 passa a tipo_contrato=[todos] com bloco `regime` (consequência e tier por regime consumerista / civil-empresarial). Motivo: restrita a consumo_pf, nunca disparava para PJ na L2, contradizendo a regra crítica da SKILL.md e a C2 da rota CONTA.",
+        "R16 marcada com requer_consulta_bacen (a Súmula 530 substitui a taxa pela média — precisa da série).",
+        "marcos_temporais[*].regras_afetadas regenerado a partir do corte_temporal das regras (MT01, MT02 e MT05 estavam errados).",
+        "Novo bloco pendencias_jurisprudenciais com verificado_em e validade_dias — o motor passa a saber que está velho.",
+        "Contagem vigente: 33 regras (16 T1, 11 T2, 6 sem tier), 12 categorias, 6 marcos, 21 súmulas, 24 séries, 7 tipos, 12 termos de CP disfarçada."
+      ]
+    },
+    {
+      "versao": "5.2",
+      "data": "2026-10-09",
+      "alteracoes": [
+        "Ramo SFH/SFI na rota INSTRUMENTO: 3 tipos novos (sfh, sfi, imobiliario_fora_sfi) com `regras_desligadas` — R15 (razão BACEN) e R18/R19 (Súmula 539) não concluem nesses contratos.",
+        "R34–R40: capitalização SFH (qualquer periodicidade, prova pela conta gráfica), capitalização SFI/fora do SFN (inferior à anual vedada mesmo pactuada — REsp 2.086.650/MG), amortização negativa com conta apartada, Súmula 450 como ressalva, CES sem cláusula, notificação por edital sem esgotar diligências, purga até a arrematação (sem_precedente_consolidado pela divergência REsp 2.187.505 × 2.005.064).",
+        "MT07–MT10 (CDC 11/03/1991, FCVS 05/12/1990, Lei 9.514 20/11/1997, Lei 13.465 11/07/2017); categorias habitacional_sfh_sfi e procedimento_expropriatorio; Súmulas 450 e 454.",
+        "Precedentes novos entram com tribunal, número e data-base do acervo Jusbrasil (inteiro teor lido em 09/10/2026); relator, órgão julgador e data de julgamento ficam [CONFERIR] — a regra de conduta 3 impede citá-los em peça antes de completar a identificação.",
+        "Duas pendências novas (critério temporal da purga; recepção do REsp 2.086.650 no TRF4), verificado_em 2026-10-09."
+      ]
+    },
+    {
+      "versao": "6.0.0",
+      "data": "2026-10-26",
+      "alteracoes": [
+        "Pacote vira plugin (revisao-bancaria). Nenhuma tese, súmula, tier, status ou consequência mudou nesta versão.",
+        "Novo campo `base` em cada marco temporal (contrato | pagamento | operacao | contrato_ou_consolidacao) e `nota_base` com a semântica das posições — insumo do motor determinístico.",
+        "Novo bloco `tipos_contrato.grupos` (todos, todos_sfn, todos_sem_lei_especifica), derivado dos tipos; `credor_sfn: false` em imobiliario_fora_sfi.",
+        "Caminhos atualizados para o layout do plugin (motores/cartao.py, motores/calculo.py::tabela_sfh e ::comparar_sfh, camadas/L2b-procedimento-expropriatorio.md, referencia/)."
+      ]
+    }
+  ],
+  "marcos_temporais": {
+    "descricao": "Datas de corte que determinam qual regime jurídico se aplica. A L0 (intake) deve resolver todos antes de rodar o motor.",
+    "marcos": [
+      {
+        "id": "MT01",
+        "data": "2000-03-31",
+        "base": "contrato",
+        "evento": "Vigência da MP 1.963-17/2000 (reeditada como MP 2.170-36/2001)",
+        "efeito": "Permite capitalização de juros com periodicidade inferior à anual em contratos do SFN, desde que expressamente pactuada",
+        "regras_afetadas": [
+          "R18"
+        ]
+      },
+      {
+        "id": "MT02",
+        "data": "2008-04-30",
+        "base": "contrato",
+        "evento": "Vigência da Resolução CMN 3.518/2007",
+        "efeito": "Veda TAC, TEC e tarifas não tipificadas em contratos PF; autoriza tarifa de cadastro no início do relacionamento",
+        "regras_afetadas": [
+          "R04",
+          "R05",
+          "R06",
+          "R07",
+          "R13"
+        ]
+      },
+      {
+        "id": "MT03",
+        "data": "2011-02-25",
+        "base": "contrato",
+        "evento": "Vigência da Resolução CMN 3.954/2011",
+        "efeito": "Veda ressarcimento da comissão do correspondente bancário ao consumidor",
+        "regras_afetadas": [
+          "R10"
+        ]
+      },
+      {
+        "id": "MT04",
+        "data": "2017-09-01",
+        "base": "contrato",
+        "evento": "Vigência da Resolução CMN 4.558/2017",
+        "efeito": "Extingue a comissão de permanência para contratos firmados a partir desta data",
+        "regras_afetadas": [
+          "R01",
+          "R02",
+          "R03"
+        ]
+      },
+      {
+        "id": "MT05",
+        "data": "2021-03-30",
+        "base": "pagamento",
+        "evento": "Publicação do acórdão do EAREsp 676.608/RS (Tema 929/STJ)",
+        "efeito": "Modulação da repetição em dobro: pagamentos posteriores a esta data são restituídos em dobro; anteriores, simples",
+        "regras_afetadas": [
+          "R26",
+          "R27"
+        ]
+      },
+      {
+        "id": "MT06",
+        "data": "2024-01-03",
+        "base": "operacao",
+        "evento": "Vigência do teto de 100% no rotativo do cartão (Lei 14.690/2023 + Resolução CMN 5.112/2023)",
+        "efeito": "Juros e encargos do rotativo/parcelamento não podem ultrapassar 100% do valor original da dívida",
+        "regras_afetadas": [
+          "R23"
+        ]
+      },
+      {
+        "id": "MT07",
+        "data": "1991-03-11",
+        "base": "contrato",
+        "evento": "Vigência do CDC (Lei 8.078/1990)",
+        "efeito": "Contratos do SFH anteriores a esta data, ou com cobertura do FCVS, não recebem o CDC (REsp 2.174.331/SP; REsp 2.205.793/GO). Repetição em dobro e inversão do ônus ficam indisponíveis.",
+        "regras_afetadas": []
+      },
+      {
+        "id": "MT08",
+        "data": "1990-12-05",
+        "base": "contrato",
+        "evento": "Corte da Lei 8.100/1990 para multiplicidade de financiamentos com FCVS (redação da Lei 10.150/2000)",
+        "efeito": "Contratos firmados até esta data admitem quitação do saldo residual do segundo financiamento pelo FCVS (TRF4 AC 5018577-45.2017.4.04.7000).",
+        "regras_afetadas": []
+      },
+      {
+        "id": "MT09",
+        "data": "1997-11-20",
+        "base": "contrato",
+        "evento": "Lei 9.514/1997 — SFI e alienação fiduciária de imóvel",
+        "efeito": "Contrato posterior com alienação fiduciária segue o procedimento dos arts. 26 e 27; capitalização autorizada sem periodicidade (art. 5º, III) → só anual.",
+        "regras_afetadas": [
+          "R35"
+        ]
+      },
+      {
+        "id": "MT10",
+        "data": "2017-07-11",
+        "base": "contrato_ou_consolidacao",
+        "evento": "Lei 13.465/2017 (republicada em 08/09/2017) — art. 26-A, §2º, e revogação do art. 39, II, da Lei 9.514",
+        "efeito": "Purga da mora só até a averbação da consolidação; antes, a jurisprudência admitia purga até a assinatura do auto de arrematação pelo DL 70/66. O STJ diverge sobre o critério temporal (data do contrato × data da consolidação).",
+        "regras_afetadas": [
+          "R40"
+        ]
+      }
+    ],
+    "nota_regras_afetadas": "Campo derivado: gerado a partir de `corte_temporal.marco` de cada regra (mais R03 em MT04 via `regime_por_marco`). `ferramentas/verificar_consistencia.py` e a suíte de testes falham se divergir. Na v5.0 o campo estava errado em MT01 (apontava seguro em vez de capitalização), MT02 e MT05 (apontava R25/IOF em vez de R26/R27).",
+    "nota_base": "Campo `base` diz qual data do caso se compara com o marco: `contrato` (data de assinatura), `pagamento` (cada pagamento — o corte reparte a apuração e não exclui a regra), `operacao` (data da operação de rotativo/parcelamento, não a do contrato de cartão) ou `contrato_ou_consolidacao` (MT10: datar contrato E consolidação — o STJ diverge sobre qual decide). Posições: `anterior` = data < marco; `anterior_ou_igual` = data <= marco; `posterior` = data > marco."
+  },
+  "categorias": [
+    "comissao_de_permanencia",
+    "tarifas",
+    "servicos_terceiros",
+    "seguro_prestamista",
+    "juros_remuneratorios",
+    "capitalizacao",
+    "juros_moratorios",
+    "multa_contratual",
+    "iof",
+    "cartao_credito",
+    "repeticao_indebito",
+    "procedimentais",
+    "habitacional_sfh_sfi",
+    "procedimento_expropriatorio"
+  ],
+  "regras": [
+    {
+      "id": "R01",
+      "categoria": "comissao_de_permanencia",
+      "nome": "Comissão de permanência — cumulação vedada",
+      "descricao": "A comissão de permanência NÃO pode ser cumulada com juros remuneratórios, juros moratórios, multa contratual ou correção monetária. Presente qualquer cumulação, o excesso deve ser decotado.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 472/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 52/STJ (REsp 1.058.114/RS e REsp 1.063.343/RS)"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos anteriores a 01/09/2017 (Res. CMN 4.558/2017)",
+        "marco": "MT04",
+        "posicao": "anterior"
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se a comissão de permanência está sendo cobrada cumulativamente com qualquer outro encargo (juros mora, multa, correção monetária, juros remuneratórios)",
+        "logica": "CP_PRESENTE AND (JUROS_MORA_PRESENTE OR MULTA_PRESENTE OR CORRECAO_PRESENTE OR JUROS_REMUN_NO_INADIMPLEMENTO)",
+        "campos_necessarios": [
+          "comissao_permanencia",
+          "juros_moratorios",
+          "multa_contratual",
+          "correcao_monetaria"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Decotar os encargos cumulados, mantendo apenas a comissão de permanência limitada ao teto (R02)",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R02",
+      "categoria": "comissao_de_permanencia",
+      "nome": "Comissão de permanência — teto",
+      "descricao": "A comissão de permanência não pode ultrapassar a soma dos encargos remuneratórios e moratórios previstos no contrato, limitada à taxa média BACEN da espécie.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 294/STJ",
+          "Súmula 296/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 52/STJ"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos anteriores a 01/09/2017",
+        "marco": "MT04",
+        "posicao": "anterior"
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se a comissão de permanência excede a menor entre (taxa do contrato) e (taxa média BACEN da espécie)",
+        "logica": "CP_TAXA > MIN(TAXA_CONTRATO, TAXA_MEDIA_BACEN)",
+        "campos_necessarios": [
+          "taxa_comissao_permanencia",
+          "taxa_contrato",
+          "taxa_media_bacen"
+        ],
+        "requer_consulta_bacen": true
+      },
+      "resultado_se_positivo": "ilicita_parcial",
+      "consequencia": "Reduzir a comissão de permanência ao menor entre a taxa do contrato e a taxa média BACEN",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R03",
+      "categoria": "comissao_de_permanencia",
+      "nome": "Comissão de permanência disfarçada",
+      "descricao": "Encargo incidente exclusivamente no período de inadimplência que, pela natureza econômica, reconstitui a tríade juros remuneratórios + juros moratórios + multa sob nomenclatura diversa. Tratado como comissão de permanência para fins de análise de cumulação.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 472/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 52/STJ"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Identificar encargos com nomenclatura diversa que, pela natureza, reconstroem a comissão de permanência",
+        "logica": "ENCARGO_INADIMPLENCIA_COM_NOME_DIVERSO AND (CUMULA_COM_JUROS_MORA OR CUMULA_COM_MULTA)",
+        "campos_necessarios": [
+          "clausulas_inadimplencia"
+        ],
+        "usar_deteccao_padroes": true
+      },
+      "padroes_deteccao": {
+        "descricao": "Termos no contrato que indicam comissão de permanência sob outro nome",
+        "termos_suspeitos": [
+          "taxa de permanência",
+          "taxa de remuneração para operações em atraso",
+          "taxa de remuneração de operações vencidas",
+          "encargo por atraso",
+          "remuneração de operações vencidas",
+          "spread de inadimplência",
+          "taxa de rentabilidade em atraso",
+          "encargo de inadimplência",
+          "taxa de administração de atraso",
+          "custo de carregamento de inadimplência",
+          "taxa de manutenção de débito em atraso",
+          "taxa operacional de inadimplência"
+        ],
+        "heuristica": "Qualquer percentual ou taxa que incida APENAS no período de inadimplência e seja cobrado ALÉM dos juros moratórios e/ou multa é suspeito de ser CP disfarçada"
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Depende do marco MT04 — ver regime_por_marco. Nunca aplicar R01/R02 a contrato posterior a 01/09/2017.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null,
+      "regime_por_marco": {
+        "anterior_a_MT04": {
+          "consequencia": "Tratar como comissão de permanência e aplicar R01 (cumulação) e R02 (teto).",
+          "fundamentacao": [
+            "Súmula 294/STJ",
+            "Súmula 296/STJ",
+            "Súmula 472/STJ",
+            "Tema 52/STJ"
+          ]
+        },
+        "posterior_a_MT04": {
+          "consequencia": "A via das Súmulas 294, 296 e 472 está FECHADA — aqueles precedentes pressupõem contrato anterior a 01/09/2017. Reconstruir o ataque em dois eixos autônomos: (a) vedação de enriquecimento sem causa pela cobrança, sob rubrica única, de encargo que reconstitui remuneração, mora e multa; (b) capitalização dos juros MORATÓRIOS, quando o contrato manda capitalizá-los na mesma periodicidade dos remuneratórios (ver R30).",
+          "fundamentacao": [
+            "CC/02, art. 884",
+            "CC/02, art. 422",
+            "CC/02, art. 404"
+          ],
+          "alerta": "NÃO citar Súmula 294, 296 ou 472 em contrato pós-01/09/2017: a credora demonstra o corte temporal na impugnação e a tese cai inteira, contaminando os achados vizinhos.",
+          "exige_pesquisa": true
+        }
+      },
+      "observacao_metodologica": "A detecção econômica vale para qualquer data: taxa moratória própria que, decomposta, equivale à soma capitalizada dos juros remuneratórios com os moratórios é CP disfarçada. O que muda com o marco é a CONSEQUÊNCIA, não a detecção."
+    },
+    {
+      "id": "R04",
+      "categoria": "tarifas",
+      "nome": "TAC — vedada em contratos pós-30/04/2008",
+      "descricao": "A Tarifa de Abertura de Crédito é indevida em contratos celebrados após 30/04/2008.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 565/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 618/STJ (REsp 1.251.331/RS)"
+        ],
+        "legislacao": [
+          "Resolução CMN 3.518/2007"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 30/04/2008",
+        "marco": "MT02",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se o contrato é posterior a 30/04/2008 E cobra TAC (ou denominação equivalente para o mesmo fato gerador)",
+        "logica": "DATA_CONTRATO > 2008-04-30 AND TAC_COBRADA",
+        "campos_necessarios": [
+          "data_contrato",
+          "tac_valor"
+        ],
+        "nomes_equivalentes": [
+          "tarifa de abertura de crédito",
+          "TAC",
+          "taxa de abertura",
+          "tarifa de contratação",
+          "tarifa de formalização"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R05",
+      "categoria": "tarifas",
+      "nome": "TAC — válida em contratos pré-30/04/2008",
+      "descricao": "Em contratos anteriores a 30/04/2008, a TAC era válida, ressalvado exame de abusividade no caso concreto.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 565/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 618/STJ"
+        ],
+        "legislacao": [
+          "Resolução CMN 2.303/1996"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos anteriores ou iguais a 30/04/2008",
+        "marco": "MT02",
+        "posicao": "anterior_ou_igual"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Contrato pré-30/04/2008 com TAC cobrada — válida por padrão",
+        "logica": "DATA_CONTRATO <= 2008-04-30 AND TAC_COBRADA",
+        "campos_necessarios": [
+          "data_contrato",
+          "tac_valor"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter cobrança, salvo abusividade concreta (valor manifestamente desproporcional)",
+      "tier": null,
+      "status": "vigente",
+      "alerta": "Verificar abusividade do valor no caso concreto"
+    },
+    {
+      "id": "R06",
+      "categoria": "tarifas",
+      "nome": "TEC — vedada em contratos pós-30/04/2008",
+      "descricao": "A Tarifa de Emissão de Carnê é indevida em contratos celebrados após 30/04/2008.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 565/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 619/STJ (REsp 1.255.573/RS)"
+        ],
+        "legislacao": [
+          "Resolução CMN 3.518/2007"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 30/04/2008",
+        "marco": "MT02",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Contrato pós-30/04/2008 com TEC cobrada",
+        "logica": "DATA_CONTRATO > 2008-04-30 AND TEC_COBRADA",
+        "campos_necessarios": [
+          "data_contrato",
+          "tec_valor"
+        ],
+        "nomes_equivalentes": [
+          "tarifa de emissão de carnê",
+          "TEC",
+          "tarifa de emissão de boleto",
+          "tarifa de cobrança"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R07",
+      "categoria": "tarifas",
+      "nome": "Tarifa de cadastro — válida no início do relacionamento",
+      "descricao": "A tarifa de cadastro é lícita quando cobrada uma única vez, no início do relacionamento entre consumidor e instituição financeira.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 566/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 620/STJ (REsp 1.251.331/RS)"
+        ],
+        "legislacao": [
+          "Resolução CMN 3.518/2007"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 30/04/2008",
+        "marco": "MT02",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se é o primeiro contrato do cliente com a instituição e se a tarifa foi cobrada uma única vez",
+        "logica": "TARIFA_CADASTRO_COBRADA AND PRIMEIRO_RELACIONAMENTO",
+        "campos_necessarios": [
+          "tarifa_cadastro_valor",
+          "e_primeiro_contrato"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter cobrança",
+      "tier": null,
+      "status": "vigente",
+      "alerta": "Se cobrada mais de uma vez ou em renovação de contrato, é indevida"
+    },
+    {
+      "id": "R08",
+      "categoria": "tarifas",
+      "nome": "Tarifa de cadastro — duplicada ou em renovação",
+      "descricao": "A tarifa de cadastro cobrada mais de uma vez ou em renovação de contrato é indevida.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 566/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 620/STJ"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Tarifa de cadastro cobrada quando já existe relacionamento prévio com a instituição",
+        "logica": "TARIFA_CADASTRO_COBRADA AND NOT PRIMEIRO_RELACIONAMENTO",
+        "campos_necessarios": [
+          "tarifa_cadastro_valor",
+          "e_primeiro_contrato"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": "Perguntar ao usuário se é o primeiro contrato com esta instituição"
+    },
+    {
+      "id": "R09",
+      "categoria": "servicos_terceiros",
+      "nome": "Serviços de terceiros sem especificação",
+      "descricao": "Abusiva a cláusula que prevê ressarcimento de serviços prestados por terceiros sem especificação do serviço efetivamente prestado.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.1 (REsp 1.578.553/SP)"
+        ],
+        "legislacao": [
+          "Art. 6º, III, CDC",
+          "Art. 51, IV e §1º, CDC"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se há cláusula genérica de ressarcimento de serviços de terceiros sem detalhar qual serviço",
+        "logica": "CLAUSULA_SERVICOS_TERCEIROS AND NOT SERVICO_ESPECIFICADO",
+        "campos_necessarios": [
+          "clausula_servicos_terceiros"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R10",
+      "categoria": "servicos_terceiros",
+      "nome": "Comissão de correspondente bancário — pós-25/02/2011",
+      "descricao": "Indevido o ressarcimento da comissão do correspondente bancário em contratos celebrados a partir de 25/02/2011.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.2"
+        ],
+        "legislacao": [
+          "Resolução CMN 3.954/2011"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 25/02/2011",
+        "marco": "MT03",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Contrato pós-25/02/2011 com cobrança de comissão de correspondente",
+        "logica": "DATA_CONTRATO > 2011-02-25 AND COMISSAO_CORRESPONDENTE_COBRADA",
+        "campos_necessarios": [
+          "data_contrato",
+          "comissao_correspondente_valor"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R11",
+      "categoria": "servicos_terceiros",
+      "nome": "Tarifa de avaliação — sem comprovação do serviço",
+      "descricao": "A tarifa de avaliação do bem é válida, ressalvada a abusividade quando o serviço não foi efetivamente prestado.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.3 e 2.3.1"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se há tarifa de avaliação cobrada sem laudo ou comprovação de que o serviço foi efetivamente prestado",
+        "logica": "TARIFA_AVALIACAO_COBRADA AND NOT LAUDO_AVALIACAO_COMPROVADO",
+        "campos_necessarios": [
+          "tarifa_avaliacao_valor",
+          "laudo_avaliacao_existe"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": "Perguntar ao usuário se há laudo de avaliação nos autos ou se o banco comprovou a prestação"
+    },
+    {
+      "id": "R12",
+      "categoria": "servicos_terceiros",
+      "nome": "Tarifa de registro — sem comprovação do registro",
+      "descricao": "O ressarcimento do registro do contrato é válido, ressalvada a abusividade quando o registro não foi efetivamente realizado.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.3 e 2.3.2"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se há tarifa de registro cobrada sem comprovação de que o registro foi efetivamente realizado",
+        "logica": "TARIFA_REGISTRO_COBRADA AND NOT REGISTRO_COMPROVADO",
+        "campos_necessarios": [
+          "tarifa_registro_valor",
+          "registro_comprovado"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Repetição integral do valor pago",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": "Perguntar ao usuário se há comprovante de registro do contrato (Detran, cartório)"
+    },
+    {
+      "id": "R13",
+      "categoria": "seguro_prestamista",
+      "nome": "Seguro prestamista — venda casada",
+      "descricao": "O consumidor não pode ser compelido a contratar seguro com a instituição financeira ou com seguradora por ela indicada. A restrição da livre escolha configura venda casada.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 972/STJ — tese 2.2 (REsp 1.639.320/SP e REsp 1.639.259/SP)"
+        ],
+        "legislacao": [
+          "Art. 39, I, CDC"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 30/04/2008 em relações de consumo",
+        "marco": "MT02",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se o consumidor foi compelido a contratar seguro com a IF ou seguradora indicada, sem livre escolha",
+        "logica": "SEGURO_CONTRATADO AND (SEM_LIVRE_ESCOLHA_SEGURADORA OR SEGURO_EMBUTIDO_NA_PARCELA OR SEGURO_CONDICAO_PARA_CREDITO)",
+        "campos_necessarios": [
+          "seguro_valor",
+          "seguradora_escolha_livre",
+          "seguro_proposta_apartada"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Afastar a cobrança do seguro + repetição do valor pago (simples ou dobro conforme marco MT05)",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "A mera contratação de seguradora indicada NÃO é, por si, venda casada (REsp 2.101.019/SP). O teste é se houve compulsão."
+    },
+    {
+      "id": "R14",
+      "categoria": "seguro_prestamista",
+      "nome": "Seguro prestamista — contratação voluntária (lícita)",
+      "descricao": "Se o seguro foi contratado por proposta apartada, voluntária, e com livre escolha da seguradora, a cobrança é lícita.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 972/STJ — aplicação por Turma (REsp 2.179.145/SP)"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Seguro contratado com proposta apartada e livre escolha da seguradora",
+        "logica": "SEGURO_CONTRATADO AND SEGURO_PROPOSTA_APARTADA AND SEGURADORA_ESCOLHA_LIVRE",
+        "campos_necessarios": [
+          "seguro_proposta_apartada",
+          "seguradora_escolha_livre"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter cobrança",
+      "tier": null,
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R15",
+      "categoria": "juros_remuneratorios",
+      "nome": "Juros remuneratórios abusivos — acima de 1,5x a média BACEN",
+      "descricao": "Juros remuneratórios são considerados abusivos quando a taxa contratada supera expressivamente a taxa média de mercado BACEN para a mesma espécie de operação. A jurisprudência dominante utiliza o parâmetro de 1,5x a 2,0x a média como indicativo de abusividade.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 382/STJ",
+          "Súmula 596/STF"
+        ],
+        "temas_repetitivos": [
+          "Temas 24, 25, 26 e 27/STJ (REsp 1.061.530/RS)"
+        ],
+        "legislacao": [
+          "Art. 51, §1º, CDC (regime consumerista)",
+          "Arts. 421, 422 e 478 do CC/02 (regime civil-empresarial)"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Calcular a razão entre a taxa contratada e a taxa média BACEN da espécie. Abusivo se >= 1,5x (zona cinzenta entre 1,5x e 2,0x; forte acima de 2,0x)",
+        "logica": "RAZAO_TAXA = TAXA_CONTRATO / TAXA_MEDIA_BACEN; RAZAO_TAXA >= 1.5",
+        "campos_necessarios": [
+          "taxa_juros_contrato",
+          "modalidade_credito",
+          "data_contrato"
+        ],
+        "requer_consulta_bacen": true,
+        "parametros": {
+          "limiar_zona_cinzenta": 1.5,
+          "limiar_forte": 2.0
+        }
+      },
+      "resultado_se_positivo": "zona_cinzenta",
+      "consequencia": "Consumerista: reduzir os juros remuneratórios à taxa média BACEN da espécie (REsp 1.112.879/PR e REsp 1.112.880/PR). Civil-empresarial: a razão contratada/média é sempre apurada e exibida como KPI; a redução à média exige demonstração concreta de abusividade (arts. 421, 422 e 478 do CC/02), sem a inversão do art. 6º, VIII, e sem o art. 51 do CDC — ver campo `regime`.",
+      "tier": "T1",
+      "status": "suspensa",
+      "alerta": "TEMA 1378/STJ (afetado 02/09/2025, suspensão nacional): a Segunda Seção vai decidir se a taxa média BACEN basta como fundamento exclusivo para aferir abusividade. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR, 2.227.287/MG, 2.227.844/RS. RECOMENDAÇÃO: fundamentar com análise fática robusta (contexto econômico, tipo de crédito, garantias, risco), não apenas comparação aritmética com a média.",
+      "regime": {
+        "descricao": "A regra dispara em qualquer tipo de contrato; o que muda com o regime qualificado na L0/C0 é a consequência e o ônus.",
+        "consumerista": {
+          "aplica": true,
+          "tier": "T1",
+          "consequencia": "Redução à taxa média BACEN da espécie; inversão do ônus (art. 6º, VIII, CDC); nulidade da cláusula (art. 51, IV e §1º, CDC)."
+        },
+        "civil_empresarial": {
+          "aplica": true,
+          "tier": "T2",
+          "consequencia": "Razão exibida como KPI obrigatório (regra crítica da SKILL.md). Redução à média só com demonstração concreta de abusividade e onerosidade excessiva (arts. 421, 422 e 478 do CC/02); sem CDC não há inversão do ônus nem repetição em dobro (R26 não se aplica). Achado classificado como 'A demonstrar' até que os elementos concretos constem dos autos."
+        },
+        "nota": "Antes da v5.1 a regra era restrita a consumo_pf e, por isso, nunca disparava para PJ na L2 — contradizendo a regra crítica que manda exibir a razão em toda análise e a C2 da rota CONTA, que a calcula para cheque especial/conta garantida PJ."
+      }
+    },
+    {
+      "id": "R16",
+      "categoria": "juros_remuneratorios",
+      "nome": "Juros remuneratórios — taxa não comprovada",
+      "descricao": "Na impossibilidade de comprovar a taxa efetivamente contratada, aplica-se a taxa média BACEN, salvo se a cobrada for mais vantajosa para o devedor.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 530/STJ"
+        ],
+        "temas_repetitivos": [
+          "Tema 233/STJ"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se a taxa de juros contratada não pode ser comprovada (contrato não juntado, ilegível, etc.)",
+        "logica": "TAXA_CONTRATO_INCOMPROVAVEL",
+        "campos_necessarios": [
+          "taxa_juros_contrato",
+          "contrato_legivel"
+        ],
+        "requer_consulta_bacen": true
+      },
+      "resultado_se_positivo": "ilicita_parcial",
+      "consequencia": "Aplicar taxa média BACEN da espécie, salvo se a taxa cobrada for menor",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R17",
+      "categoria": "juros_remuneratorios",
+      "nome": "Juros em cédula rural / comercial / industrial — teto de 12% a.a.",
+      "descricao": "Em cédulas de crédito rural, comercial e industrial com recursos livres (não controlados), na ausência de limite fixado pelo CMN, aplica-se o teto de 12% a.a. do Decreto 22.626/1933.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Decreto-Lei 167/1967 (rural)",
+          "Decreto-Lei 413/1969 (industrial)",
+          "Lei 6.840/1980 (comercial)",
+          "Decreto 22.626/1933"
+        ],
+        "precedentes_qualificados": [
+          "REsp 1.940.292/PR (3ª Turma, Rel. Min. Nancy Andrighi, DJe 27/05/2022)"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data (enquanto CMN não fixar limite específico)",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "cedula_rural",
+        "cedula_comercial",
+        "cedula_industrial"
+      ],
+      "teste": {
+        "descricao": "Verificar se é cédula de crédito rural/comercial/industrial com recursos livres e taxa acima de 12% a.a.",
+        "logica": "TIPO_CEDULA IN (rural, comercial, industrial) AND RECURSO_LIVRE AND TAXA_ANUAL > 12.0",
+        "campos_necessarios": [
+          "tipo_contrato",
+          "tipo_recurso",
+          "taxa_juros_anual"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Reduzir a taxa de juros a 12% a.a. (1% a.m.)",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "Tese objetiva de alta taxa de êxito. Verificar se o contrato é efetivamente uma cédula (título de crédito) e não mero contrato de abertura de crédito."
+    },
+    {
+      "id": "R18",
+      "categoria": "capitalizacao",
+      "nome": "Capitalização de juros — pós-31/03/2000 com pactuação expressa",
+      "descricao": "Permitida a capitalização com periodicidade inferior à anual em contratos do SFN celebrados a partir de 31/03/2000, desde que expressamente pactuada.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 539/STJ",
+          "Súmula 541/STJ"
+        ],
+        "temas_repetitivos": [
+          "Temas 246 e 247/STJ (REsp 973.827/RS)"
+        ],
+        "legislacao": [
+          "MP 2.170-36/2001"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 31/03/2000",
+        "marco": "MT01",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "todos_sfn"
+      ],
+      "teste": {
+        "descricao": "Verificar se há pactuação expressa de capitalização (taxa anual > 12x taxa mensal = Súmula 541)",
+        "logica": "DATA_CONTRATO > 2000-03-31 AND TAXA_ANUAL > (TAXA_MENSAL * 12)",
+        "campos_necessarios": [
+          "data_contrato",
+          "taxa_juros_mensal",
+          "taxa_juros_anual"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter capitalização — pactuação expressa válida",
+      "tier": null,
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R19",
+      "categoria": "capitalizacao",
+      "nome": "Capitalização de juros — sem pactuação expressa",
+      "descricao": "Vedada a capitalização de juros quando não há pactuação expressa, mesmo em contratos pós-31/03/2000.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 121/STF (regra geral)",
+          "Súmula 539/STJ (exceção com pactuação)"
+        ],
+        "temas_repetitivos": [
+          "Temas 246 e 247/STJ"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se há capitalização praticada sem pactuação expressa (taxa anual <= 12x mensal ou ausência de cláusula explícita)",
+        "logica": "CAPITALIZAÇÃO_PRATICADA AND NOT PACTUACAO_EXPRESSA",
+        "campos_necessarios": [
+          "taxa_juros_mensal",
+          "taxa_juros_anual",
+          "capitalizacao_clausula"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Afastar a capitalização, recalculando os juros de forma simples (linear)",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R20",
+      "categoria": "capitalizacao",
+      "nome": "Capitalização em cédula rural / comercial / industrial",
+      "descricao": "A legislação sobre cédulas de crédito rural, comercial e industrial admite o pacto de capitalização de juros, desde que expressamente pactuado.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 93/STJ"
+        ],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Decreto-Lei 167/1967",
+          "Decreto-Lei 413/1969",
+          "Lei 6.840/1980"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "cedula_rural",
+        "cedula_comercial",
+        "cedula_industrial"
+      ],
+      "teste": {
+        "descricao": "Capitalização expressamente pactuada em cédula de crédito",
+        "logica": "TIPO_CEDULA IN (rural, comercial, industrial) AND CAPITALIZACAO_PACTUADA",
+        "campos_necessarios": [
+          "tipo_contrato",
+          "capitalizacao_clausula"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter capitalização — expressa previsão legal",
+      "tier": null,
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R21",
+      "categoria": "juros_moratorios",
+      "nome": "Juros moratórios — acima de 1% a.m.",
+      "descricao": "Em contratos bancários não regidos por legislação específica, os juros moratórios não podem exceder 1% ao mês.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 379/STJ"
+        ],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Art. 406, CC/2002"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos_sem_lei_especifica"
+      ],
+      "teste": {
+        "descricao": "Verificar se os juros moratórios excedem 1% ao mês",
+        "logica": "TAXA_JUROS_MORA > 1.0",
+        "campos_necessarios": [
+          "taxa_juros_moratorios"
+        ]
+      },
+      "resultado_se_positivo": "ilicita_parcial",
+      "consequencia": "Reduzir juros moratórios a 1% a.m.",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R22",
+      "categoria": "multa_contratual",
+      "nome": "Multa contratual — acima de 2% em relação de consumo",
+      "descricao": "Em contratos de consumo, a multa de mora não pode exceder 2% do valor da prestação.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 285/STJ"
+        ],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Art. 52, §1º, CDC"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores ao CDC (11/03/1991)",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se a multa contratual excede 2% do valor da prestação",
+        "logica": "MULTA_PERCENTUAL > 2.0 AND RELACAO_CONSUMO",
+        "campos_necessarios": [
+          "multa_percentual",
+          "tipo_relacao"
+        ]
+      },
+      "resultado_se_positivo": "ilicita_parcial",
+      "consequencia": "Reduzir a multa a 2% do valor da prestação",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R23",
+      "categoria": "cartao_credito",
+      "nome": "Rotativo do cartão — teto de 100% pós-03/01/2024",
+      "descricao": "O total de juros e encargos financeiros do rotativo e parcelamento da fatura do cartão de crédito não pode ultrapassar 100% do valor original da dívida (excluído IOF).",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 14.690/2023, art. 28",
+          "Resolução CMN 5.112/2023"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "operações de crédito rotativo/parcelamento a partir de 03/01/2024",
+        "marco": "MT06",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "cartao_credito"
+      ],
+      "teste": {
+        "descricao": "Verificar se juros + encargos financeiros do rotativo/parcelamento excedem 100% do valor original da dívida",
+        "logica": "(JUROS_ACUMULADOS + ENCARGOS_FINANCEIROS) > VALOR_ORIGINAL_DIVIDA",
+        "campos_necessarios": [
+          "valor_original_divida",
+          "juros_acumulados",
+          "encargos_financeiros"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Limitar o total de juros e encargos a 100% do valor original (o saldo no máximo dobra). Quantificação obrigatória por `motores/cartao.py::teto_lei_14690()`, que devolve excesso por competência, excesso acumulado, competência de estouro e margem restante do teto. IOF fica apartado do cômputo (Res. CMN 5.112/2023).",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "Parâmetro objetivo por força de lei — não depende de comparação com média BACEN. Aplica-se independentemente da data do contrato de cartão, desde que a operação de crédito (rotativo/parcelamento) seja posterior a 03/01/2024. O valor original da dívida NÃO é inferido pelo motor: é confirmado pelo usuário em gate de abertura. Série de faturas descontínua é analisada por trechos, com pedido nominal das competências faltantes — nunca interpolada.",
+      "implementacao": {
+        "modulo": "motores/cartao.py",
+        "funcao": "teto_lei_14690(valor_original, faturas, data_operacao)",
+        "gate": "valor_original_divida é fixado em gate com o usuário após o envio das faturas — nunca inferido",
+        "grafico": "svg_excesso(linhas) — barras por competência, linha de acumulado"
+      }
+    },
+    {
+      "id": "R24",
+      "categoria": "cartao_credito",
+      "nome": "Cartão consignado RMC/RCC — alto litígio",
+      "descricao": "Contratação de cartão de crédito com Reserva de Margem Consignável (RMC) em benefício previdenciário. Temas pendentes no STJ com suspensão nacional.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 1328/STJ (REsp 2.145.244/SC)",
+          "Tema 1414/STJ (REsp 2.224.599/PE e outros)"
+        ],
+        "legislacao": [
+          "Lei 14.690/2023"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "cartao_consignado"
+      ],
+      "teste": {
+        "descricao": "Verificar se há cartão consignado com RMC sem prova de contratação e uso efetivo",
+        "logica": "TIPO_CONTRATO = cartao_consignado AND (SEM_PROVA_CONTRATACAO OR SEM_USO_EFETIVO)",
+        "campos_necessarios": [
+          "tipo_contrato",
+          "prova_contratacao",
+          "uso_efetivo_cartao"
+        ]
+      },
+      "resultado_se_positivo": "zona_cinzenta",
+      "consequencia": "Nulidade da contratação + restituição dos descontos + possível dano moral (verbas alimentares). MAS: temas pendentes de julgamento.",
+      "tier": "T1",
+      "status": "suspensa",
+      "alerta": "TEMAS 1328 E 1414/STJ PENDENTES COM SUSPENSÃO NACIONAL. Dano moral in re ipsa e contornos da nulidade ainda serão definidos pela Segunda Seção. Ações em curso podem estar sobrestadas."
+    },
+    {
+      "id": "R25",
+      "categoria": "iof",
+      "nome": "IOF financiado — lícito com pactuação expressa",
+      "descricao": "Podem as partes convencionar o pagamento do IOF por meio de financiamento acessório ao mútuo principal.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 621/STJ (REsp 1.251.331/RS)"
+        ],
+        "legislacao": []
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "IOF financiado com pactuação expressa no contrato",
+        "logica": "IOF_FINANCIADO AND PACTUACAO_EXPRESSA",
+        "campos_necessarios": [
+          "iof_financiado",
+          "iof_clausula_expressa"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter cobrança",
+      "tier": null,
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R26",
+      "categoria": "repeticao_indebito",
+      "nome": "Repetição em dobro — pagamentos pós-30/03/2021",
+      "descricao": "A devolução em dobro independe de má-fé da instituição financeira, bastando cobrança em desacordo com a boa-fé objetiva. Aplica-se a pagamentos realizados após 30/03/2021.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 929/STJ (EAREsp 676.608/RS, Corte Especial)"
+        ],
+        "legislacao": [
+          "Art. 42, parágrafo único, CDC"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "pagamentos realizados após 30/03/2021",
+        "marco": "MT05",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Verificar se houve pagamento indevido após 30/03/2021",
+        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO > 2021-03-30",
+        "campos_necessarios": [
+          "datas_pagamento",
+          "valores_pagos_indevidos"
+        ]
+      },
+      "resultado_se_positivo": "dobro",
+      "consequencia": "Restituição em dobro do valor pago indevidamente",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "O Tema 929 pode ter sua modulação confirmada ou alterada — a Corte Especial pediu vista em set/2025. Excludente única: engano justificável (ônus do fornecedor)."
+    },
+    {
+      "id": "R27",
+      "categoria": "repeticao_indebito",
+      "nome": "Repetição simples — pagamentos pré-30/03/2021",
+      "descricao": "Para pagamentos realizados antes de 30/03/2021, a repetição do indébito é simples (e não em dobro), conforme modulação do Tema 929.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 929/STJ — modulação temporal"
+        ],
+        "legislacao": [
+          "Art. 42, parágrafo único, CDC"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "pagamentos realizados até 30/03/2021",
+        "marco": "MT05",
+        "posicao": "anterior_ou_igual"
+      },
+      "tipo_contrato": [
+        "consumo_pf"
+      ],
+      "teste": {
+        "descricao": "Pagamento indevido anterior a 30/03/2021",
+        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO <= 2021-03-30",
+        "campos_necessarios": [
+          "datas_pagamento",
+          "valores_pagos_indevidos"
+        ]
+      },
+      "resultado_se_positivo": "simples",
+      "consequencia": "Restituição simples do valor pago indevidamente",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R28",
+      "categoria": "procedimentais",
+      "nome": "Autenticidade da assinatura — ônus do banco",
+      "descricao": "Quando o consumidor impugna a autenticidade da assinatura no contrato, o ônus da prova da autenticidade é da instituição financeira.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 1061/STJ"
+        ],
+        "legislacao": [
+          "CPC, arts. 6º, 369 e 429, II"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Consumidor impugna a assinatura do contrato",
+        "logica": "ASSINATURA_IMPUGNADA",
+        "campos_necessarios": [
+          "assinatura_impugnada"
+        ]
+      },
+      "resultado_se_positivo": "inversao_onus",
+      "consequencia": "O banco deve provar a autenticidade da assinatura por perícia grafotécnica ou meios legítimos. Se não provar, as cobranças são indevidas.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "Tese útil quando o contrato não foi assinado pelo consumidor ou quando há suspeita de fraude"
+    },
+    {
+      "id": "R29",
+      "categoria": "tarifas",
+      "nome": "Comissão flat — sem justificativa de contraprestação de serviço",
+      "descricao": "A comissão flat, cobrada como percentual sobre o valor do crédito concedido a título de assessoria, estruturação ou adequação da linha de crédito, é ilegal quando a instituição financeira não demonstra a contraprestação de serviço efetivamente prestado, autônomo e distinto da própria atividade de intermediação financeira que já é remunerada pelos juros.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.3 (abusividade de tarifa cujo serviço não foi efetivamente prestado), por analogia"
+        ],
+        "legislacao": [
+          "CC/02, art. 422 (boa-fé objetiva)",
+          "CC/02, art. 884 (vedação ao enriquecimento sem causa)",
+          "Resolução CMN 4.881/2020, art. 7º (integração obrigatória ao CET)"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se há comissão flat cobrada e se o banco demonstrou serviço autônomo efetivamente prestado, distinto da concessão do crédito. O ônus da demonstração é da instituição financeira.",
+        "logica": "COMISSAO_FLAT_COBRADA AND NOT CONTRAPRESTACAO_SERVICO_DEMONSTRADA",
+        "campos_necessarios": [
+          "comissao_flat_percentual",
+          "comissao_flat_valor",
+          "contraprestacao_servico_demonstrada"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Decote integral da comissão flat com recomposição do valor presente financiado (não apenas devolução do valor nominal), quando a comissão houver sido financiada ou debitada em conta vinculada à liberação. Se o valor foi pago à vista e não integrou o principal, repetição do valor nominal corrigido.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "Se o banco demonstrar contraprestação autônoma (relatório de estruturação, assessoria documentada, serviço distinto da concessão), o resultado passa a lícito. Perguntar sempre ao usuário se há nos autos comprovação do serviço. Verificar também se a comissão foi computada no CET — a omissão reforça a natureza de remuneração disfarçada.",
+      "observacao_metodologica": "Não confundir com tarifa de cadastro (R07/R08) nem com serviços de terceiros (R11/R12). A comissão flat incide sobre o valor do crédito, não sobre um ato específico, e por isso replica economicamente os juros remuneratórios."
+    },
+    {
+      "id": "R30",
+      "categoria": "capitalizacao",
+      "nome": "Capitalização de juros moratórios",
+      "descricao": "Cláusula que determina a capitalização dos encargos moratórios na mesma forma e periodicidade dos remuneratórios. A autorização de capitalização infra-anual foi construída para os juros REMUNERATÓRIOS, que remuneram o capital; os moratórios têm natureza sancionatória, e a sua capitalização carece de fundamento equivalente.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 539/STJ",
+          "Súmula 541/STJ"
+        ],
+        "temas_repetitivos": [
+          "Temas 246 e 247/STJ"
+        ],
+        "legislacao": [
+          "MP 2.170-36/2001, art. 5º",
+          "CC/02, art. 406",
+          "Decreto 22.626/1933, art. 4º"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se a cláusula de encargos moratórios manda capitalizá-los, expressa ou por remissão à periodicidade dos remuneratórios",
+        "logica": "CLAUSULA_MORA_CAPITALIZADA OR MORA_REMETE_A_PERIODICIDADE_REMUNERATORIA",
+        "campos_necessarios": [
+          "clausula_encargos_moratorios"
+        ]
+      },
+      "resultado_se_positivo": "ilicita_parcial",
+      "consequencia": "Recalcular os juros moratórios em regime simples, decotando o efeito da capitalização.",
+      "tier": "T2",
+      "status": "sem_precedente_consolidado",
+      "alerta": "Tese sem repetitivo específico. NÃO levar à peça sem pesquisa prévia — o enunciado está na agenda da L3. Verificar sempre se a memória do credor efetivamente CAPITALIZOU a mora: é comum a cláusula autorizar e a planilha praticar juros simples, caso em que o achado é preventivo e não gera decote."
+    },
+    {
+      "id": "R31",
+      "categoria": "multa_contratual",
+      "nome": "Multa moratória sobre base que inclui juros",
+      "descricao": "Cláusula que faz a multa incidir sobre o débito total apurado, incluídos principal e todos os encargos, de modo que a pena convencional recai sobre parcela que já remunera o capital e já sanciona o atraso.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "CC/02, art. 404",
+          "CC/02, art. 884",
+          "CDC, art. 52, §1º"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Conferir, linha a linha na memória do credor, o quociente entre a multa lançada e as rubricas que a antecedem. Quociente de 2% sobre principal+juros indica base ampliada",
+        "logica": "MULTA_LANCADA / (PRINCIPAL + JUROS_REMUN + JUROS_MORA) == MULTA_PERCENTUAL",
+        "campos_necessarios": [
+          "multa_percentual",
+          "base_incidencia_multa",
+          "memoria_credor"
+        ]
+      },
+      "resultado_se_positivo": "base_de_calculo",
+      "consequencia": "Recalcular a multa sobre o principal corrigido e as prestações vencidas, excluídos os juros. A diferença é o excesso.",
+      "tier": "T2",
+      "status": "sem_precedente_consolidado",
+      "alerta": "Distinguir do R22: aquele testa o PERCENTUAL (teto de 2%), este testa a BASE. Percentual dentro do teto com base ampliada passa incólume pelo R22 e só aparece aqui."
+    },
+    {
+      "id": "R32",
+      "categoria": "tarifas",
+      "nome": "Honorários advocatícios extrajudiciais cumulados com judiciais",
+      "descricao": "Cláusula que estipula honorários extrajudiciais somados a honorários judiciais, ambos percentuais sobre o total da dívida, quando os de sucumbência serão arbitrados pelo juízo na própria execução.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "CPC, art. 85, §§2º e 8º-A",
+          "CC/02, art. 395, parágrafo único",
+          "CC/02, art. 884"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se há previsão cumulativa de honorários extrajudiciais e judiciais, e se a memória do credor efetivamente lançou a rubrica extrajudicial",
+        "logica": "HONORARIOS_EXTRAJUDICIAIS_PACTUADOS AND HONORARIOS_JUDICIAIS_PACTUADOS",
+        "campos_necessarios": [
+          "honorarios_extrajudiciais_pct",
+          "honorarios_judiciais_pct",
+          "lancado_na_memoria"
+        ]
+      },
+      "resultado_se_positivo": "a_verificar",
+      "consequencia": "Se lançado na memória, decote integral da rubrica extrajudicial. Se não lançado, arguição PREVENTIVA — dimensionar o valor em risco e suscitar antes que seja cobrado.",
+      "tier": "T2",
+      "status": "sem_precedente_consolidado",
+      "alerta": "Em execuções de valor elevado esta é frequentemente a maior cifra em jogo, e costuma não figurar na memória inicial. Sempre dimensionar o valor em risco mesmo quando não cobrado."
+    },
+    {
+      "id": "R33",
+      "categoria": "tarifas",
+      "nome": "Encargo com base de cálculo indeterminável pelo devedor",
+      "descricao": "Encargo estipulado por fórmula que remete a fator não informado no instrumento, ou cujo resultado não é apurável pelo devedor a partir do próprio contrato, e que não integra o Custo Efetivo Total declarado. Abrange encargos de concessão de garantia (ECG do FGI-PEAC), tarifas remetidas a tabela externa e encargos denominados adicionais.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [
+          "Tema 958/STJ — tese 2.1, por analogia"
+        ],
+        "legislacao": [
+          "CC/02, art. 104, II",
+          "CC/02, art. 122",
+          "Resolução CMN 4.881/2020, art. 7º"
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "todos"
+      ],
+      "teste": {
+        "descricao": "Verificar se o encargo tem valor ou fórmula integralmente resolúvel com os dados do instrumento, e se integra o CET declarado",
+        "logica": "ENCARGO_PACTUADO AND (NOT BASE_APURAVEL_PELO_INSTRUMENTO OR NOT INTEGRA_CET)",
+        "campos_necessarios": [
+          "encargo_formula",
+          "encargo_valor",
+          "integra_cet"
+        ]
+      },
+      "resultado_se_positivo": "nao_discriminado",
+      "consequencia": "Requerer exibição da memória de apuração do encargo. Não apresentada, inexigibilidade por indeterminação do objeto.",
+      "tier": "T2",
+      "status": "sem_precedente_consolidado",
+      "alerta": "Não confundir com R09 (serviços de terceiros sem especificação): ali o serviço não é descrito; aqui a fórmula existe mas não fecha."
+    },
+    {
+      "id": "R34",
+      "categoria": "habitacional_sfh_sfi",
+      "nome": "SFH — capitalização de juros em qualquer periodicidade",
+      "descricao": "No SFH a capitalização é vedada em qualquer periodicidade (art. 6º, e, Lei 4.380/64). A simples adoção da Tabela Price NÃO prova anatocismo (REsp 2.168.394/SP; REsp 2.103.041/DF; Súmulas 5 e 7): o achado depende de demonstrar, na conta gráfica, que juros vencidos foram incorporados ao saldo e renderam novos juros. Sem conta gráfica desde a origem o achado é `A verificar` e exige perícia — que o TRF4 costuma indeferir quando os documentos bastam.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 450/STJ"
+        ],
+        "temas_repetitivos": [
+          "REsp 1.070.297/PR (Tema 10x — Price sob Súmulas 5 e 7)"
+        ],
+        "legislacao": [
+          "Lei 4.380/1964, art. 6º, c e e",
+          "Decreto 22.626/1933, art. 4º"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.168.394/SP, data-base 03/12/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 2.103.041/DF, data-base 16/04/2026",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5003241-32.2016.4.04.7001, data-base 23/05/2023",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "sfh"
+      ],
+      "teste": {
+        "descricao": "Rodar comparar_sfh() com a série do indexador (conector) e as prestações da conta gráfica; o achado existe se anatocismo > 0, isto é, se houve competência com prestação < juros e o credor incorporou o impago ao saldo",
+        "logica": "CONTA_GRAFICA_INTEGRAL AND comparar_sfh.anatocismo > 0",
+        "campos_necessarios": [
+          "conta_grafica_integral",
+          "indice_saldo",
+          "taxa_juros_mensal",
+          "prestacoes_pagas"
+        ],
+        "requer_motor": "motores/calculo.py::comparar_sfh"
+      },
+      "resultado_se_positivo": "ilicita",
+      "resultado_se_sem_conta_grafica": "a_verificar",
+      "consequencia": "Recalcular com juros impagos em conta apartada, só com correção monetária (R36); diferença é indébito. Amortização negativa NÃO afasta a mora (REsp 1.476.395/RS) — não pedir descaracterização da mora por este fundamento.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R35",
+      "categoria": "habitacional_sfh_sfi",
+      "nome": "SFI e imobiliário fora do SFN — capitalização inferior à anual vedada mesmo pactuada",
+      "descricao": "A Lei 9.514/97 (art. 5º, III) autoriza capitalização sem fixar periodicidade; aplica-se o art. 4º da Lei da Usura: só anual. A Súmula 539 e os Temas 246/247 (MP 2.170) são do SFN e não alcançam o SFI (REsp 2.086.650/MG). Com construtora ou loteadora fora do SFN/SFI a vedação é a mesma, ainda que pactuada (AgInt nos EDcl no AREsp 3.050.638/SE). Cláusula de capitalização mensal é nula por si — não depende de prova de anatocismo na conta gráfica, mas a quantificação depende dela.",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 9.514/1997, art. 5º, III",
+          "Decreto 22.626/1933, art. 4º"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.086.650/MG, Terceira Turma, data-base 07/02/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, AgInt no AREsp 2.738.974/MG, data-base 06/05/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, AgInt nos EDcl no AREsp 3.050.638/SE, data-base 19/06/2026",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos posteriores a 20/11/1997",
+        "marco": "MT09",
+        "posicao": "posterior"
+      },
+      "tipo_contrato": [
+        "sfi",
+        "imobiliario_fora_sfi"
+      ],
+      "teste": {
+        "descricao": "Verificar se há cláusula de capitalização com periodicidade inferior à anual (mensal, diária) ou taxa anual superior ao duodécuplo da mensal; no SFI o duodécuplo NÃO valida — ao contrário do SFN, ele PROVA a capitalização vedada",
+        "logica": "TIPO IN (sfi, imobiliario_fora_sfi) AND (CLAUSULA_CAPITALIZACAO_PERIODICIDADE < anual OR TAXA_ANUAL > TAXA_MENSAL * 12)",
+        "campos_necessarios": [
+          "tipo_contrato",
+          "clausula_capitalizacao_periodicidade",
+          "taxa_juros_mensal",
+          "taxa_juros_anual"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Nulidade da cláusula; recálculo com capitalização anual (ou simples, segundo a cláusula remanescente); indébito pela diferença. Validar no TRF4 após 02/2025 antes de ajuizar: a skill não localizou acórdão do TRF4 aplicando o REsp 2.086.650 — agenda de pesquisa obrigatória.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": "Posição do TRF4 pós-REsp 2.086.650/MG não conferida no acervo — validar via pesquisa-jurisprudencial-jusia antes de concluir em caso da 4ª Região."
+    },
+    {
+      "id": "R36",
+      "categoria": "habitacional_sfh_sfi",
+      "nome": "Amortização negativa — juros impagos incorporados ao saldo",
+      "descricao": "Quando a prestação não cobre os juros do mês, a diferença (juros impagos) não pode ser somada ao saldo devedor para render novos juros; vai a conta apartada, só com correção monetária (TRF4 AC 5002846-95.2016.4.04.7112; STJ REsp 1.476.395/RS, que manteve o recálculo). Ocorre tipicamente em PES/CP com saldo em TR. Não existe se a prestação cobre os juros (TRF4 AC 5003241-32).",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 4.380/1964, art. 6º",
+          "CC/02, art. 421 (função social)"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 1.476.395/RS, data-base 11/10/2018",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5002846-95.2016.4.04.7112, data-base 23/07/2020",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5003241-32.2016.4.04.7001, data-base 23/05/2023 (contrário: prestação cobria os juros)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "sfh",
+        "sfi"
+      ],
+      "teste": {
+        "descricao": "tabela_sfh(...).amortizacao_negativa.ocorre == True com as prestações da conta gráfica e a série do indexador do conector",
+        "logica": "CONTA_GRAFICA_INTEGRAL AND tabela_sfh.amortizacao_negativa.ocorre",
+        "campos_necessarios": [
+          "conta_grafica_integral",
+          "indice_saldo",
+          "taxa_juros_mensal",
+          "prestacoes_pagas"
+        ],
+        "requer_motor": "motores/calculo.py::tabela_sfh"
+      },
+      "resultado_se_positivo": "ilicita",
+      "resultado_se_sem_conta_grafica": "a_verificar",
+      "consequencia": "Conta apartada dos juros impagos (cenário revisado de comparar_sfh); indébito = anatocismo apurado. A mora permanece (REsp 1.476.395/RS, item 1.1).",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R37",
+      "categoria": "habitacional_sfh_sfi",
+      "nome": "Ordem correção/amortização — Súmula 450 (consolidado CONTRA o mutuário)",
+      "descricao": "No SFH o saldo é corrigido ANTES de amortizar a prestação (Súmula 450/STJ; REsp 2.174.331/SP). Pedido de amortizar antes de corrigir é tese vencida — vai em `ressalvas`, nunca em achado. Regra registrada para que o laudo não a formule e para calibrar `ordem='corrige_antes'` no motor.",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 450/STJ"
+        ],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 4.380/1964, art. 6º, c"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.174.331/SP, data-base 16/03/2026",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5001894-72.2023.4.04.7015, data-base 25/09/2024 (só trecho)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "sfh"
+      ],
+      "teste": {
+        "descricao": "Sempre que o contrato for SFH, o motor roda com ordem='corrige_antes'; a ordem inversa só como contrafactual de réplica",
+        "logica": "TIPO == sfh",
+        "campos_necessarios": [
+          "tipo_contrato"
+        ]
+      },
+      "resultado_se_positivo": "licita",
+      "consequencia": "Manter a ordem legal; registrar em ressalvas que a tese inversa é rejeitada pelo STJ.",
+      "tier": null,
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R38",
+      "categoria": "habitacional_sfh_sfi",
+      "nome": "CES sem cláusula expressa; PES/CP e TR",
+      "descricao": "O Coeficiente de Equiparação Salarial só pode ser cobrado com cláusula expressa — resolução do BNH ou circular do BACEN não a substitui, e o pagamento da primeira parcela não convalida (REsp 2.166.103/SP; REsp 2.168.394/SP). Com cláusula expressa, é válido mesmo antes da Lei 8.692/93 (REsp 2.174.331/SP). TR como índice do saldo é válida (Súmula 454; REsp 969.129/MG, repetitivo) — não atacar. Repetição é SIMPLES salvo má-fé provada (REsp 2.174.331/SP).",
+      "fundamentacao": {
+        "sumulas": [
+          "Súmula 454/STJ"
+        ],
+        "temas_repetitivos": [
+          "REsp 969.129/MG (repetitivo, TR)"
+        ],
+        "legislacao": [
+          "Lei 8.692/1993",
+          "Lei 8.177/1991"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.166.103/SP, data-base 12/12/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 2.174.331/SP, data-base 16/03/2026",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 969.129/MG, repetitivo, data-base 15/12/2009",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos anteriores a 11/03/1991 são os típicos; vale para qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "sfh"
+      ],
+      "teste": {
+        "descricao": "CES cobrado (primeira prestação ou fator) sem cláusula contratual que o preveja expressamente",
+        "logica": "CES_COBRADO AND NOT CLAUSULA_CES_EXPRESSA",
+        "campos_necessarios": [
+          "clausula_ces",
+          "ces_cobrado",
+          "plano_reajuste_prestacao"
+        ]
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Exclusão do CES e repetição simples da diferença de prestações; observar prescrição (risco central em contratos antigos — AREsp 3.057.124/SP, só trecho).",
+      "tier": "T2",
+      "status": "vigente",
+      "alerta": "Prescrição é o obstáculo típico: datar a quitação e a negativa administrativa antes de concluir."
+    },
+    {
+      "id": "R39",
+      "categoria": "procedimento_expropriatorio",
+      "nome": "Consolidação / execução extrajudicial — notificação por edital sem esgotar a localização",
+      "descricao": "Na alienação fiduciária (Lei 9.514, art. 26) e no DL 70/66 a intimação para purgar a mora só pode ser por edital depois de esgotadas as tentativas de notificação pessoal pelo cartório; a ciência da data dos leilões NÃO supre a notificação válida (REsp 2.107.242/ES; REsp 2.218.731/PE). Contra: edital válido se a notificação pessoal foi frustrada (REsp 1.698.322/RJ) ou recusada (TRF4 AC 5008761-44, só trecho); e no DL 70/66 a nulidade exige prejuízo concreto — provar intenção e capacidade de purgar (REsp 1.977.553/SP). Intimação pessoal dos leilões não é exigida: basta correspondência aos endereços do contrato (TRF4 AC 5000201-87.2022.4.04.7209; art. 27, §2º-A).",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 9.514/1997, arts. 26, 26-A e 27, §2º-A",
+          "DL 70/1966, arts. 31, 33 e 34"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.107.242/ES, data-base 17/08/2026",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 2.218.731/PE, data-base 23/10/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 1.977.553/SP, data-base 05/03/2026 (contrário: pas de nullité sans grief)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 1.698.322/RJ, data-base 23/04/2026 (contrário: edital válido após frustração)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5000201-87.2022.4.04.7209, data-base 20/06/2023",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
+      },
+      "tipo_contrato": [
+        "sfh",
+        "sfi",
+        "imobiliario_fora_sfi"
+      ],
+      "teste": {
+        "descricao": "Checklist documental da camada L2b: certidão do cartório de títulos e documentos com número e datas das diligências pessoais; edital só após diligências; prazo de 15 dias; averbação da consolidação; comunicação dos leilões aos endereços do contrato",
+        "logica": "EDITAL_PUBLICADO AND NOT DILIGENCIAS_PESSOAIS_ESGOTADAS_CERTIFICADAS",
+        "campos_necessarios": [
+          "certidoes_notificacao",
+          "edital",
+          "enderecos_contrato",
+          "matricula_averbacao_consolidacao",
+          "comunicacao_leiloes"
+        ],
+        "requer_sub_skill": "camadas/L2b-procedimento-expropriatorio.md"
+      },
+      "resultado_se_positivo": "ilicita",
+      "consequencia": "Nulidade da consolidação e dos leilões; reabertura do prazo de purga. No DL 70/66 juntar prova do prejuízo (proposta de purga, depósito). Sem certidões nos autos: exibição de documentos antes de concluir.",
+      "tier": "T1",
+      "status": "vigente",
+      "alerta": null
+    },
+    {
+      "id": "R40",
+      "categoria": "procedimento_expropriatorio",
+      "nome": "Purga da mora até a arrematação — contratos ou consolidações anteriores à Lei 13.465/2017",
+      "descricao": "Antes da Lei 13.465/2017 o STJ admitia purgar a mora até a assinatura do auto de arrematação (DL 70/66, art. 34, subsidiário). Depois, só até a averbação da consolidação (art. 26-A, §2º). O STJ DIVERGE sobre o critério temporal: REsp 2.187.505/SP manteve a purga tardia pela DATA DO CONTRATO anterior à lei; REsp 2.005.064/GO exige a DATA DA CONSOLIDAÇÃO — ambos decididos com óbices processuais (Súmulas 7 e 283). TRF4 nega purga após consolidação averbada na vigência da lei (AC 5008453-45.2023.4.04.7209, só trecho; AC 5000201-87).",
+      "fundamentacao": {
+        "sumulas": [],
+        "temas_repetitivos": [],
+        "legislacao": [
+          "Lei 9.514/1997, arts. 26-A, §2º, e 39, II (revogado)",
+          "DL 70/1966, art. 34",
+          "Lei 13.465/2017"
+        ],
+        "precedentes": [
+          {
+            "ref": "STJ, REsp 2.187.505/SP, data-base 12/12/2025",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "STJ, REsp 2.005.064/GO, data-base 02/10/2025 (divergente)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          },
+          {
+            "ref": "TRF4, AC 5000201-87.2022.4.04.7209, data-base 20/06/2023 (contrário)",
+            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+          }
+        ]
+      },
+      "corte_temporal": {
+        "aplica_se": "contratos ou consolidações anteriores a 11/07/2017",
+        "marco": "MT10",
+        "posicao": "anterior"
+      },
+      "tipo_contrato": [
+        "sfh",
+        "sfi",
+        "imobiliario_fora_sfi"
+      ],
+      "teste": {
+        "descricao": "Datar contrato E consolidação; se ambas anteriores a 11/07/2017 a tese é forte; se só o contrato, é contestável; se nenhuma, não há tese",
+        "logica": "DATA_CONTRATO < 2017-07-11 AND (DATA_CONSOLIDACAO < 2017-07-11 OR DATA_CONSOLIDACAO IS NULL)",
+        "campos_necessarios": [
+          "data_contrato",
+          "data_consolidacao"
+        ]
+      },
+      "resultado_se_positivo": "zona_cinzenta",
+      "consequencia": "Decisão do advogado: registrar as duas datas e a divergência; não concluir sem pesquisa.",
+      "tier": null,
+      "status": "sem_precedente_consolidado",
+      "alerta": "Divergência interna no STJ (data do contrato × data da consolidação) e TRF4 hostil — tese sem repetitivo; pesquisa obrigatória antes da peça."
+    }
+  ],
+  "tipos_contrato": {
+    "descricao": "Classificação dos tipos de contrato para determinar quais regras se aplicam",
+    "tipos": [
+      {
+        "id": "consumo_pf",
+        "nome": "Contrato de consumo — pessoa física",
+        "descricao": "CDC aplicável (Súmula 297/STJ). Todas as regras consumeristas se aplicam.",
+        "cdc_aplicavel": true,
+        "regras_aplicaveis": "todas"
+      },
+      {
+        "id": "empresarial_pj",
+        "nome": "Contrato empresarial — pessoa jurídica",
+        "descricao": "CDC NÃO se aplica por padrão. Revisão pela teoria finalista mitigada se comprovada vulnerabilidade.",
+        "cdc_aplicavel": false,
+        "gate_obrigatorio": "A empresa contratante é vulnerável nesta relação? (porte, faturamento, sofisticação financeira, dependência do crédito). Se SIM → desbloquear regras consumeristas via teoria finalista mitigada.",
+        "regras_sem_cdc": [
+          "R01",
+          "R02",
+          "R03",
+          "R17",
+          "R18",
+          "R19",
+          "R20",
+          "R21",
+          "R25"
+        ],
+        "regras_com_cdc_mitigado": "todas"
+      },
+      {
+        "id": "cedula_rural",
+        "nome": "Cédula de crédito rural",
+        "descricao": "Regida pelo DL 167/1967. Teto de 12% a.a. para recursos livres (R17). Capitalização permitida se pactuada (R20).",
+        "legislacao_especifica": "Decreto-Lei 167/1967",
+        "regras_especificas": [
+          "R17",
+          "R20"
+        ]
+      },
+      {
+        "id": "cedula_comercial",
+        "nome": "Cédula de crédito comercial",
+        "descricao": "Regida pela Lei 6.840/1980. Teto de 12% a.a. para recursos livres (R17). Capitalização permitida se pactuada (R20).",
+        "legislacao_especifica": "Lei 6.840/1980",
+        "regras_especificas": [
+          "R17",
+          "R20"
+        ]
+      },
+      {
+        "id": "cedula_industrial",
+        "nome": "Cédula de crédito industrial",
+        "descricao": "Regida pelo DL 413/1969. Teto de 12% a.a. para recursos livres (R17). Capitalização permitida se pactuada (R20).",
+        "legislacao_especifica": "Decreto-Lei 413/1969",
+        "regras_especificas": [
+          "R17",
+          "R20"
+        ]
+      },
+      {
+        "id": "cartao_credito",
+        "nome": "Cartão de crédito",
+        "descricao": "Teto de 100% no rotativo pós-03/01/2024 (R23). Administradoras são IFs (Súmula 283/STJ).",
+        "regras_especificas": [
+          "R23",
+          "R24"
+        ]
+      },
+      {
+        "id": "cartao_consignado",
+        "nome": "Cartão de crédito consignado (RMC)",
+        "descricao": "Alto litígio. Temas 1328 e 1414 pendentes no STJ. Descontos em verba alimentar.",
+        "regras_especificas": [
+          "R24"
+        ]
+      },
+      {
+        "id": "sfh",
+        "nome": "Financiamento habitacional — SFH (Lei 4.380/1964)",
+        "descricao": "Mútuo habitacional com recursos do SFH (FGTS/SBPE): identificadores — Lei 4.380/64, apólice SH/SFH, FCVS, PES/CP, CES, CEF/EMGEA, seguro MIP+DFI compulsório. CDC só para contratos posteriores a 11/03/1991 e sem cobertura do FCVS (REsp 2.174.331/SP). A R15 (razão BACEN) e o duodécuplo NÃO concluem aqui: a capitalização é vedada em qualquer periodicidade (art. 6º, e, Lei 4.380/64) e a limitação de juros a 10%/12% a.a. é rejeitada por STJ e TRF4.",
+        "legislacao_especifica": "Lei 4.380/1964; Lei 8.177/1991 (TR); Lei 8.692/1993 (PES/CP, CES); Lei 8.100/1990 e 10.150/2000 (FCVS); DL 70/1966 (execução extrajudicial)",
+        "cdc_aplicavel": "condicional — posterior a 11/03/1991 e sem FCVS",
+        "regras_desligadas": [
+          "R15",
+          "R18",
+          "R19"
+        ],
+        "regras_especificas": [
+          "R34",
+          "R36",
+          "R37",
+          "R38",
+          "R39",
+          "R40"
+        ],
+        "campos_extras_obrigatorios": [
+          "data_contrato",
+          "cobertura_fcvs",
+          "indice_saldo",
+          "plano_reajuste_prestacao",
+          "clausula_ces",
+          "data_consolidacao_ou_leilao",
+          "ordem_correcao_amortizacao"
+        ]
+      },
+      {
+        "id": "sfi",
+        "nome": "Financiamento imobiliário — SFI (Lei 9.514/1997) com alienação fiduciária",
+        "descricao": "Identificadores — Lei 9.514/97, alienação fiduciária em garantia, consolidação da propriedade, arts. 26 e 27, leilão extrajudicial. Capitalização inferior à anual vedada mesmo que pactuada (REsp 2.086.650/MG): Súmula 539 e Temas 246/247 não se aplicam. Seguro MIP/DFI é obrigatório por lei (art. 5º) — venda casada só com prova de recusa de outra seguradora.",
+        "legislacao_especifica": "Lei 9.514/1997 (arts. 5º, 26, 26-A, 27, 39); Lei 13.465/2017; Decreto 22.626/1933, art. 4º; DL 70/1966 (subsidiário, contratos anteriores a 11/07/2017)",
+        "cdc_aplicavel": true,
+        "regras_desligadas": [
+          "R15",
+          "R18",
+          "R19"
+        ],
+        "regras_especificas": [
+          "R35",
+          "R36",
+          "R37",
+          "R39",
+          "R40"
+        ],
+        "campos_extras_obrigatorios": [
+          "data_contrato",
+          "data_consolidacao",
+          "indice_saldo",
+          "clausula_capitalizacao_periodicidade",
+          "enderecos_contrato",
+          "certidoes_notificacao"
+        ]
+      },
+      {
+        "id": "imobiliario_fora_sfi",
+        "nome": "Compra e venda / promessa imobiliária com construtora ou loteadora (fora do SFN/SFI)",
+        "descricao": "Vendedor não é instituição financeira. Capitalização mensal vedada ainda que pactuada, por falta de autorização legal (AgInt nos EDcl no AREsp 3.050.638/SE; AgInt no AREsp 2.738.974/MG). Resolução com alienação fiduciária segue arts. 26 e 27 da Lei 9.514 (REsp 1.792.003/SP), não a Súmula 543.",
+        "credor_sfn": false,
+        "legislacao_especifica": "Decreto 22.626/1933, art. 4º; Lei 9.514/1997, arts. 26 e 27 (quando houver alienação fiduciária)",
+        "cdc_aplicavel": true,
+        "regras_desligadas": [
+          "R15",
+          "R18"
+        ],
+        "regras_especificas": [
+          "R35",
+          "R39",
+          "R40"
+        ],
+        "campos_extras_obrigatorios": [
+          "data_contrato",
+          "clausula_capitalizacao_periodicidade",
+          "existe_alienacao_fiduciaria"
+        ]
+      }
+    ],
+    "grupos": {
+      "descricao": "Grupos citados em `tipo_contrato` das regras. Derivados dos tipos — a suíte de testes recalcula e falha se divergirem: `todos` = todos os tipos; `todos_sfn` = tipos cujo credor é instituição do SFN (todos, menos os marcados `credor_sfn: false`); `todos_sem_lei_especifica` = tipos sem `legislacao_especifica`.",
+      "todos": [
+        "consumo_pf",
+        "empresarial_pj",
+        "cedula_rural",
+        "cedula_comercial",
+        "cedula_industrial",
+        "cartao_credito",
+        "cartao_consignado",
+        "sfh",
+        "sfi",
+        "imobiliario_fora_sfi"
+      ],
+      "todos_sfn": [
+        "consumo_pf",
+        "empresarial_pj",
+        "cedula_rural",
+        "cedula_comercial",
+        "cedula_industrial",
+        "cartao_credito",
+        "cartao_consignado",
+        "sfh",
+        "sfi"
+      ],
+      "todos_sem_lei_especifica": [
+        "consumo_pf",
+        "empresarial_pj",
+        "cartao_credito",
+        "cartao_consignado"
+      ]
+    }
+  },
+  "series_bacen_por_modalidade": {
+    "descricao": "Mapeamento modalidade -> série SGS/BACEN (taxa média MENSAL, % a.m.). Códigos verificados contra o Portal de Dados Abertos do BCB (ago/2026). Todas mensais: razão contratada/média direta, sem conversão.",
+    "mapeamento": [
+      {
+        "modalidade": "credito_pessoal_nao_consignado",
+        "serie": 25464,
+        "nome": "Crédito pessoal não consignado — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_pessoal_consignado_inss",
+        "serie": 25468,
+        "nome": "Consignado INSS (aposentados/pensionistas) — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_pessoal_consignado_publico",
+        "serie": 25467,
+        "nome": "Consignado setor público — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_pessoal_consignado_privado",
+        "serie": 25466,
+        "nome": "Consignado setor privado — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "aquisicao_veiculo_pf",
+        "serie": 25471,
+        "nome": "Aquisição de veículos — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "aquisicao_veiculo_pj",
+        "serie": 25447,
+        "nome": "Aquisição de veículos — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cartao_rotativo",
+        "serie": 25477,
+        "nome": "Cartão de crédito rotativo — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cartao_parcelado",
+        "serie": 25478,
+        "nome": "Cartão de crédito parcelado — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cartao_rotativo_pj",
+        "serie": 25455,
+        "nome": "Cartão de crédito rotativo — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cartao_parcelado_pj",
+        "serie": 25456,
+        "nome": "Cartão de crédito parcelado — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cheque_especial_pf",
+        "serie": 25463,
+        "nome": "Cheque especial — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "cheque_especial_pj",
+        "serie": 25446,
+        "nome": "Cheque especial — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "conta_garantida_pj",
+        "serie": 25445,
+        "nome": "Conta garantida — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "capital_giro_ate_365",
+        "serie": 25441,
+        "nome": "Capital de giro até 365 dias — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "capital_giro_acima_365",
+        "serie": 25442,
+        "nome": "Capital de giro acima de 365 dias — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "capital_giro_rotativo",
+        "serie": 25443,
+        "nome": "Capital de giro rotativo — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_rural",
+        "serie": 25496,
+        "nome": "Crédito rural total — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_rural_mercado",
+        "serie": 25494,
+        "nome": "Crédito rural taxas de mercado — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "credito_rural_regulado",
+        "serie": 25495,
+        "nome": "Crédito rural taxas reguladas — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "financiamento_imobiliario_regulado",
+        "serie": 25498,
+        "nome": "Financiamento imobiliário taxas reguladas — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "financiamento_imobiliario_mercado",
+        "serie": 25497,
+        "nome": "Financiamento imobiliário taxas de mercado — PF",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "desconto_duplicatas",
+        "serie": 25438,
+        "nome": "Desconto de duplicatas e recebíveis — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "leasing_veiculos",
+        "serie": 25450,
+        "nome": "Arrendamento mercantil de veículos — PJ",
+        "unidade": "% a.m."
+      },
+      {
+        "modalidade": "leasing_veiculos_pf",
+        "serie": 25474,
+        "nome": "Arrendamento mercantil de veículos — PF",
+        "unidade": "% a.m."
+      }
+    ],
+    "nota": "v1.5.0 — os códigos abaixo são os mesmos que o catálogo do conector publica; use-os direto. Histórico: até a v1.3.0 apontavam para modalidades erradas (cartão rotativo em 25497, que é financiamento imobiliário; cheque especial em 20715, que é PJ total anual); a v1.4.0 reconstruiu tudo contra o Portal de Dados Abertos do BCB, e o conector foi corrigido em conjunto. Todas as séries são MENSAIS (% a.m.) da faixa 254xx: a razão contratada/média sai na mesma base, sem conversão. Este mapeamento existe para não escolher série por intuição — a identidade final é a que listar_series_bacen devolve, e não é preciso confirmá-la por outra tool. Backstop, só quando algo já parecer errado: série de modalidade acima de 25% a.m. cheira a código anual. Não usar magnitude como teste de rotina — cartão rotativo (~15% a.m.) e cheque especial PJ (~13,5% a.m.) passam de 10, e imobiliário anual (~12% a.a.) fica abaixo. Ver referencia/bacen-consulta.md e referencia/teste-contrato-bacen.md."
+  },
+  "sumulas_consolidadas": {
+    "descricao": "Texto integral de todas as súmulas do STJ aplicáveis a contratos bancários, para citação direta nos relatórios",
+    "sumulas": [
+      {
+        "numero": 30,
+        "texto": "A comissão de permanência e a correção monetária são inacumuláveis."
+      },
+      {
+        "numero": 93,
+        "texto": "A legislação sobre cédulas de crédito rural, comercial e industrial admite o pacto de capitalização de juros."
+      },
+      {
+        "numero": 283,
+        "texto": "As empresas administradoras de cartão de crédito são instituições financeiras e, por isso, os juros remuneratórios por elas cobrados não sofrem as limitações da Lei de Usura."
+      },
+      {
+        "numero": 285,
+        "texto": "Nos contratos bancários posteriores ao Código de Defesa do Consumidor incide a multa moratória nele prevista."
+      },
+      {
+        "numero": 286,
+        "texto": "A renegociação de contrato bancário ou a confissão da dívida não impede a possibilidade de discussão sobre eventuais ilegalidades dos contratos anteriores."
+      },
+      {
+        "numero": 288,
+        "texto": "A Taxa de Juros de Longo Prazo (TJLP) pode ser utilizada como indexador de correção monetária nos contratos bancários."
+      },
+      {
+        "numero": 293,
+        "texto": "A cobrança antecipada do valor residual garantido (VRG) não descaracteriza o contrato de arrendamento mercantil."
+      },
+      {
+        "numero": 294,
+        "texto": "Não é potestativa a cláusula contratual que prevê a comissão de permanência, calculada pela taxa média de mercado apurada pelo Banco Central do Brasil, limitada à taxa do contrato."
+      },
+      {
+        "numero": 296,
+        "texto": "Os juros remuneratórios, não cumuláveis com a comissão de permanência, são devidos no período de inadimplência, à taxa média de mercado estipulada pelo Banco Central do Brasil, limitada ao percentual contratado."
+      },
+      {
+        "numero": 297,
+        "texto": "O Código de Defesa do Consumidor é aplicável às instituições financeiras."
+      },
+      {
+        "numero": 379,
+        "texto": "Nos contratos bancários não regidos por legislação específica, os juros moratórios poderão ser convencionados até o limite de 1% ao mês."
+      },
+      {
+        "numero": 380,
+        "texto": "A simples propositura da ação de revisão de contrato não inibe a caracterização da mora do autor."
+      },
+      {
+        "numero": 381,
+        "texto": "Nos contratos bancários, é vedado ao julgador conhecer, de ofício, da abusividade das cláusulas."
+      },
+      {
+        "numero": 382,
+        "texto": "A estipulação de juros remuneratórios superiores a 12% ao ano, por si só, não indica abusividade."
+      },
+      {
+        "numero": 472,
+        "texto": "A cobrança de comissão de permanência — cujo valor não pode ultrapassar a soma dos encargos remuneratórios e moratórios previstos no contrato — exclui a exigibilidade dos juros remuneratórios, moratórios e da multa contratual."
+      },
+      {
+        "numero": 530,
+        "texto": "Nos contratos bancários, na impossibilidade de comprovar a taxa de juros efetivamente contratada — por ausência de pactuação ou pela falta de juntada do instrumento aos autos —, aplica-se a taxa média de mercado, divulgada pelo Bacen, praticada nas operações da mesma espécie, salvo se a taxa cobrada for mais vantajosa para o devedor."
+      },
+      {
+        "numero": 532,
+        "texto": "Constitui prática comercial abusiva o envio de cartão de crédito sem prévia e expressa solicitação do consumidor, configurando-se ato ilícito indenizável e sujeito à aplicação de multa administrativa."
+      },
+      {
+        "numero": 539,
+        "texto": "É permitida a capitalização de juros com periodicidade inferior à anual em contratos celebrados com instituições integrantes do Sistema Financeiro Nacional a partir de 31/3/2000 (MP n. 1.963-17/2000, reeditada como MP n. 2.170-36/2001), desde que expressamente pactuada."
+      },
+      {
+        "numero": 541,
+        "texto": "A previsão no contrato bancário de taxa de juros anual superior ao duodécuplo da mensal é suficiente para permitir a cobrança da taxa efetiva anual contratada."
+      },
+      {
+        "numero": 565,
+        "texto": "A pactuação das tarifas de abertura de crédito (TAC) e de emissão de carnê (TEC), ou outra denominação para o mesmo fato gerador, é válida apenas nos contratos bancários anteriores ao início da vigência da Resolução-CMN n. 3.518/2007, em 30/4/2008."
+      },
+      {
+        "numero": 566,
+        "texto": "Nos contratos bancários posteriores ao início da vigência da Resolução-CMN n. 3.518/2007, em 30/4/2008, pode ser cobrada a tarifa de cadastro no início do relacionamento entre o consumidor e a instituição financeira."
+      },
+      {
+        "numero": 450,
+        "texto": "Nos contratos vinculados ao SFH, a atualização do saldo devedor antecede sua amortização pelo pagamento da prestação.",
+        "fonte": "Texto conforme paráfrase do REsp 2.174.331/SP no acervo; [CONFERIR] redação oficial no portal do STJ antes de citar"
+      },
+      {
+        "numero": 454,
+        "texto": "Pactuada a correção monetária nos contratos do SFH pelo mesmo índice aplicável à caderneta de poupança, incide a taxa referencial (TR) a partir da vigência da Lei n. 8.177/1991.",
+        "fonte": "Transcrita no REsp 1.630.932/SP (acervo Jusbrasil, 09/10/2026)"
+      }
+    ]
+  },
+  "pendencias_jurisprudenciais": {
+    "descricao": "Temas pendentes que alteram regras deste motor. `verificado_em` é a última data em que o status foi conferido por quem editou este arquivo — NÃO é a data de hoje. Se (hoje − verificado_em) > validade_dias, toda análise que invoque a regra afetada emite o alerta abaixo, além do alerta da própria regra.",
+    "validade_dias": 90,
+    "alerta_vencido": "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do {tema} foi conferida pela última vez em {verificado_em}. Validar via pesquisa-jurisprudencial-jusia antes de citar ou de emitir conclusão.",
+    "temas": [
+      {
+        "tema": "Tema 1378/STJ",
+        "questao": "Taxa média BACEN como fundamento exclusivo de abusividade dos juros remuneratórios",
+        "status": "afetado em 02/09/2025 com suspensão nacional — julgamento não conferido",
+        "regras_afetadas": [
+          "R15"
+        ],
+        "paradigmas": [
+          "REsp 2.227.276/AL",
+          "REsp 2.227.280/PR",
+          "REsp 2.227.287/MG",
+          "REsp 2.227.844/RS"
+        ],
+        "verificado_em": "2026-08-26"
+      },
+      {
+        "tema": "Tema 929/STJ",
+        "questao": "Modulação da repetição em dobro (EAREsp 676.608/RS) — conclusão na Corte Especial",
+        "status": "modulação vigente (corte 30/03/2021); conclusão pendente não conferida",
+        "regras_afetadas": [
+          "R26",
+          "R27"
+        ],
+        "paradigmas": [
+          "EAREsp 676.608/RS"
+        ],
+        "verificado_em": "2026-08-26"
+      },
+      {
+        "tema": "Tema 1328/STJ",
+        "questao": "Dano moral in re ipsa em RMC invalidada",
+        "status": "afetado em 11/04/2025 com suspensão — não conferido",
+        "regras_afetadas": [
+          "R24"
+        ],
+        "paradigmas": [
+          "REsp 2.145.244/SC"
+        ],
+        "verificado_em": "2026-08-26"
+      },
+      {
+        "tema": "Tema 1414/STJ",
+        "questao": "Abusos em cartão consignado RMC/RCC",
+        "status": "afetado com suspensão ampliada — não conferido",
+        "regras_afetadas": [
+          "R24"
+        ],
+        "paradigmas": [
+          "REsp 2.224.599/PE"
+        ],
+        "verificado_em": "2026-08-26"
+      },
+      {
+        "tema": "Purga da mora — critério temporal da Lei 13.465/2017",
+        "questao": "Se a purga até a arrematação (DL 70/66) vale pela data do contrato (REsp 2.187.505/SP) ou pela data da consolidação (REsp 2.005.064/GO)",
+        "status": "divergência interna no STJ sem afetação conhecida; ambos os paradigmas decididos com óbices processuais",
+        "regras_afetadas": [
+          "R40"
+        ],
+        "paradigmas": [
+          "REsp 2.187.505/SP",
+          "REsp 2.005.064/GO"
+        ],
+        "verificado_em": "2026-10-09"
+      },
+      {
+        "tema": "Capitalização no SFI — recepção pelo TRF4",
+        "questao": "Se o TRF4 aplica o REsp 2.086.650/MG (capitalização inferior à anual vedada no SFI) ou mantém a leitura de que a Price que paga os juros integralmente afasta anatocismo",
+        "status": "não localizado acórdão do TRF4 posterior a 02/2025 no acervo — lacuna, não divergência",
+        "regras_afetadas": [
+          "R35"
+        ],
+        "paradigmas": [
+          "REsp 2.086.650/MG",
+          "TRF4 AC 5003263-84.2021.4.04.7108 (anterior)"
+        ],
+        "verificado_em": "2026-10-09"
+      }
+    ]
+  }
+}
