@@ -16,6 +16,8 @@ Chamada de qualquer pasta, só com a biblioteca padrão (o `openpyxl` é exigido
                        [--pdf auto|sim|nao] [--sem-tema]
     python3 revisao.py operador mostrar | salvar --tipo advogado|contador [--nome ...]
     python3 revisao.py tema mostrar | salvar --arquivo tema.json | remover
+    python3 revisao.py jurisprudencia consultar --regras R04,R13 [--sem-adversos] | cobertura | validar
+    python3 revisao.py espelho payload.json --saida DIR [--config-dir DIR]
 
 Saída em JSON (salvo `autoteste`). Códigos de saída: 0 ok · 1 autoteste com falha ou
 `gerar --pdf sim` sem o PDF · 2 erro de entrada · 3 operador não configurado.
@@ -34,10 +36,11 @@ PASTA_SKILL = Path(__file__).resolve().parent
 if str(PASTA_SKILL) not in sys.path:
     sys.path.insert(0, str(PASTA_SKILL))
 
-from motores import VERSAO, calculo, operador, pdf, regras, relatorios, tema  # noqa: E402
+from motores import VERSAO, calculo, jurisprudencia, operador, pdf, regras, relatorios, tema  # noqa: E402
 from motores.comum import arredondar, saida_utf8                    # noqa: E402
 
-MODULOS_AUTOTESTE = ("comum", "calculo", "cet", "cartao", "conta_corrente", "relatorios", "regras")
+MODULOS_AUTOTESTE = ("comum", "calculo", "cet", "cartao", "conta_corrente", "relatorios", "regras",
+                     "jurisprudencia")
 DICA_OPERADOR = ("configure o operador: revisao.py operador salvar --tipo advogado|contador "
                  "--nome ... --registro ... --entidade ... --cidade ...")
 
@@ -288,6 +291,46 @@ def cmd_tema_remover(args) -> int:
 
 
 # ─────────────────────────────────────────────────────────────────────
+# jurisprudencia, espelho
+# ─────────────────────────────────────────────────────────────────────
+
+def cmd_juris_consultar(args) -> int:
+    ids = [i.strip().upper() for i in args.regras.split(",") if i.strip()]
+    if not ids:
+        raise ValueError("informe ao menos uma regra em --regras (ex.: R04,R13)")
+    _imprimir(jurisprudencia.consultar(ids, incluir_adversos=not args.sem_adversos, hoje=args.hoje))
+    return 0
+
+
+def cmd_juris_cobertura(args) -> int:
+    _imprimir(jurisprudencia.cobertura(hoje=args.hoje))
+    return 0
+
+
+def cmd_juris_validar(args) -> int:
+    resultado = jurisprudencia.validar(hoje=args.hoje)
+    _imprimir(resultado)
+    return 1 if resultado["erros"] else 0
+
+
+def cmd_espelho(args) -> int:
+    caminho = Path(args.payload)
+    try:
+        payload = json.loads(caminho.read_text(encoding="utf-8-sig"))
+    except OSError as erro:
+        raise ValueError(f"não foi possível ler o payload {caminho}: {erro.strerror or erro}") from None
+    except ValueError as erro:
+        raise ValueError(f"payload {caminho} não é um JSON UTF-8 válido: {erro}") from None
+    if not isinstance(payload, dict):
+        raise ValueError(f"payload {caminho} deve ser um objeto JSON")
+    op = operador.ler(args.config_dir) or {}
+    arquivo, resumo = jurisprudencia.gerar_espelho(payload, Path(args.saida),
+                                                   skill_peticao=op.get("skill_peticao"), hoje=args.hoje)
+    _imprimir({"arquivo": str(arquivo), "skill_peticao": op.get("skill_peticao"), **resumo})
+    return 0
+
+
+# ─────────────────────────────────────────────────────────────────────
 # argparse
 # ─────────────────────────────────────────────────────────────────────
 
@@ -386,6 +429,27 @@ def _parser() -> argparse.ArgumentParser:
     r = acao.add_parser("remover", help="apaga o tema gravado e volta ao visual padrão")
     r.add_argument("--config-dir")
     r.set_defaults(func=cmd_tema_remover)
+
+    p = sub.add_parser("jurisprudencia", help="repertório jurisprudencial validado (Jusbrasil)")
+    acao = p.add_subparsers(dest="acao", required=True, metavar="AÇÃO")
+    c = acao.add_parser("consultar", help="julgados citáveis das regras ou teses informadas")
+    c.add_argument("--regras", required=True, help="ids separados por vírgula: R04,R13,PJ-VULN")
+    c.add_argument("--sem-adversos", action="store_true", help="omite os julgados ADV (limites da tese)")
+    c.add_argument("--hoje", help="AAAA-MM-DD, data de referência da validade (padrão: hoje)")
+    c.set_defaults(func=cmd_juris_consultar)
+    c = acao.add_parser("cobertura", help="julgados por regra e regras T1 sem precedente superior")
+    c.add_argument("--hoje")
+    c.set_defaults(func=cmd_juris_cobertura)
+    c = acao.add_parser("validar", help="confere o formato do repertório (código 1 se houver erro)")
+    c.add_argument("--hoje")
+    c.set_defaults(func=cmd_juris_validar)
+
+    p = sub.add_parser("espelho", help="espelho da petição inicial: achados do laudo + repertório")
+    p.add_argument("payload")
+    p.add_argument("--saida", required=True, help="pasta de saída")
+    p.add_argument("--config-dir", help="pasta do operador.json (skill de petição canônica)")
+    p.add_argument("--hoje", help="AAAA-MM-DD (padrão: hoje)")
+    p.set_defaults(func=cmd_espelho)
     return ap
 
 

@@ -56,8 +56,10 @@ campo não tem origem documental ou de série oficial, ele não entra no payload
 
   "achados": [                                      // motor de regras + auditar_cet()
     { "id": "A1", "tier": "T1", "resultado": "Ilícito",
-      "titulo": "…", "detalhe": "…", "fundamento": "…" }
+      "titulo": "…", "detalhe": "…", "fundamento": "…",
+      "regras": ["R04"] }                           // opcional: ids do motor; o `espelho` puxa os julgados por eles
   ],
+  "valor_causa": "…",                               // opcional: só o `espelho` usa; ausente, sai [A DEFINIR]
 
   "ressalvas":    ["…"],                            // OBRIGATÓRIO quando houver achado pró-banco
   "lacunas":      ["…"],

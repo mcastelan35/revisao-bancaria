@@ -50,6 +50,7 @@ revisao-bancaria/                         ← raiz do repositório = plugin = ma
 │   │   │   ├── bacen-consulta.md         ← protocolo do conector (ler antes da 1ª consulta)
 │   │   │   ├── payload-schema.md         ← contrato de dados L3 → saída
 │   │   │   ├── pesquisa-base.md          ← pesquisa consolidada (INSTRUMENTO)
+│   │   │   ├── repertorio-jurisprudencial.md ← julgados validados (Jusbrasil, portal do TJPR) por regra/tese (lido pela CLI)
 │   │   │   ├── repertorio-jurisprudencial-contas.md ← ESQUELETO — [PENDENTE], preencher via JusIA
 │   │   │   └── teste-contrato-bacen.md   ← alarme de drift do catálogo do conector
 │   │   ├── dados/
@@ -65,6 +66,7 @@ revisao-bancaria/                         ← raiz do repositório = plugin = ma
 │   │       ├── operador.py               ← identidade de quem assina (fora do pacote, na pasta de dados)
 │   │       ├── tema.py                   ← identidade visual dos entregáveis (cores, fontes, logo): tema.json ao lado do operador.json
 │   │       ├── pdf.py                    ← PDF de cada HTML por Chrome/Edge/Chromium/Brave instalado (sem dependência nova)
+│   │       ├── jurisprudencia.py         ← repertório validado: leitura estrita, consulta por regra, cobertura e espelho da inicial
 │   │       └── relatorios.py             ← renderizador único (PREMIUM, PANORAMA, planilha), ramos instrumento e conta
 │   ├── triagem/SKILL.md                  ← taxa × média BACEN sem documento (uma chamada)
 │   └── configurar/SKILL.md               ← operador, ambiente e conector
@@ -146,8 +148,11 @@ derivados, marcos e regras citados existentes, `regras_afetadas` derivado do cor
 | `gerar` | entregáveis a partir do payload (ramo instrumento ou conta), com marca e assinatura do operador, o tema do escritório (`--sem-tema` o ignora) e o PDF de cada HTML (`--pdf auto\|sim\|nao`) |
 | `operador` | mostrar e salvar a identidade de quem assina (inclui `--skill-layout`, só registro) |
 | `tema` | mostrar, salvar (`--arquivo`) e remover a identidade visual dos entregáveis |
+| `jurisprudencia` | `consultar --regras` (julgados citáveis: VERIFICADO e dentro da validade), `cobertura` e `validar` do repertório |
+| `espelho` | espelho da petição inicial (`espelho-peticao-<slug>.md`) a partir dos achados do payload e do repertório; nomeia a `skill_peticao` do operador como canônica ou declara o formato neutro |
 
-Códigos de saída: 0 ok · 1 autoteste com falha, ou `gerar --pdf sim` sem o PDF · 2 erro de
+Códigos de saída: 0 ok · 1 autoteste com falha, `gerar --pdf sim` sem o PDF ou `jurisprudencia
+validar` com erro · 2 erro de
 entrada · 3 operador não configurado.
 
 ## Dependências externas

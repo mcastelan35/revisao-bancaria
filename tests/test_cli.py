@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -101,7 +102,7 @@ def test_autoteste_compacto(cli):
     linhas = r.out.splitlines()
     assert r.codigo == 0, r.out + r.err
     assert [l.split()[1] for l in linhas[:-1]] == ["comum", "calculo", "cet", "cartao", "conta_corrente",
-                                                    "relatorios", "regras"]
+                                                    "relatorios", "regras", "jurisprudencia"]
     for linha in linhas[:-1]:
         assert linha.split()[0] in ("OK", "PULADO") and "FALHOU" not in linha
     assert "  OK      calculo          77 passaram" in linhas
@@ -735,3 +736,40 @@ def test_gerar_conta_com_extracao_nao_reconciliada_e_recusado_com_2(cli, tmp_pat
     r = cli("gerar", payload, "--saida", tmp_path / "s")
     assert r.codigo == 2 and r.out == "" and "DIVERGENTE" in r.err and "lacuna bloqueante" in r.err
     assert not (tmp_path / "s").exists()
+
+
+# ── jurisprudência e espelho ─────────────────────────────────────────
+
+def test_jurisprudencia_validar_e_cobertura(cli):
+    r = cli("jurisprudencia", "validar")
+    assert r.codigo == 0, r.out + r.err
+    assert r.json()["erros"] == []
+    c = cli("jurisprudencia", "cobertura").json()
+    assert {l["id"] for l in c["regras"]} >= {"R01", "R40"}
+
+
+def test_jurisprudencia_consultar_recusa_lista_vazia(cli):
+    r = cli("jurisprudencia", "consultar", "--regras", " , ")
+    assert r.codigo == 2 and "ao menos uma regra" in r.err
+
+
+def test_espelho_formato_neutro_e_skill_canonica(cli, tmp_path):
+    achados = relatorios._payload_demo()["achados"]
+    for a in achados:
+        a["regras"] = ["R04"]
+    payload = escrever_payload(tmp_path / "p.json", achados=achados)
+    r = cli("espelho", payload, "--saida", tmp_path / "saida")
+    assert r.codigo == 0, r.err
+    saida = r.json()
+    texto = Path(saida["arquivo"]).read_text(encoding="utf-8")
+    assert Path(saida["arquivo"]).name.startswith("espelho-peticao-")
+    assert "neutro" in texto and saida["skill_peticao"] is None
+    salvar_operador(cli, skill_peticao="peticoes-escritorio")
+    texto = Path(cli("espelho", payload, "--saida", tmp_path / "saida").json()["arquivo"]).read_text(encoding="utf-8")
+    assert "`peticoes-escritorio`" in texto
+
+
+def test_espelho_recusa_payload_sem_achados(cli, tmp_path):
+    payload = escrever_payload(tmp_path / "p.json", achados=None)
+    r = cli("espelho", payload, "--saida", tmp_path / "saida")
+    assert r.codigo == 2 and "achados" in r.err
