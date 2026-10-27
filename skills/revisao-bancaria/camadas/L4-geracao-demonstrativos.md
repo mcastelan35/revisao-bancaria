@@ -61,6 +61,8 @@ gerar sem `planilha` em `--formatos`, dizendo isso ao usuário.
 
 **Passo 2 — Montar o payload.** Seguir `referencia/payload-schema.md`. Todo número sai do
 motor. Nenhum valor é digitado à mão no JSON. Campo sem origem documental vira `lacunas`.
+Cada achado leva em `regras` os ids do motor que o sustentam (`["R04", "R26"]`): o laudo não os
+mostra, mas o espelho da petição puxa a jurisprudência validada por eles.
 
 **Passo 3 — Preencher os três campos que a v3 não tinha.**
 
@@ -126,11 +128,19 @@ visualização de impressão. Só então entregar os arquivos ao usuário.
 - "Encerrar a análise"
 - "Analisar outro contrato"
 - "Montar o roteiro estratégico de ajuizamento" → estrutura os tópicos da fundamentação a
-  partir dos achados, gradua as teses por tier e entrega os prompts calibrados de pesquisa
-  para a skill `pesquisa-jurisprudencial-jusia` antes da redação
-- "Gerar a petição com base nesta análise" → briefing estruturado para a skill de
-  peticionamento gravada na L-1 (`skill_peticao` do operador). Sem skill configurada, entregar
-  o briefing em markdown
+  partir dos achados e gradua as teses por tier. Para cada regra dos achados, os julgados vêm
+  de `<rb> jurisprudencia consultar --regras …`: favoráveis sustentam a tese, adversos viram
+  ressalva. Regra em `sem_cobertura` ou com aviso (vencida, `CONFERIR`) recebe o prompt
+  calibrado para a skill `pesquisa-jurisprudencial-jusia` antes da redação
+- "Gerar a petição com base nesta análise" → `<rb> espelho payload.json --saida <pasta>
+  --config-dir "${CLAUDE_PLUGIN_DATA}"` grava `espelho-peticao-<slug>.md`: fatos e números do
+  laudo, um tópico por achado contra o banco (T1 antes de T2) com a tese, a ementa integral e o
+  link de cada julgado validado, os argumentos contrários previstos, provas, pedidos (da
+  `consequencia` de cada regra) e as pendências antes de protocolar. Para isso, cada achado do
+  payload leva em `regras` os ids que o motor aplicou (`["R04"]`). Com `skill_peticao` gravada
+  na L-1, essa é a skill canônica do escritório: chame-a com o espelho como insumo, e ela define
+  forma e estilo. Sem skill configurada, entregar o espelho, que já está em formato neutro. Na
+  redação, nenhum julgado fora do espelho: o que faltar vai para a pesquisa antes
 
 ## Erros que esta camada existe para não repetir
 

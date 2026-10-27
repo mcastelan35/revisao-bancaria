@@ -97,22 +97,42 @@ def test_gitignore_protege_documentos_de_clientes():
         assert padrao in regras, padrao
 
 
-# Processo de cliente costuma tramitar na Justiça Estadual (segmento J = 8 no número CNJ). Os
-# precedentes do acervo do plugin hoje são de tribunais federais e superiores. Número estadual em
-# arquivo versionado é, até prova em contrário, dado de caso real: precedente público legítimo de
-# TJ entra nesta lista, com a fonte.
+# Processo de cliente costuma tramitar na Justiça Estadual (segmento J = 8 no número CNJ). Número
+# estadual em arquivo versionado é, até prova em contrário, dado de caso real. A exceção é o
+# precedente público de TJ do repertório jurisprudencial: admitido só dentro dele, como
+# `classe_numero` (ou no link permanente) de uma entrada com fonte pública (Jusbrasil ou portal
+# oficial do tribunal) ou citado na ementa integral dessa entrada (texto do tribunal). Em observação ou qualquer outro
+# texto, recusado.
 CNJ_ESTADUAL = re.compile(r"\b\d{7}-\d{2}\.\d{4}\.8\.\d{2}\.\d{4}\b")
-PRECEDENTES_ESTADUAIS_ADMITIDOS: set[str] = set()
+REPERTORIO = SKILL / "referencia" / "repertorio-jurisprudencial.md"
+IGNORADAS = (".git", "__pycache__", "dist", ".pesquisa", ".venv")
+
+
+def _precedentes_estaduais_do_repertorio() -> set[str]:
+    from motores import jurisprudencia
+    _, entradas, _ =jurisprudencia._parse(REPERTORIO.read_text(encoding="utf-8"))
+    fontes = [e for e in entradas if jurisprudencia.fonte_valida(e.get("url", ""), e.get("tribunal", ""))]
+    return ({m.group(0) for e in fontes if e.get("tribunal") not in jurisprudencia.SUPERIORES
+             for m in CNJ_ESTADUAL.finditer(e.get("classe_numero", ""))}
+            | {m.group(0) for e in fontes for m in CNJ_ESTADUAL.finditer(e.get("ementa", ""))})
 
 
 def test_nenhum_numero_de_processo_estadual_nos_arquivos_versionados():
+    admitidos = _precedentes_estaduais_do_repertorio()
     suspeitos = []
     for arq in RAIZ.rglob("*"):
-        if not arq.is_file() or ".git" in arq.parts or "__pycache__" in arq.parts or "dist" in arq.parts:
+        if not arq.is_file() or any(p in arq.parts for p in IGNORADAS):
             continue
         if arq.suffix not in (".md", ".py", ".json", ".yml", ".txt"):
             continue
-        for m in CNJ_ESTADUAL.finditer(arq.read_text(encoding="utf-8", errors="ignore")):
-            if m.group(0) not in PRECEDENTES_ESTADUAIS_ADMITIDOS:
-                suspeitos.append(f"{arq.relative_to(RAIZ).as_posix()}: {m.group(0)}")
+        texto = arq.read_text(encoding="utf-8", errors="ignore")
+        if arq == REPERTORIO:
+            for linha in texto.splitlines():
+                for m in CNJ_ESTADUAL.finditer(linha):
+                    if m.group(0) not in admitidos or not linha.startswith(
+                            ("### ", "- classe_numero:", "- url:", ">")):
+                        suspeitos.append(f"{arq.relative_to(RAIZ).as_posix()}: {m.group(0)}")
+            continue
+        for m in CNJ_ESTADUAL.finditer(texto):
+            suspeitos.append(f"{arq.relative_to(RAIZ).as_posix()}: {m.group(0)}")
     assert not suspeitos, suspeitos

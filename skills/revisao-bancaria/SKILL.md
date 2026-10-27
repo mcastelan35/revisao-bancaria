@@ -57,6 +57,8 @@ SKILL.md).
 | Autoteste dos motores — antes da 1ª apuração da sessão | `<rb> autoteste` |
 | Regras aplicáveis ao caso (L2, C3) | `<rb> regras --tipo T --regime consumerista\|civil_empresarial --data-contrato AAAA-MM-DD [--data-consolidacao AAAA-MM-DD] [--categorias a,b] [--formato resumo\|padrao\|completo]` |
 | Texto integral de regra ou súmula, para fundamentar | `<rb> regra R15 R16` · `<rb> sumula 530 541` |
+| Julgados validados das regras do caso (estratégia, petição) | `<rb> jurisprudencia consultar --regras R04,R13` · `<rb> jurisprudencia cobertura` |
+| Espelho da petição inicial (gate pós-entrega da L4) | `<rb> espelho payload.json --saida <pasta de saída> --config-dir "${CLAUDE_PLUGIN_DATA}"` |
 | Posição do contrato nos marcos MT01–MT10 (L0) | `<rb> marcos --data-contrato AAAA-MM-DD [--data-consolidacao AAAA-MM-DD]` |
 | Série BACEN da modalidade | `<rb> serie --buscar "cheque especial"` · `<rb> serie --modalidade aquisicao_veiculo_pf` |
 | Razão contratada/média e limiares 1,5x / 2,0x | `<rb> razao --contratada-pct 2.99 --unidade-contratada am_efetiva --media-pct 1.85 --tipo T` |
@@ -93,6 +95,7 @@ memória do credor): numa sessão Python, `sys.path.insert(0, "<pasta da skill>"
 | Cartão | `camadas/analise-faturas-cartao.md` + `motores/cartao.py` |
 | Rota CONTA, antes de fundamentar | `referencia/repertorio-jurisprudencial-contas.md` — **ESQUELETO**: entrada `[PENDENTE]`/`[CONFERIR]` não se cita |
 | L4 / C6 | `referencia/payload-schema.md` → `<rb> gerar` |
+| Estratégia e petição (INSTRUMENTO) | `referencia/repertorio-jurisprudencial.md` — pelo `<rb> jurisprudencia consultar`, nunca lido inteiro |
 | Pesquisa consolidada (INSTRUMENTO) | `referencia/pesquisa-base.md` |
 | Atualização do conector ou série que não responde | `referencia/teste-contrato-bacen.md` |
 
@@ -170,7 +173,9 @@ falha de fonte.
    na janela inteira do contrato e calcular a razão antes do gate de intake; L2, L3 e C2
    reaproveitam esse resultado — não reconsultar. Razão abaixo de 1,5x se diz no próprio gate.
 3. **Jurisprudência só do acervo.** Súmulas, temas e precedentes do `regras-bancarias.json`
-   (lidos por `<rb> regra` e `<rb> sumula`) e do repertório da rota CONTA, nada além. Toda
+   (lidos por `<rb> regra` e `<rb> sumula`), do repertório validado (`<rb> jurisprudencia
+   consultar`, que só devolve entrada conferida no Jusbrasil ou no portal do TJPR e dentro da validade) e do
+   repertório da rota CONTA, nada além. Toda
    ementa citada vai **na íntegra**, padrão sanduíche (tese → ementa integral → identificação
    completa: tribunal, número, relator, órgão, datas → aplicação). Entrada `[PENDENTE]`/
    `[CONFERIR]` não se cita; completar identificação por memória é falta absoluta. Fora do
@@ -264,7 +269,8 @@ falha de fonte.
 `triagem` (pergunta pontual de taxa, sem documento) e `configurar` (operador e ambiente), do
 próprio plugin. `pesquisa-jurisprudencial-jusia` (validar precedentes e preencher o repertório
 CONTA — a única via para tirar uma entrada de `[PENDENTE]`); skill de peticionamento gravada
-na L-1 (`skill_peticao`, recebe o briefing da L4/C6); `briefing-estrategico` (risco para o
+na L-1 (`skill_peticao`, a skill canônica do escritório: recebe o espelho da inicial da L4 e o
+briefing da C6; sem ela, o espelho sai em formato neutro); `briefing-estrategico` (risco para o
 cliente antes de ajuizar); `proposta-comercial` (prospecção); `liquidacao-correcao-debitos`
 (quando a correção do indébito exigir regime que o `atualizar_debito` não parametriza);
 `design-quality-guard` (checklist visual); a skill de layout do escritório (`skill_layout` do

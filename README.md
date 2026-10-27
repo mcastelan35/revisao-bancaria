@@ -102,7 +102,7 @@ precedente consolidado não concluem: aparecem como alerta, e a decisão é do a
 | PANORAMA | Duas a três páginas com veredito, indicadores, gráficos comparativos e recomendação | Reunião com o cliente |
 | PLANILHA (Excel) | Painel na primeira aba, memória de cálculo, metodologia e lacunas | Conferência independente e anexo |
 | PDF | O laudo e o panorama já convertidos, ao lado de cada HTML, quando o computador tem Chrome, Edge, Chromium ou Brave; sem navegador, o HTML abre e se salva como PDF | Juntar aos autos e enviar ao cliente |
-| Resumo para a petição | Os achados organizados para a sua skill de peticionamento | A redação da inicial |
+| Espelho da petição inicial | Roteiro da inicial em markdown: fatos e números do laudo, um tópico por tese (T1 antes de T2) com a ementa integral e o link de cada julgado validado, argumentos contrários previstos, provas, pedidos e pendências | A redação da inicial, pela skill de petição canônica do escritório ou pelo advogado |
 | Agenda de pesquisa | Pedidos de pesquisa de jurisprudência (JusIA), num arquivo interno que nunca entra no laudo | Uso do escritório |
 
 - **Assinatura:** o laudo sai em nome de quem foi configurado. Laudo pericial é assinado por
@@ -111,6 +111,13 @@ precedente consolidado não concluem: aparecem como alerta, e a decisão é do a
   seu escritório as cores, as fontes, o logo, a linha do cabeçalho e o rodapé, e aplica tudo ao
   laudo, ao panorama e à planilha. Sem isso, sai o visual padrão. O semáforo (vermelho, verde e
   âmbar) nunca muda com a marca.
+- **Jurisprudência validada:** o repertório do plugin guarda, por tese, julgados do STJ e, dos
+  tribunais estaduais (TJPR primeiro), só os favoráveis. Cada um foi aberto no inteiro teor pelo
+  conector Jusbrasil (ou, no TJPR, no portal do próprio tribunal), tem a ementa copiada na íntegra, a identificação completa e o link de
+  acesso, e vale por um ano até ser revalidado. A petição só cita o que está nele.
+- **Petição:** na `configurar`, você indica a skill de petição do escritório, que passa a ser a
+  canônica e recebe o espelho para redigir a inicial. Sem skill indicada, o espelho sai em formato
+  neutro.
 - **Sem excesso:** quando não há o que cobrar, o veredito diz isso: "revisão contratual inviável
   — atacar a composição do débito".
 - **Conta corrente:** sai no mesmo padrão dos contratos (laudo, panorama, planilha e PDF), com a
@@ -295,7 +302,7 @@ python skills/revisao-bancaria/revisao.py serie --buscar "cheque especial"
 ```
 
 Subcomandos: `autoteste`, `regras`, `regra`, `sumula`, `marcos`, `serie`, `razao`, `comparar`,
-`gerar`, `operador` e `tema` — detalhes em [ARCHITECTURE.md](ARCHITECTURE.md). O `gerar` converte
+`gerar`, `operador`, `tema`, `jurisprudencia` e `espelho` — detalhes em [ARCHITECTURE.md](ARCHITECTURE.md). O `gerar` converte
 os HTML em PDF sozinho quando acha um navegador Chromium (`--pdf nao` desliga).
 
 ## Testes e manutenção

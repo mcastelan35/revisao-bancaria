@@ -2,6 +2,37 @@
 
 ## [Não lançado]
 
+### Repertório jurisprudencial validado e espelho da petição inicial
+
+- `referencia/repertorio-jurisprudencial.md`: julgados por regra do motor ou tese própria, com a
+  ementa na íntegra copiada do inteiro teor lido no conector Jusbrasil (para o TJPR, também do
+  portal de jurisprudência do tribunal, com o link permanente do acórdão), a identificação completa
+  e a url canônica. Erro de digitação e defeito de extração da ementa (palavra emendada, acento
+  faltando) são corrigidos; o conteúdo, não. STJ e STF entram favoráveis e, quando fixam o limite da tese, adversos (viram
+  ressalva); tribunais locais só favoráveis, TJPR primeiro. Cada entrada vale um ano desde
+  `verificado_em`.
+- `motores/jurisprudencia.py` e os subcomandos `jurisprudencia consultar | cobertura | validar`:
+  o agente pede só os julgados das regras do caso; entrada `CONFERIR`, vencida ou incompleta não
+  sai, vira aviso. O validador recusa campo faltando, url fora do Jusbrasil (ou do portal
+  oficial do próprio tribunal), tribunal local adverso, regra inexistente, julgado repetido, data no futuro e ementa curta demais.
+- Subcomando `espelho`: `espelho-peticao-<slug>.md` com fatos e números do laudo, um tópico por
+  achado contra o banco (T1 antes de T2) com tese, ementas e links, argumentos contrários
+  previstos, provas (perícia, exibição), pedidos tirados da `consequencia` de cada regra e as
+  pendências antes de protocolar. A `skill_peticao` gravada na `configurar` é a skill canônica de
+  redação; sem ela, o espelho sai em formato neutro.
+- Payload: `achados[*].regras` (ids do motor) e `valor_causa`, opcionais, usados só pelo espelho.
+- Regra de conduta 3 e gate pós-entrega da L4 apontam para o repertório validado.
+- Primeira onda do repertório: as teses T1 de contratos de consumo PF (comissão de permanência,
+  TAC/TEC, serviços de terceiros, correspondente, seguro prestamista, juros, capitalização,
+  repetição em dobro, assinatura), empresarial PJ (vulnerabilidade, teto de 12% nas cédulas),
+  cartão (teto de 100%, RMC) e habitacional (SFH, SFI, intimação por edital). As teses R10 e R29
+  ainda sem julgado específico; R23 e R24 sem favorável do STJ (lei recente e temas afetados).
+  Complemento do TJPR pelo portal do tribunal: nove apelações das Câmaras Cíveis (juros acima da
+  média, capitalização sem pactuação, assinatura impugnada e capitalização vedada fora do SFN).
+- Teste de sigilo: número CNJ estadual só é admitido dentro do repertório, no título ou em
+  `classe_numero` ou no link de entrada com fonte pública (Jusbrasil ou portal do tribunal), ou
+  citado na ementa integral dela.
+
 Entregáveis padronizados: a rota CONTA ganha o renderizador, o laudo ganha a identidade visual do
 escritório e o `gerar` passa a entregar o PDF. **Nenhum cálculo, tese, súmula, tier, limiar ou
 regra mudou**. O HTML sem tema só difere do anterior na contagem inteira da memória, que sai sem

@@ -50,8 +50,10 @@ confirmação) ou usar o comando base com uv, que traz o `openpyxl` sem instalar
      instrui peça é assinado por advogado com OAB;
   2. **nome**, **registro** (OAB/UF 00.000 ou CRC/UF 000000/O), **entidade** (sociedade ou
      escritório, se houver) e **cidade** da assinatura (Cidade-UF);
-  3. **skill de peticionamento** que recebe o briefing ao fim da análise (opcional). Se houver
-     skills de petição instaladas na sessão, ofereça-as pelo nome; nunca invente.
+  3. **skill de peticionamento canônica** (opcional): a skill de petição do escritório que vai
+     redigir a inicial a partir do espelho gerado no fim da análise. Se houver skills de petição
+     instaladas na sessão, ofereça-as pelo nome; nunca invente. Sem skill indicada, o espelho
+     sai em formato neutro, que qualquer skill ou o próprio advogado consegue usar.
 
   Grave: `<rb> operador salvar --tipo … --nome "…" --registro "…" --entidade "…" --cidade "…" --skill-peticao "…" --config-dir "${CLAUDE_PLUGIN_DATA}"`.
   O comando regrava o arquivo inteiro: numa troca, repita também o que não mudou, inclusive
