@@ -113,27 +113,128 @@ precedente consolidado não concluem: aparecem como alerta, e a decisão é do a
 
 ## Instalação
 
-No Claude Code (aba **Code** do app Claude, terminal ou IDE):
+O plugin funciona em dois lugares: no **Claude Code** (terminal, aba **Code** do app Claude,
+VS Code ou JetBrains) e no **claude.ai** (chat e Cowork). Nos dois, ele precisa do conector
+**Radar Apogeu**, que é a fonte das taxas do BACEN.
+
+### Antes de começar
+
+| Precisa de | Para quê | Como conferir |
+|---|---|---|
+| Assinatura do conector **Radar Apogeu** | Taxas médias, séries e correção do indébito: sem ele a revisão não roda | Ver o passo 1 abaixo |
+| Claude Code com **login pela conta claude.ai** (Pro, Max, Team ou Enterprise) | É por esse login que o conector do claude.ai chega ao Claude Code. Login só com chave de API não traz o conector | `/status` mostra a conta. Para trocar, use `/login` |
+| **git** | O Claude Code baixa o plugin do GitHub com o git | `git --version` no terminal |
+| **Python 3.10+** ou **uv** | Os motores de cálculo são programas Python | Não precisa instalar antes: no primeiro uso, a skill `configurar` confere e, se faltar, oferece instalar o uv, sem pedir administrador |
+
+### No Claude Code — passo a passo
+
+**1. Ative o conector no claude.ai.** Em [claude.ai › Personalizar › Conectores](https://claude.ai/customize/connectors),
+adicione o **Radar Apogeu** e configure a chave de acesso **no próprio conector**. Nunca cole a
+chave no chat: ela é pessoal e acompanha a assinatura. Nos planos Team e Enterprise, só o
+administrador adiciona conectores.
+
+Depois, numa sessão do Claude Code, rode `/mcp`: o conector deve aparecer como
+`claude.ai Radar Apogeu`. Se ele não aparecer, veja [Problemas comuns](#problemas-comuns).
+
+**2. Adicione o marketplace do plugin** (uma vez por computador):
 
 ```
 /plugin marketplace add mcastelan35/revisao-bancaria
+```
+
+A resposta é `Successfully added marketplace: revisao-bancaria`.
+
+**3. Instale o plugin:**
+
+```
 /plugin install revisao-bancaria@revisao-bancaria
 ```
 
-No claude.ai, baixe o arquivo `revisao-bancaria-<versão>.plugin` da
+O comando abre a ficha do plugin. Escolha **Install for you (user scope)**: o plugin fica
+disponível em qualquer pasta deste computador. Se aparecer `Run /reload-plugins to apply`, rode
+`/reload-plugins` (ou abra uma sessão nova).
+
+**4. Confira a instalação.** Digite `/` e procure as três skills, que vêm com o prefixo do plugin:
+
+- `/revisao-bancaria:revisao-bancaria`
+- `/revisao-bancaria:triagem`
+- `/revisao-bancaria:configurar`
+
+A instalação também aparece na aba **Installed** do `/plugin` e, fora da sessão, no comando
+`claude plugin list`.
+
+**5. Configure.** Rode `/revisao-bancaria:configurar` (ou diga "configura a revisão bancária").
+Veja o que ela faz em [Primeiro uso](#primeiro-uso).
+
+#### Pelo terminal, sem abrir uma sessão
+
+Os mesmos passos 2 e 3, no PowerShell, no Prompt de Comando ou no terminal do Mac e do Linux:
+
+```
+claude plugin marketplace add mcastelan35/revisao-bancaria
+claude plugin install revisao-bancaria@revisao-bancaria
+```
+
+O plugin carrega na próxima sessão do Claude Code. Para instalar só para um projeto, acrescente
+`--scope project` (vale para todos que trabalham no repositório) ou `--scope local` (só para você,
+só nesse repositório).
+
+#### No app desktop e no VS Code
+
+- **Aba Code do app Claude:** adicione o marketplace uma vez pelo terminal
+  (`claude plugin marketplace add mcastelan35/revisao-bancaria`). Depois, clique no **+** ao lado
+  da caixa de mensagem, em **Add plugins** (ou **Plugins › Browse plugins**), escolha
+  `revisao-bancaria` e o escopo.
+- **VS Code:** digite `/plugins` para abrir **Manage plugins**. Na aba **Marketplaces**,
+  adicione `mcastelan35/revisao-bancaria`. Na aba **Plugins**, procure `revisao-bancaria` e
+  clique em **Install**.
+- **JetBrains:** use os comandos do terminal do próprio IDE.
+
+O terminal, o app desktop e o VS Code no mesmo computador compartilham a instalação: o plugin
+instalado para o usuário num deles aparece nos outros.
+
+#### Atualizar
+
+Para marketplaces de terceiros, a atualização automática vem **desligada**. Há três jeitos de
+atualizar:
+
+- **Automático:** em `/plugin`, aba **Marketplaces**, selecione `revisao-bancaria` e clique em
+  **Enable auto-update**. A partir daí, cada sessão nova já traz a última versão.
+- **Pelo terminal:** `claude plugin update revisao-bancaria@revisao-bancaria`.
+- **Pelo painel:** em `/plugin`, aba **Installed**, abra `revisao-bancaria` e clique em **Update now**.
+
+A sessão que estava aberta continua com a versão antiga até você rodar `/reload-plugins`. As
+novidades de cada versão estão no [CHANGELOG](CHANGELOG.md) e nas
+[releases](https://github.com/mcastelan35/revisao-bancaria/releases).
+
+#### Desativar ou remover
+
+Para desligar sem desinstalar, use `claude plugin disable revisao-bancaria@revisao-bancaria` (e
+`enable` para religar). Para desinstalar, use
+`claude plugin uninstall revisao-bancaria@revisao-bancaria`. Pelo painel, a aba **Installed** do
+`/plugin` faz o mesmo.
+
+#### Problemas comuns
+
+| Sintoma | Causa provável | O que fazer |
+|---|---|---|
+| `/mcp` não lista `claude.ai Radar Apogeu` | Claude Code logado por chave de API, conector não adicionado no claude.ai ou conectores do claude.ai desligados | Rode `/login` e entre com a conta claude.ai que tem o conector. Confira o passo 1. Veja se a variável `ENABLE_CLAUDEAI_MCP_SERVERS` está como `false` |
+| O conector aparece, mas a consulta falha por autenticação | Chave do conector expirada ou não configurada | Reconecte o conector em [claude.ai › Personalizar › Conectores](https://claude.ai/customize/connectors) |
+| `/plugin isn't available in this environment` | Sessão não interativa (`claude -p`) | Instale pelo terminal, com os comandos `claude plugin` |
+| O marketplace não é adicionado | git ausente ou sem acesso ao GitHub | Instale o git e tente de novo. Atrás de proxy, confira o acesso a `github.com` |
+| As skills não aparecem depois de instalar | Plugin pendente de recarga | Rode `/reload-plugins` ou abra uma sessão nova. Os erros de carga aparecem na aba **Errors** do `/plugin` |
+| A sessão é na nuvem (claude.ai/code) | Sessões na nuvem não carregam os plugins instalados no seu computador | Use o Claude Code local ou o claude.ai com o arquivo `.plugin` |
+
+### No claude.ai (chat e Cowork)
+
+Baixe o arquivo `revisao-bancaria-<versão>.plugin` da
 [última release](https://github.com/mcastelan35/revisao-bancaria/releases/latest) (ou gere com
-`python ferramentas/empacotar_plugin.py`) e envie em **Personalizar › Plugins**.
+`python ferramentas/empacotar_plugin.py`) e envie em **Personalizar › Plugins**. O conector Radar
+Apogeu é ativado no mesmo lugar do passo 1.
 
-### Pré-requisito: o conector Radar Apogeu
-
-O plugin trabalha **sempre** com o conector: ele é a fonte única das taxas médias por modalidade,
-das séries de indexador e da correção do indébito, servidas de um cache persistente que torna o
-laudo reproduzível por terceiro. Sem ele, a revisão não roda.
-
-1. Adicione o conector **Radar Apogeu** em **Configurações › Conectores**.
-2. Configure a chave de acesso **no próprio conector** — nunca cole a chave no chat. A chave é
-   pessoal e acompanha a assinatura.
-3. Abra uma conversa nova.
+Plugins ligados na sua conta claude.ai também chegam ao Claude Code do mesmo login, com o nome
+`revisao-bancaria@synced`. Se você usar os dois caminhos, deixe só uma cópia ativa no Claude Code
+(aba **Installed** do `/plugin`), para não carregar duas versões ao mesmo tempo.
 
 ### Primeiro uso
 
