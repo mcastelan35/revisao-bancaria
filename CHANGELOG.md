@@ -1,5 +1,62 @@
 # CHANGELOG
 
+## [Não lançado]
+
+Entregáveis padronizados: a rota CONTA ganha o renderizador, o laudo ganha a identidade visual do
+escritório e o `gerar` passa a entregar o PDF. **Nenhum cálculo, tese, súmula, tier, limiar ou
+regra mudou**. O HTML sem tema só difere do anterior na contagem inteira da memória, que sai sem
+casas ("1", não "1,00"). A versão do pacote segue 6.0.0.
+
+### Ramo CONTA no renderizador
+
+- Payload com `ramo: "conta"` (o padrão segue `"instrumento"`): o bloco `conferencia` dá lugar ao
+  bloco `conta` — reconciliação do extrato, trinca de cenários, líder, encontro de contas, séries
+  consultadas e, opcionalmente, a correção do conector. Especificação em
+  `referencia/payload-schema.md`, "Ramo CONTA" (substitui a seção "Ramo CONTA — pendente").
+- `conta_corrente.bloco_payload(reconciliacao, trinca, cenario_lider, encontro, series, correcao)`
+  monta o bloco a partir das saídas dos motores, sem número digitado.
+- PREMIUM com a seção 3 "Reconciliação do extrato e recomposição da conta" e a advertência fixa da
+  regra de conduta 20; PANORAMA com selo do cenário líder (o CONFORME do extrato não vira "sem
+  excesso"), barras dos cenários não omitidos e a mesma advertência; PLANILHA com reconciliação,
+  trinca e encontro no Dashboard e as séries na aba de metodologia. Rótulos amigáveis dos cenários
+  em `ROTULOS_CENARIOS`.
+- Validação do ramo: reconciliação DIVERGENTE ou competência sem lançamento é erro (lacuna
+  bloqueante da C1), líder inexistente ou omitido, simples + dobro que não fecha com o excesso
+  final (tolerância de 0,01) e cenário desfavorável sem `ressalvas`.
+- C6: o entregável passa a sair por `<rb> gerar`; o fallback em HTML manual com o CSS de
+  `html-pdf-impressao-segura` foi removido, e a regra de conduta 14 não tem mais exceção de rota.
+
+- Cenário omitido por falta de taxa leva motivo legível no laudo ("nenhuma taxa comprovada nos
+  documentos para este cenário"), não a mensagem interna do motor.
+
+### Identidade visual do escritório
+
+- `motores/tema.py`: `tema.json` na mesma pasta do `operador.json`, com esquema fechado — cores
+  (`tinta`, `destaque`, `destaque_claro`, `fundo_destaque`), fontes (`titulo`, `texto`, `mono`),
+  `fontes_url` do Google Fonts, `logo` (PNG, JPG ou SVG de até 300 KB, embutido no cabeçalho e
+  copiado para a pasta de dados), `cabecalho_linha` e `rodape`. As cores do semáforo não são
+  configuráveis. `render_premium`, `render_panorama`, `render_planilha` e `gerar` aceitam `tema=`.
+- `revisao.py tema mostrar|salvar --arquivo|remover`; o `gerar` lê o tema da pasta de configuração
+  (`--sem-tema` força o padrão) e informa `"tema"` no JSON. `operador salvar --skill-layout`
+  registra a skill de layout escolhida (só registro).
+- `configurar`: nova etapa "Identidade visual", que importa o tema de uma skill de layout do
+  escritório quando houver uma na sessão.
+
+### PDF pelo `gerar`
+
+- `motores/pdf.py`: converte cada HTML gerado em PDF, ao lado dele, com Chrome, Edge, Chromium ou
+  Brave instalado (`REVISAO_BANCARIA_NAVEGADOR` indica um), em headless e com perfil temporário.
+  Sem navegador o HTML segue e o JSON traz `"pdf": {"gerado": false, "motivo": …}`; com navegador
+  traz `arquivos` e `paginas`, e avisa quando o PANORAMA passa de três páginas.
+- `gerar --pdf auto|sim|nao` (padrão `auto`; `sim` sem PDF sai com código 1).
+- L4, passo 5: a paginação passa a ser conferida pelas `paginas` do JSON do `gerar`.
+
+### Testes
+
+Novos `tests/test_tema.py`, `tests/test_pdf.py` (navegador simulado e, havendo navegador, uma
+conversão de verdade) e `tests/test_conta_relatorio.py` (do motor ao laudo); o autoteste do
+renderizador e o do motor da conta cobrem o ramo CONTA e o bloco do payload.
+
 ## v6.0.0 — 26/10/2026 — Plugin `revisao-bancaria`
 
 A skill `revisao-contratos-bancarios` vira o plugin `revisao-bancaria`, no padrão dos demais

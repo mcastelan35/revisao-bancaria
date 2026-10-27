@@ -31,7 +31,7 @@ Três princípios guiam o plugin:
 |---|---|---|
 | `triagem` | "Essa taxa de 3,2% ao mês do consignado de 2023 é abusiva?", sem documento | Uma consulta ao conector, a taxa contratada dividida pela média do BACEN e o enquadramento: faixa de mercado, zona de abusividade ou fortemente abusiva |
 | `revisao-bancaria` | Você envia contrato, extrato, faturas ou memória de cálculo | A análise completa, em etapas com aprovação |
-| `configurar` | Logo depois de instalar | Registra quem assina (OAB ou CRC), confere o Python e testa o conector |
+| `configurar` | Logo depois de instalar | Registra quem assina (OAB ou CRC), oferece a identidade visual do escritório, confere o Python e testa o conector |
 
 ## Como uma revisão acontece
 
@@ -101,15 +101,21 @@ precedente consolidado não concluem: aparecem como alerta, e a decisão é do a
 | Laudo PREMIUM | Laudo pericial em A4 com memória de cálculo, achados com fundamento, ressalvas (o que favorece o banco) e lacunas | O processo e o assistente técnico |
 | PANORAMA | Duas a três páginas com veredito, indicadores, gráficos comparativos e recomendação | Reunião com o cliente |
 | PLANILHA (Excel) | Painel na primeira aba, memória de cálculo, metodologia e lacunas | Conferência independente e anexo |
+| PDF | O laudo e o panorama já convertidos, ao lado de cada HTML, quando o computador tem Chrome, Edge, Chromium ou Brave; sem navegador, o HTML abre e se salva como PDF | Juntar aos autos e enviar ao cliente |
 | Resumo para a petição | Os achados organizados para a sua skill de peticionamento | A redação da inicial |
 | Agenda de pesquisa | Pedidos de pesquisa de jurisprudência (JusIA), num arquivo interno que nunca entra no laudo | Uso do escritório |
 
 - **Assinatura:** o laudo sai em nome de quem foi configurado. Laudo pericial é assinado por
   contador com CRC; parecer técnico, por advogado com OAB.
+- **Identidade visual (opcional):** na `configurar`, o plugin importa de uma skill de layout do
+  seu escritório as cores, as fontes, o logo, a linha do cabeçalho e o rodapé, e aplica tudo ao
+  laudo, ao panorama e à planilha. Sem isso, sai o visual padrão. O semáforo (vermelho, verde e
+  âmbar) nunca muda com a marca.
 - **Sem excesso:** quando não há o que cobrar, o veredito diz isso: "revisão contratual inviável
   — atacar a composição do débito".
-- **Conta corrente:** o resultado é uma faixa entre três cenários, não um número fechado, e serve
-  para pedir perícia contábil.
+- **Conta corrente:** sai no mesmo padrão dos contratos (laudo, panorama, planilha e PDF), com a
+  reconciliação do extrato, os três cenários lado a lado e o encontro de contas. O resultado é uma
+  faixa entre os cenários, não um número fechado, e serve para pedir perícia contábil.
 
 ## Instalação
 
@@ -125,6 +131,7 @@ VS Code ou JetBrains) e no **claude.ai** (chat e Cowork). Nos dois, ele precisa 
 | Claude Code com **login pela conta claude.ai** (Pro, Max, Team ou Enterprise) | É por esse login que o conector do claude.ai chega ao Claude Code. Login só com chave de API não traz o conector | `/status` mostra a conta. Para trocar, use `/login` |
 | **git** | O Claude Code baixa o plugin do GitHub com o git | `git --version` no terminal |
 | **Python 3.10+** ou **uv** | Os motores de cálculo são programas Python | Não precisa instalar antes: no primeiro uso, a skill `configurar` confere e, se faltar, oferece instalar o uv, sem pedir administrador |
+| **Chrome, Edge, Chromium ou Brave** (opcional) | O PDF do laudo e do panorama sai pronto; sem navegador, o HTML abre no navegador e se salva como PDF | O plugin o encontra sozinho; para indicar um específico, defina `REVISAO_BANCARIA_NAVEGADOR` com o caminho do executável |
 
 ### No Claude Code — passo a passo
 
@@ -240,7 +247,8 @@ Plugins ligados na sua conta claude.ai também chegam ao Claude Code do mesmo lo
 
 Diga **"configura a revisão bancária"** (ou rode `/revisao-bancaria:configurar`). O Claude confere
 o Python, roda o autoteste dos motores, pergunta quem assina os laudos — advogado com OAB ou
-contador com CRC — e confirma o conector com uma chamada.
+contador com CRC —, oferece a identidade visual do escritório (se houver uma skill de layout na
+sua sessão) e confirma o conector com uma chamada.
 
 ## Como pedir
 
@@ -252,7 +260,7 @@ contador com CRC — e confirma o conector com uma chamada.
 | faturas do cartão | caminho do **cartão** |
 | contrato habitacional, consolidação ou leilão | caminho **SFH/SFI** |
 | memória de cálculo de uma execução | auditoria da **memória do credor** antes de recalcular |
-| "gera o laudo" ao fim da análise | PREMIUM, PANORAMA e planilha, em nome de quem foi configurado |
+| "gera o laudo" ao fim da análise | PREMIUM, PANORAMA, planilha e os PDFs, em nome de quem foi configurado e com a identidade visual do escritório, se houver |
 
 ## O que tem no repositório
 
@@ -262,7 +270,7 @@ contador com CRC — e confirma o conector com uma chamada.
 | `skills/revisao-bancaria/SKILL.md` | O roteiro da análise: ordem das etapas e regras de conduta |
 | `skills/revisao-bancaria/camadas/` | Uma instrução para cada etapa |
 | `skills/revisao-bancaria/dados/regras-bancarias.json` | A base jurídica: 40 regras, 10 marcos temporais, 23 súmulas, 24 séries do BACEN e as pendências de jurisprudência |
-| `skills/revisao-bancaria/motores/` | Os programas de cálculo, o motor de regras e o gerador dos laudos |
+| `skills/revisao-bancaria/motores/` | Os programas de cálculo, o motor de regras e o gerador dos laudos (com a identidade visual e o PDF) |
 | `skills/revisao-bancaria/revisao.py` | O comando que o Claude usa para acionar os motores |
 | `skills/revisao-bancaria/referencia/` | Como consultar o conector, o formato dos dados do laudo e a pesquisa de base |
 | `skills/triagem/`, `skills/configurar/` | As duas skills auxiliares |
@@ -287,7 +295,8 @@ python skills/revisao-bancaria/revisao.py serie --buscar "cheque especial"
 ```
 
 Subcomandos: `autoteste`, `regras`, `regra`, `sumula`, `marcos`, `serie`, `razao`, `comparar`,
-`gerar` e `operador` — detalhes em [ARCHITECTURE.md](ARCHITECTURE.md).
+`gerar`, `operador` e `tema` — detalhes em [ARCHITECTURE.md](ARCHITECTURE.md). O `gerar` converte
+os HTML em PDF sozinho quando acha um navegador Chromium (`--pdf nao` desliga).
 
 ## Testes e manutenção
 
@@ -307,8 +316,8 @@ consistência falha se divergirem. Quem já instalou só recebe código novo qua
   (o `.gitignore` bloqueia PDFs, planilhas, HTML e payloads). Ao conector vão apenas códigos de
   série, datas e, na correção do indébito, valores e datas de pagamento — nunca nome, CPF ou o
   documento.
-- A identidade de quem assina fica na pasta de dados do plugin, fora do código, e nunca vem
-  pré-preenchida.
+- A identidade de quem assina e a identidade visual do escritório (`operador.json` e `tema.json`)
+  ficam na pasta de dados do plugin, fora do código, e nunca vêm pré-preenchidas.
 - A razão contratada/média é aritmética; a tese de juros abusivos depende do Tema 1378/STJ,
   pendente. Regras suspensas ou sem precedente consolidado não concluem: a decisão é do advogado.
 - Jurisprudência só do acervo do plugin, com ementa integral; o que não estiver lá vai para

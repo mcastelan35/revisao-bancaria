@@ -50,7 +50,9 @@ def versoes() -> dict[str, str | None]:
 def entra(arq: Path) -> bool:
     if not arq.is_file() or IGNORAR_PARTES & set(arq.parts):
         return False
-    if arq.suffix.lower() in IGNORAR_SUFIXOS or arq.name == "operador.json":
+    if arq.suffix.lower() in IGNORAR_SUFIXOS or arq.name in ("operador.json", "tema.json"):
+        return False
+    if arq.name.startswith("tema-logo."):                    # logo copiado do tema, na pasta de dados
         return False
     return True
 

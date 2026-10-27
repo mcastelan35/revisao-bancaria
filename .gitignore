@@ -17,8 +17,10 @@ INTERNO-*.md
 saida/
 casos/
 
-# Configuração local do operador (nome, OAB/CRC) — fica fora do plugin.
+# Configuração local do operador (nome, OAB/CRC) e do tema visual (logo do escritório) — fica fora do plugin.
 operador.json
+tema.json
+tema-logo.*
 
 # Nomes reais conferidos pela verificação de consistência (local, nunca publicado).
 ferramentas/identidades-locais.txt

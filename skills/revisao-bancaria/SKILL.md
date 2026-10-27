@@ -61,8 +61,9 @@ SKILL.md).
 | Série BACEN da modalidade | `<rb> serie --buscar "cheque especial"` · `<rb> serie --modalidade aquisicao_veiculo_pf` |
 | Razão contratada/média e limiares 1,5x / 2,0x | `<rb> razao --contratada-pct 2.99 --unidade-contratada am_efetiva --media-pct 1.85 --tipo T` |
 | Simulação Price/SAC contratado × revisado | `<rb> comparar --sistema price --pv 50000 --n 48 --taxa-contratada-pct 2.99 --taxa-revisada-pct 1.85` |
-| Entregáveis (L4, C6) | `<rb> gerar payload.json --saida <pasta de saída> --formatos premium,planilha --config-dir "${CLAUDE_PLUGIN_DATA}"` |
-| Operador (L-1) | `<rb> operador mostrar --config-dir "${CLAUDE_PLUGIN_DATA}"` · `<rb> operador salvar --tipo advogado\|contador --nome … --registro … --entidade … --cidade … --skill-peticao … --config-dir "${CLAUDE_PLUGIN_DATA}"` |
+| Entregáveis (L4, C6) | `<rb> gerar payload.json --saida <pasta de saída> --formatos premium,planilha --config-dir "${CLAUDE_PLUGIN_DATA}"` — PDF por padrão (`--pdf auto`; `sim` exige, `nao` desliga) e tema do escritório lido da pasta de configuração (`--sem-tema` força o padrão) |
+| Operador (L-1) | `<rb> operador mostrar --config-dir "${CLAUDE_PLUGIN_DATA}"` · `<rb> operador salvar --tipo advogado\|contador --nome … --registro … --entidade … --cidade … --skill-peticao … --skill-layout … --config-dir "${CLAUDE_PLUGIN_DATA}"` |
+| Identidade visual (opcional, `configurar`) | `<rb> tema mostrar --config-dir "${CLAUDE_PLUGIN_DATA}"` · `<rb> tema salvar --arquivo tema.json --config-dir "${CLAUDE_PLUGIN_DATA}"` · `<rb> tema remover --config-dir "${CLAUDE_PLUGIN_DATA}"` |
 
 Cálculo que a CLI não cobre (reconstrução pós-fixada, SFH, conta, cartão, decote, auditoria da
 memória do credor): numa sessão Python, `sys.path.insert(0, "<pasta da skill>")` e
@@ -202,10 +203,13 @@ falha de fonte.
     contém os juros sobre o encargo). Nunca corrigir monetariamente o `impacto_nominal` como se
     fosse valor presente; para `atualizar_debito` usar as diferenças parcela a parcela.
 14. **Relatório = payload renderizado.** Dois entregáveis (PREMIUM e PANORAMA) mais a
-    PLANILHA, por `<rb> gerar` a partir do payload do `referencia/payload-schema.md`. Não editar
-    CSS, não escrever HTML novo, não digitar número que não saiu do motor. Exceção declarada:
-    a rota CONTA, enquanto o renderizador não tiver o ramo `conta`, sai em HTML com o CSS de
-    `html-pdf-impressao-segura` (C6, item 3) — e o laudo diz isso na metodologia.
+    PLANILHA, por `<rb> gerar` a partir do payload do `referencia/payload-schema.md` — nas duas
+    rotas: a CONTA usa `ramo: "conta"` com o bloco montado por `conta_corrente.bloco_payload`.
+    Não editar CSS, não escrever HTML novo, não digitar número que não saiu do motor. Sem
+    exceção de rota. O PDF de cada HTML sai do próprio `gerar` quando houver navegador
+    Chromium (Chrome, Edge, Chromium ou Brave) e a identidade visual do escritório, quando
+    configurada (`tema.json`), é aplicada por ele; sem navegador, o HTML segue e o JSON do
+    `gerar` diz como fechar o PDF à mão.
 15. **Cartão é ramo próprio.** Sem Price nem SAC; a fatura é a fonte da taxa (ausente = lacuna,
     não média BACEN); IOF apartado do teto (Res. CMN 5.112/2023); competências anteriores a
     03/01/2024 ficam fora do teto; compras novas roladas constituem dívida própria
@@ -263,8 +267,9 @@ CONTA — a única via para tirar uma entrada de `[PENDENTE]`); skill de peticio
 na L-1 (`skill_peticao`, recebe o briefing da L4/C6); `briefing-estrategico` (risco para o
 cliente antes de ajuizar); `proposta-comercial` (prospecção); `liquidacao-correcao-debitos`
 (quando a correção do indébito exigir regime que o `atualizar_debito` não parametriza);
-`html-pdf-impressao-segura` (CSS do fallback CONTA); `design-quality-guard` (checklist
-visual). As skills externas são opcionais: ausentes, entregar o briefing em markdown. Conector
+`design-quality-guard` (checklist visual); a skill de layout do escritório (`skill_layout` do
+operador, de onde a `configurar` importou o `tema.json`; o `gerar` nunca a chama). As skills
+externas são opcionais: ausentes, entregar o briefing em markdown. Conector
 **Radar Apogeu**: `listar_series_bacen`, `consultar_taxa_bacen`, `consultar_indice`,
 `atualizar_debito`.
 

@@ -18,7 +18,8 @@ Passaram a ser **dois entregáveis mais uma planilha**, renderizados por
 | **PLANILHA** | XLSX único, dashboard na primeira aba, abas de memória, aba de metodologia e lacunas, A4 retrato ajustado à largura | Conferência independente, anexo processual |
 
 **O template não calcula mais nada.** Todo número vem do payload, produzido pelas camadas
-L0-L3 com `motores/calculo.py` e `motores/cet.py`. Ver `referencia/payload-schema.md`.
+L0-L3 com `motores/calculo.py` e `motores/cet.py`. Ver `referencia/payload-schema.md`. A rota
+CONTA usa o mesmo renderizador, no ramo `conta` (C6).
 
 ## Entrada
 
@@ -92,7 +93,7 @@ ser confundido com decimal.
 
 ```bash
 <rb> gerar payload.json --saida <diretório de saída da sessão> \
-    --formatos premium,planilha --config-dir "${CLAUDE_PLUGIN_DATA}"
+    --formatos premium,planilha --pdf auto --config-dir "${CLAUDE_PLUGIN_DATA}"
 ```
 
 O diretório de saída é o que a sessão usa para entregar arquivos ao usuário (varia por
@@ -101,10 +102,24 @@ fora do repositório do plugin. `marca` e `assinatura` ausentes do payload são 
 partir do operador gravado na L-1. `validar_detalhado()` roda antes de qualquer escrita — erro
 interrompe, aviso vai ao stderr e deve ser lido.
 
-**Passo 5 — Validar a paginação antes de entregar.** Renderizar em PDF e conferir que
-nenhuma página transborda e que não há folha meio vazia por bloco indivisível que não coube.
-Sobra de setenta a cem pixels ao pé da folha é a margem normal; acima de cento e trinta
-indica bloco que não coube e migrou inteiro. Só então entregar os arquivos ao usuário.
+- **PDF (`--pdf`).** `auto`, o padrão, converte cada HTML em PDF, ao lado dele e com o mesmo
+  nome, por um navegador Chromium instalado (Chrome, Edge, Chromium ou Brave). Sem navegador
+  nada falha: o HTML segue entregue e o JSON traz `"pdf": {"gerado": false, "motivo": …}` — diga
+  ao usuário que abra o HTML e salve como PDF. `sim` exige o PDF (sem ele, código de saída 1);
+  `nao` não tenta. Falha de conversão de um arquivo vem em `pdf.avisos`, não como erro.
+- **Tema.** A identidade visual do escritório (`tema.json`, gravado pela skill `configurar` na
+  mesma pasta do operador) é aplicada sozinha, e o JSON informa `"tema": "<nome>"` ou
+  `"padrao"`. `--sem-tema` força o visual padrão. O tema não muda cálculo, texto nem as cores do
+  semáforo (`referencia/payload-schema.md`, "Tema visual").
+- **Rota CONTA.** Mesmo comando, com `ramo: "conta"` no payload e o bloco `conta` montado por
+  `conta_corrente.bloco_payload` (C6, item 3).
+
+**Passo 5 — Validar a paginação antes de entregar.** Usar as `paginas` do JSON do `gerar` (uma
+por PDF): o PANORAMA é de duas a três páginas, e o JSON avisa "panorama passou de 3 páginas"
+quando passa — enxugar o texto ou as seções do `panorama` e gerar de novo; no PREMIUM, o número
+de páginas tem de ser compatível com o conteúdo, sem folha quase vazia por bloco indivisível que
+não coube e migrou inteiro. Sem PDF (`pdf.gerado: false`), conferir abrindo o HTML na
+visualização de impressão. Só então entregar os arquivos ao usuário.
 
 ## Gate pós-entrega
 

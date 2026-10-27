@@ -79,7 +79,8 @@ def test_empacotador_confere_versoes_e_filtra_arquivos(tmp_path):
     emp = _modulo(RAIZ / "ferramentas" / "empacotar_plugin.py")
     assert len(set(emp.versoes().values())) == 1
     lixo = [tmp_path / "__pycache__" / "x.pyc", tmp_path / "laudo.pdf", tmp_path / "extrato.csv",
-            tmp_path / "planilha.xlsx", tmp_path / "operador.json"]
+            tmp_path / "planilha.xlsx", tmp_path / "operador.json", tmp_path / "tema.json",
+            tmp_path / "tema-logo.png"]
     for arq in lixo:
         arq.parent.mkdir(parents=True, exist_ok=True)
         arq.write_text("x", encoding="utf-8")
@@ -91,7 +92,7 @@ def test_empacotador_confere_versoes_e_filtra_arquivos(tmp_path):
 
 def test_gitignore_protege_documentos_de_clientes():
     regras = _ler(".gitignore").splitlines()
-    for padrao in ("*.pdf", "*.csv", "*.xlsx", "*.docx", "operador.json", "INTERNO-*.md",
+    for padrao in ("*.pdf", "*.csv", "*.xlsx", "*.docx", "operador.json", "tema.json", "INTERNO-*.md",
                    "ferramentas/identidades-locais.txt", "dist/"):
         assert padrao in regras, padrao
 

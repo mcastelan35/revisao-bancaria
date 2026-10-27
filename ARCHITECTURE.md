@@ -63,13 +63,15 @@ revisao-bancaria/                         ← raiz do repositório = plugin = ma
 │   │       ├── conta_corrente.py         ← rota CONTA
 │   │       ├── regras.py                 ← motor de regras determinístico
 │   │       ├── operador.py               ← identidade de quem assina (fora do pacote, na pasta de dados)
-│   │       └── relatorios.py             ← renderizador único (PREMIUM, PANORAMA, planilha)
+│   │       ├── tema.py                   ← identidade visual dos entregáveis (cores, fontes, logo): tema.json ao lado do operador.json
+│   │       ├── pdf.py                    ← PDF de cada HTML por Chrome/Edge/Chromium/Brave instalado (sem dependência nova)
+│   │       └── relatorios.py             ← renderizador único (PREMIUM, PANORAMA, planilha), ramos instrumento e conta
 │   ├── triagem/SKILL.md                  ← taxa × média BACEN sem documento (uma chamada)
 │   └── configurar/SKILL.md               ← operador, ambiente e conector
 ├── ferramentas/
 │   ├── verificar_consistencia.py         ← docs ↔ JSON ↔ renderizador ↔ manifestos (exit 1 = divergência)
 │   └── empacotar_plugin.py               ← gera dist/revisao-bancaria-<versão>.plugin para o claude.ai
-├── tests/                                ← pytest: motores, motor de regras, operador, CLI, plugin
+├── tests/                                ← pytest: motores, motor de regras, operador, tema, PDF, ramo conta, CLI, plugin
 ├── .github/workflows/testes.yml          ← suíte em Windows e Linux a cada envio
 ├── CONECTOR.md                           ← instruções curtas para Projetos do claude.ai sem o plugin
 ├── ARCHITECTURE.md · CHANGELOG.md · README.md
@@ -98,7 +100,7 @@ USUÁRIO ─▶ R0 (gate de roteamento) ─▶ R0-b (nº de instrumentos) ─▶
    ▼ gate (números)         ▼ gate (cenário-líder)
  L4 payload → entrega     C5 nexo cruzado + exibição
                             ▼ gate
-                          C6 encontro de contas + entrega (fallback HTML declarado)
+                          C6 encontro de contas + entrega (`gerar`, ramo conta)
 ```
 
 Rota AMBAS: CONTA primeiro — o saldo recomposto e o `nexo_cruzado` alimentam o encontro de
@@ -141,10 +143,12 @@ derivados, marcos e regras citados existentes, `regras_afetadas` derivado do cor
 | `serie` | série BACEN da modalidade, sem gastar quota do conector |
 | `razao` | razão contratada/média, limiares 1,5x/2,0x (Decimal) |
 | `comparar` | Price/SAC contratado × revisado |
-| `gerar` | entregáveis a partir do payload, com marca e assinatura do operador |
-| `operador` | mostrar e salvar a identidade de quem assina |
+| `gerar` | entregáveis a partir do payload (ramo instrumento ou conta), com marca e assinatura do operador, o tema do escritório (`--sem-tema` o ignora) e o PDF de cada HTML (`--pdf auto\|sim\|nao`) |
+| `operador` | mostrar e salvar a identidade de quem assina (inclui `--skill-layout`, só registro) |
+| `tema` | mostrar, salvar (`--arquivo`) e remover a identidade visual dos entregáveis |
 
-Códigos de saída: 0 ok · 1 autoteste com falha · 2 erro de entrada · 3 operador não configurado.
+Códigos de saída: 0 ok · 1 autoteste com falha, ou `gerar --pdf sim` sem o PDF · 2 erro de
+entrada · 3 operador não configurado.
 
 ## Dependências externas
 
@@ -158,7 +162,8 @@ Códigos de saída: 0 ok · 1 autoteste com falha · 2 erro de entrada · 3 oper
 | `pesquisa-jurisprudencial-jusia` | Skill | Opcional (obrigatória p/ preencher o repertório CONTA e p/ pendências vencidas) | Validação de precedentes |
 | `briefing-estrategico` / `proposta-comercial` | Skill | Opcional | Risco para o cliente / prospecção |
 | `liquidacao-correcao-debitos` | Skill | Opcional | Regimes de correção fora do `atualizar_debito` |
-| `html-pdf-impressao-segura` | Skill | Opcional (fallback do entregável CONTA) | CSS anti-quebra |
+| Chrome, Edge, Chromium ou Brave | Navegador | Opcional | O `gerar` converte cada HTML em PDF (headless, perfil temporário); sem ele, só o HTML e o motivo no JSON |
+| Skill de layout do escritório | Skill | Opcional (escolhida na `configurar`) | Origem do `tema.json` (cores, fontes, logo); o `gerar` nunca a chama |
 | `design-quality-guard` | Skill | Opcional | Checklist visual |
 
 Orçamento de chamadas do caso típico: **uma** de dado (`consultar_taxa_bacen`, em lote quando
@@ -177,7 +182,15 @@ indexador custa uma chamada dedicada. Chamada é a unidade de quota do aluno.
   `regras_sem_cdc`; repetição de indébito em tipo consumerista que não é `consumo_pf`), o motor
   devolve `confirmar` com o motivo — não aplica nem descarta em silêncio.
 - **Relatório = payload renderizado** (regra 14), **um laudo por instrumento** (regra 25) e
-  **menor excesso** (regra 23) seguem como na v5.
+  **menor excesso** (regra 23) seguem como na v5. A rota CONTA usa o mesmo renderizador no ramo
+  `conta`, com o bloco montado por `conta_corrente.bloco_payload` a partir das saídas do motor.
+- **Tema fora do pacote.** `tema.json` fica ao lado do `operador.json` (mesma pasta de
+  configuração), com esquema fechado e cores do semáforo fixas. Sem tema, o HTML é o de sempre,
+  byte a byte (hash no teste). O logo é copiado para a pasta de dados na gravação.
+- **PDF sem dependência.** Um navegador Chromium já instalado converte o HTML (`--print-to-pdf`
+  em headless, perfil temporário). Sem navegador nada falha: o HTML segue e o JSON do `gerar` diz
+  o motivo. O Edge pode devolver o controle antes de gravar o arquivo, então o `pdf.py` espera o
+  PDF aparecer por inteiro.
 
 ## Motor de regras — estatísticas (v6.0.0)
 
@@ -211,33 +224,31 @@ base simples (menor excesso).
 
 1. Repertório jurisprudencial da rota CONTA: preencher as 7 teses via JusIA (inteiro teor
    conferido) — até lá a rota é **beta** e a C6 fundamenta só no `regras-bancarias.json`.
-2. Renderizador: ramo `conta` no payload-schema (reconciliação, trinca, série por competência)
-   para PREMIUM/PANORAMA saírem do renderizador único.
-3. **Decisão jurídica do autor — regras para PJ sem CDC.** `empresarial_pj.regras_sem_cdc`
+2. **Decisão jurídica do autor — regras para PJ sem CDC.** `empresarial_pj.regras_sem_cdc`
    lista R01, R02, R03, R17–R21 e R25, mas a L2 da v5 só excluía as regras exclusivas de
    `consumo_pf`. Regras `todos` fora da lista (R11, R12, R14, R16, R28–R33) hoje saem em
    `confirmar`. Definir regra a regra se dependem do CDC e atualizar a lista ou marcar
    `depende_cdc` no JSON.
-4. **Decisão jurídica do autor — consumidor fora de `consumo_pf`.** R26/R27 (dobro/simples) são
+3. **Decisão jurídica do autor — consumidor fora de `consumo_pf`.** R26/R27 (dobro/simples) são
    marcadas só para `consumo_pf`, mas a regra de conduta 9 as liga ao regime consumerista. Em
    cartão PF, cartão consignado e SFI consumerista elas saem em `confirmar`. Definir se as tags
    devem incluir esses tipos.
-5. Cartão como terceira rota explícita (F0–F3) em vez de ramo que atravessa L1–L3.
-6. Regressão com caso real anonimizado: rodar um extrato verdadeiro ponta a ponta e congelar
+4. Cartão como terceira rota explícita (F0–F3) em vez de ramo que atravessa L1–L3.
+5. Regressão com caso real anonimizado: rodar um extrato verdadeiro ponta a ponta e congelar
    como fixture, no molde do `teste-contrato-bacen.md`.
-7. Conferir o status dos temas em `pendencias_jurisprudenciais`: os conferidos em 26/08/2026
+6. Conferir o status dos temas em `pendencias_jurisprudenciais`: os conferidos em 26/08/2026
    valem até 24/11/2026 e os de 09/10/2026 até 07/01/2027 (validade de 90 dias); depois disso
    o motor passa a emitir o alerta vencido em toda análise que os invoque.
-8. Ramo SFH/SFI: completar relator, órgão e data de julgamento dos 15 precedentes `[CONFERIR]`
+7. Ramo SFH/SFI: completar relator, órgão e data de julgamento dos 15 precedentes `[CONFERIR]`
    no JSON; validar no TRF4 a recepção do REsp 2.086.650/MG (R35); congelar uma conta gráfica
    real da CEF como fixture de `tabela_sfh` (o autoteste usa fixture calculada à mão).
-9. Renderizador: ramo `sfh` no payload (credor × revisado de `comparar_sfh`, conta apartada e
+8. Renderizador: ramo `sfh` no payload (credor × revisado de `comparar_sfh`, conta apartada e
    checklist L2b) — até lá o laudo SFH/SFI usa a natureza `recomposicao` com a conta apartada
    declarada em texto.
-10. Séries longas passam pelo contexto do modelo (a resposta do conector precisa ser
+9. Séries longas passam pelo contexto do modelo (a resposta do conector precisa ser
     transcrita para o motor). Um modo do conector que entregue a série como arquivo, ou um
     recurso MCP, cortaria esse custo nas reconstruções pós-fixadas de vários anos.
-11. Agente de extração para extratos e faturas longos (C1 e cartão), para manter o contexto
+10. Agente de extração para extratos e faturas longos (C1 e cartão), para manter o contexto
     principal enxuto em casos de centenas de páginas.
 
 ## Benchmarks que mudam o plugin

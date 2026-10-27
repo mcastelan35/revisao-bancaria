@@ -17,6 +17,15 @@ O template não calcula mais nada. Todo número vem do payload, produzido pelas
 camadas L0-L3 com `calculo.py` e `cet.py`. Isso mantém a regra 12
 (cálculo só pelo motor) e torna possível cobrir qualquer sistema de amortização.
 
+DOIS RAMOS (campo `ramo` do payload)
+  · "instrumento" (padrão) — a seção 3 é a conferência do saldo (`conferencia`).
+  · "conta" — rota CONTA: a seção 3 é a reconciliação do extrato e a trinca de cenários
+    (`conta`, montado por `conta_corrente.bloco_payload` a partir das saídas do motor).
+
+IDENTIDADE VISUAL (`tema=` em render_* e gerar; ver `tema.py`)
+  Sem tema, o HTML é o do plugin, byte a byte. Com tema trocam cores de tinta e destaque,
+  fontes, cabeçalho (logo e linha) e rodapé; as cores do semáforo nunca mudam.
+
 USO
 ---
     python3 revisao.py gerar payload.json --saida <pasta de saída>
@@ -29,10 +38,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
+import re
 import sys
 from pathlib import Path
 
+from . import tema as tema_mod
 from .comum import (brl as _brl_comum, brl_rs as _brl_rs_comum, pct as _pct_comum,
                     rodar_autoteste, saida_utf8)
 
@@ -111,6 +123,17 @@ PRO_BANCO = {r for r, c in CORES.items() if c == "grn"}          # exigem `ressa
 PENDENTES = {"A verificar", "A demonstrar", "Lacuna"}             # sinalizados no laudo
 VEREDITOS = {"CONFORME", "DIVERGENTE"}
 NATUREZAS_CENARIOS = {"conferencia", "recomposicao"}
+RAMOS = ("instrumento", "conta")
+
+# Ramo CONTA: rótulos da trinca (usados no HTML e na planilha) e a advertência da regra de
+# conduta 20, que acompanha todo laudo de conta.
+ROTULOS_CENARIOS = {"C1_TAXA_MEDIA": "C1 — Taxa média BACEN",
+                    "C2_CAP_MENSAL": "C2 — Capitalização mensal",
+                    "C3_TAXA_LIMPA": "C3 — Só encargos sem lastro"}
+ADVERTENCIA_CONTA = ("Os valores apurados na conta corrente formam uma faixa entre cenários de "
+                     "recomposição e não um valor fechado. Eles instruem o pedido de prova "
+                     "pericial contábil e dependem de confirmação pericial.")
+TOLERANCIA_ENCONTRO = 0.01                  # simples + dobro = excesso final, em reais
 
 # Textos condicionais à natureza dos cenários (schema: `conferencia.natureza_cenarios`).
 # "conferencia" (default) é a rota pós-fixada/CET: os cenários só dimensionam o diferencial.
@@ -208,8 +231,92 @@ FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
           '&display=swap" rel="stylesheet">')
 
 
-def _cabecalho(p, titulo_doc):
+# ─────────────────────────────────────────────────────────────────────
+# IDENTIDADE VISUAL — `tema=None` é o plugin como sempre foi (mesmos bytes de HTML)
+# ─────────────────────────────────────────────────────────────────────
+
+#: Regras acrescentadas ao CSS só quando o tema traz logo ou linha de cabeçalho.
+CSS_CABECALHO_TEMA = """
+.id{display:flex;align-items:center;gap:10px}
+.logo{display:block;max-height:14mm;max-width:48mm;width:auto;height:auto}
+.linha{font-size:7.5pt;color:var(--mut);line-height:1.4;margin-top:2px}
+"""
+_ABERTURA_ROOT = ":root{--ink:#1A1714;--gold:#B08A4E;--glt:#EDE0B8;--gpale:#FAF7EF;"
+_FAMILIAS_CSS = re.compile(r"'(DM Sans|Space Grotesk|JetBrains Mono)'")
+
+
+def _tema_normalizado(tema) -> tuple[dict | None, list[str]]:
+    """`tema` como o chamador passou (None ou dict) -> (tema validado e completo, avisos).
+    ValueError se inválido, antes de qualquer escrita."""
+    return (None, []) if tema is None else tema_mod.validar(tema)
+
+
+def _css(tm) -> str:
+    """CSS do documento. Sem tema, o `CSS` do plugin. Com tema, as variáveis de cor e as famílias
+    de fonte trocadas numa passada só (o fallback de cada pilha fica); cores do semáforo, não."""
+    if tm is None:
+        return CSS
+    c, f = tm["cores"], tm["fontes"]
+    familias = {"DM Sans": f["texto"], "Space Grotesk": f["titulo"], "JetBrains Mono": f["mono"]}
+    css = CSS.replace(_ABERTURA_ROOT, f":root{{--ink:{c['tinta']};--gold:{c['destaque']};"
+                                      f"--glt:{c['destaque_claro']};--gpale:{c['fundo_destaque']};")
+    css = css.replace("color:#7A5F10",
+                      f"color:{tema_mod.cor_texto_destaque(c['destaque'], c['fundo_destaque'])}")
+    css = _FAMILIAS_CSS.sub(lambda m: f"'{familias[m.group(1)]}'", css)
+    return css + (CSS_CABECALHO_TEMA if tm.get("logo") or tm.get("cabecalho_linha") else "")
+
+
+def _fontes_html(tm) -> str:
+    """Tags `<link>` das fontes. O link do Google das fontes padrão só vai para as famílias
+    padrão que o tema ainda usa; a URL do tema, quando há, substitui o padrão."""
+    if tm is None:
+        return FONTES
+    url = tema_mod.url_fontes(tm)
+    if url is None:
+        return ""
+    if url == tema_mod.FONTES_URL_PADRAO:
+        return FONTES
+    return ('<link rel="preconnect" href="https://fonts.googleapis.com">'
+            '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+            f'<link href="{esc(url)}" rel="stylesheet">')
+
+
+def _cor_destaque(tm) -> str:
+    """Cor das barras sem `cor` própria: o destaque do tema (no padrão, o dourado do plugin)."""
+    return "#B08A4E" if tm is None else tm["cores"]["destaque"]
+
+
+def _ramo(p) -> str:
+    return p.get("ramo") or "instrumento"
+
+
+def rotulo_cenario(codigo) -> str:
+    """Rótulo da trinca da rota CONTA ('C1_TAXA_MEDIA' -> 'C1 — Taxa média BACEN'); código
+    desconhecido volta como veio."""
+    return ROTULOS_CENARIOS.get(codigo, str(codigo))
+
+
+def _data_br(texto) -> str:
+    """'2019-01-02' -> '02/01/2019'; '2021-03' -> '03/2021'; outro texto volta como veio."""
+    s = str(texto)
+    m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", s)
+    if m:
+        return f"{m[3]}/{m[2]}/{m[1]}"
+    m = re.fullmatch(r"(\d{4})-(\d{2})", s)
+    return f"{m[2]}/{m[1]}" if m else s
+
+
+def _cabecalho(p, titulo_doc, tm=None):
     m = p["marca"]
+    if tm is not None and (tm.get("logo") or tm.get("cabecalho_linha")):
+        logo = tema_mod.logo_data_uri(tm)
+        img = f'<img class="logo" src="{logo}" alt="">' if logo else ""
+        linha = f'<div class="linha">{esc(tm["cabecalho_linha"])}</div>' if tm.get("cabecalho_linha") else ""
+        return f"""  <div class="hdr">
+    <div class="id">{img}<div><div class="marca">{esc(m['nome'])}<span>.</span></div>{linha}</div></div>
+    <div class="hdr-ref"><strong>{esc(titulo_doc)}</strong>
+      {esc(p['identificacao'].get('referencia', ''))}<br>{esc(p['emissao'])}</div>
+  </div>"""
     return f"""  <div class="hdr">
     <div class="marca">{esc(m['nome'])}<span>.</span></div>
     <div class="hdr-ref"><strong>{esc(titulo_doc)}</strong>
@@ -229,10 +336,11 @@ def _assinatura(p):
   </div>"""
 
 
-def _rodape(p):
+def _rodape(p, tm=None):
+    texto = tm.get("rodape") if tm is not None else None
     return (f'  <div class="rod"><span>{esc(p["marca"]["nome"])} — '
             f'{esc(p["identificacao"].get("referencia",""))}</span>'
-            f'<span>Documento confidencial</span></div>')
+            f'<span>{esc(texto or tema_mod.RODAPE_PADRAO)}</span></div>')
 
 
 def _tabela_conferencia(p):
@@ -283,8 +391,9 @@ def _frase_diferenca(diferenca) -> str:
     return f"O saldo recalculado excede o apurado pela credora em {brl_rs(abs(d))}"
 
 
-def render_premium(p: dict) -> str:
-    i, c = p["identificacao"], p["conferencia"]
+def _secao3_instrumento(p) -> str:
+    """Seção 3 do ramo INSTRUMENTO: conferência do saldo devedor."""
+    c = p["conferencia"]
     veredito = c["veredito"]
     textos = TEXTOS_CENARIOS.get(c.get("natureza_cenarios") or "conferencia",
                                  TEXTOS_CENARIOS["conferencia"])
@@ -294,6 +403,86 @@ def render_premium(p: dict) -> str:
                 f'<div class="cx al"><b>Divergência apurada.</b> {_frase_diferenca(c["diferenca"])}, '
                 f'equivalentes a {pct(abs(float(c["diferenca_pct"])),2)} do montante.</div>')
     nota_cenarios = f'<div class="cx nt">{textos["nota"]}</div>'
+    return (f'  <div class="faixa">3 — Conferência do saldo devedor — veredito {esc(veredito)}</div>\n'
+            f'  {cx_saldo}\n  {_tabela_conferencia(p)}\n  {nota_cenarios}')
+
+
+def _secao3_conta(p) -> str:
+    """Seção 3 do ramo CONTA: reconciliação do extrato, trinca de cenários, encontro de contas,
+    procedência das séries, correção do conector (se houver) e a advertência da regra 20."""
+    c = p["conta"]
+    rec, enc, lider = c["reconciliacao"], c["encontro"], c["cenario_lider"]
+    jan = rec["janela"]
+    caixa = (f'<div class="cx ok"><b>Reconciliação do extrato — {esc(rec["veredito"])}.</b> O saldo '
+             f'recomposto a partir dos lançamentos coincide com o saldo impresso nos '
+             f'{esc(rec["pontos_conferidos"])} pontos de conferência, na janela de '
+             f'{esc(_data_br(jan["data_inicial"]))} a {esc(_data_br(jan["data_final"]))}, sem '
+             f'competência sem lançamento. A extração está reconciliada, condição para a '
+             f'apuração que segue.</div>')
+
+    linhas = ""
+    for cen in c["cenarios"]:
+        rot = esc(rotulo_cenario(cen["cenario"]))
+        if cen.get("omitido"):
+            linhas += (f'<tr><td>{rot}</td><td colspan="2"><b class="amb">Omitido.</b> '
+                       f'{esc(cen["motivo"])}</td></tr>')
+            continue
+        lid = "<br><b>cenário líder</b>" if cen["cenario"] == lider else ""
+        desfav = ("" if cen["favoravel"] else
+                  '<br><b class="amb">Desfavorável: não reduz o saldo cobrado (ver ressalvas).</b>')
+        linhas += (f'<tr><td><b>{rot}</b>{lid}</td><td>{esc(cen["condicao"])}{desfav}</td>'
+                   f'<td class="n {"red" if cen["favoravel"] else "amb"}">{brl(cen["excesso_final"])}</td></tr>')
+    trinca = (f'<table><thead><tr><th>Cenário</th><th>Condição de aplicabilidade</th>'
+              f'<th class="n">Excesso final (R$)</th></tr></thead><tbody>{linhas}</tbody></table>')
+
+    quadro = (f'<table><thead><tr><th>Encontro de contas (cenário líder: {esc(rotulo_cenario(lider))})</th>'
+              f'<th class="n">Valor (R$)</th></tr></thead><tbody>'
+              f'<tr><td>Base de repetição simples — competências até a de corte '
+              f'({esc(_data_br(enc["competencia_corte"]))}, inclusive)</td>'
+              f'<td class="n">{brl(enc["base_repeticao_simples"])}</td></tr>'
+              f'<tr><td>Base de repetição em dobro — competências posteriores ao corte '
+              f'(só no regime consumerista)</td><td class="n">{brl(enc["base_repeticao_dobro"])}</td></tr>'
+              f'</tbody><tfoot><tr><td>Excesso final (soma das bases)</td>'
+              f'<td class="n">{brl(enc["excesso_final"])}</td></tr></tfoot></table>'
+              f'<div class="cx nt">{esc(enc["nota"])}</div>')
+
+    series = "".join(f'<tr><td>{esc(s["serie"])}</td><td class="c">{esc(s["codigo"])}</td>'
+                     f'<td>{esc(s["procedencia"])}</td><td class="c">{esc(s["periodo"])}</td></tr>'
+                     for s in c["series"])
+    bloco_series = (f'<table><thead><tr><th>Série consultada</th><th class="c">Código</th>'
+                    f'<th>Procedência</th><th class="c">Período</th></tr></thead>'
+                    f'<tbody>{series}</tbody></table>' if series else
+                    "<p>Nenhuma série externa foi declarada nesta apuração.</p>")
+
+    corr = c.get("correcao")
+    bloco_corr = ""
+    if corr:
+        bloco_corr = (f'<table><thead><tr><th>Correção do indébito (conector)</th>'
+                      f'<th class="n">Resultado</th></tr></thead><tbody>'
+                      f'<tr><td>Valor corrigido</td><td class="n">{brl_rs(corr["valor_corrigido"])}</td></tr>'
+                      f'<tr><td>Data final</td><td class="n">{esc(_data_br(corr["data_final"]))}</td></tr>'
+                      f'<tr><td>Índice / regime</td><td class="n">{esc(corr["indice"])}</td></tr>'
+                      f'<tr><td>Hash de auditoria</td><td class="n">{esc(corr["hash"])}</td></tr>'
+                      f'</tbody></table>')
+
+    return (f'  <div class="faixa">3 — Reconciliação do extrato e recomposição da conta</div>\n'
+            f'  {caixa}\n'
+            f'  <p><b>Trinca de cenários.</b> Cada cenário reconstrói a conta dia a dia sob uma '
+            f'premissa, declarada na coluna de condição; o excesso é a diferença entre o saldo '
+            f'cobrado e o que o cenário admite. O cenário líder, indicado na tabela, sustenta o '
+            f'encontro de contas; os demais compõem a faixa.</p>\n'
+            f'  {trinca}\n'
+            f'  {quadro}\n'
+            f'  <p><b>Procedência das séries.</b></p>\n'
+            f'  {bloco_series}\n'
+            f'  {bloco_corr}\n'
+            f'  <div class="cx nt">{ADVERTENCIA_CONTA}</div>')
+
+
+def render_premium(p: dict, tema: dict | None = None) -> str:
+    tm, _ = _tema_normalizado(tema)
+    i = p["identificacao"]
+    secao3 = _secao3_conta(p) if _ramo(p) == "conta" else _secao3_instrumento(p)
 
     premissas = ""
     if p.get("premissas"):
@@ -333,7 +522,7 @@ def render_premium(p: dict) -> str:
         m = p["memoria"]
         linhas = "".join("<tr>" + "".join(
             f'<td class="{"n" if isinstance(v,(int,float)) and not isinstance(v,bool) else "c"}">'
-            f'{brl(v) if isinstance(v,(int,float)) and not isinstance(v,bool) else esc(v)}</td>'
+            f'{(brl(v, 0) if isinstance(v, int) else brl(v)) if isinstance(v,(int,float)) and not isinstance(v,bool) else esc(v)}</td>'
             for v in row) + "</tr>" for row in m["linhas"])
         memoria = (f'<div class="faixa">{esc(m["titulo"])}</div><p>{esc(m.get("nota",""))}</p>'
                    f'<table><thead><tr>' +
@@ -347,8 +536,8 @@ def render_premium(p: dict) -> str:
                   f'<tbody>{docs}</tbody></table>' if docs else "")
 
     return f"""<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>{esc(p['titulo'])}</title>{FONTES}<style>{CSS}</style></head><body><div class="doc">
-{_cabecalho(p, p['tipo_doc'])}
+<title>{esc(p['titulo'])}</title>{_fontes_html(tm)}<style>{_css(tm)}</style></head><body><div class="doc">
+{_cabecalho(p, p['tipo_doc'], tm)}
   <h1>{esc(p['titulo'])}</h1>
   <div class="sub">{esc(p['subtitulo'])}</div>
   <div class="kpis">{kpis}</div>
@@ -365,10 +554,7 @@ def render_premium(p: dict) -> str:
   conclusão estão declaradas em seção própria, e os achados correspondentes foram classificados
   como pendentes de verificação.</div>
 
-  <div class="faixa">3 — Conferência do saldo devedor — veredito {esc(veredito)}</div>
-  {cx_saldo}
-  {_tabela_conferencia(p)}
-  {nota_cenarios}
+{secao3}
 
   <div class="faixa">4 — Quadro de achados</div>
   {_tabela_achados(p)}
@@ -387,7 +573,7 @@ def render_premium(p: dict) -> str:
   {conclusao}
 
 {_assinatura(p)}
-{_rodape(p)}
+{_rodape(p, tm)}
 </div></body></html>"""
 
 
@@ -395,30 +581,80 @@ def render_premium(p: dict) -> str:
 # ENTREGÁVEL 2 — PANORAMA (panorâmica estratégica executiva)
 # ─────────────────────────────────────────────────────────────────────
 
-def render_panorama(p: dict) -> str:
-    c = p["conferencia"]
+def _barras(barras: list, cor_padrao: str) -> str:
+    """Barras comparativas. Valor negativo (ex.: saldo credor) não vira largura negativa:
+    barra vazia + rótulo."""
+    html = ""
+    mx = max([float(b["valor"]) for b in barras] + [0.0]) or 1
+    for b in barras:
+        v = float(b["valor"])
+        w = max(0.0, v / mx * 100)
+        neg = " (negativo)" if v < 0 else ""
+        html += (f'<div style="font-size:7.5pt;color:var(--mut);margin-top:5px">'
+                 f'{esc(b["rotulo"])} — <b style="color:var(--ink)">{brl_rs(v)}</b>{neg}</div>'
+                 f'<div class="barra"><i style="width:{w:.1f}%;background:{esc(b.get("cor", cor_padrao))}"></i></div>')
+    return html
+
+
+def _lider_conta(p) -> dict:
+    """O cenário líder da rota CONTA, tal como está em `conta.cenarios`."""
+    c = p["conta"]
+    return next(x for x in c["cenarios"] if x["cenario"] == c["cenario_lider"])
+
+
+def _panorama_conta(p) -> tuple[str, str, str, str]:
+    """(classe do selo, texto do selo, parágrafo da reconciliação, barras dos cenários) do
+    PANORAMA da rota CONTA. O selo diz se há excesso no cenário líder — o CONFORME da
+    reconciliação prova a extração, não a ausência de excesso."""
+    c = p["conta"]
+    lider = _lider_conta(p)
+    rot = rotulo_cenario(lider["cenario"])
+    if lider["favoravel"]:
+        selo = "al"
+        padrao = (f"No cenário líder ({rot}) a conta apresenta excesso de "
+                  f"{brl_rs(lider['excesso_final'])} sobre o admitido por esse cenário. O valor "
+                  f"integra uma faixa entre cenários e depende de confirmação pericial.")
+    else:
+        selo = "ok"
+        padrao = (f"No cenário líder ({rot}) a conta não apresenta excesso: o saldo cobrado não "
+                  f"supera o que esse cenário admite.")
+    texto = (p.get("panorama") or {}).get("selo") or padrao
+    rec = c["reconciliacao"]
+    jan = rec["janela"]
+    verificado = (f'<p><b>Reconciliação do extrato — {esc(rec["veredito"])}.</b> O saldo recomposto '
+                  f'coincide com o saldo impresso nos {esc(rec["pontos_conferidos"])} pontos de '
+                  f'conferência, entre {esc(_data_br(jan["data_inicial"]))} e '
+                  f'{esc(_data_br(jan["data_final"]))}. Isso prova a extração; o excesso, quando há, '
+                  f'vem da recomposição abaixo.</p>')
+    barras = [{"rotulo": rotulo_cenario(x["cenario"]) + (" (líder)" if x["cenario"] == c["cenario_lider"] else ""),
+               "valor": x["excesso_final"],
+               "cor": "var(--ink)" if x["cenario"] == c["cenario_lider"] else "var(--gold)"}
+              for x in c["cenarios"] if not x.get("omitido")]
+    return selo, texto, verificado, _barras(barras, "var(--gold)")
+
+
+def render_panorama(p: dict, tema: dict | None = None) -> str:
+    tm, _ = _tema_normalizado(tema)
     kpis = "".join(
         f'<div class="kpi"><div class="lab">{esc(k["lab"])}</div>'
         f'<div class="n {k.get("cor","")}">{esc(k["val"])}</div>'
         f'<div class="s">{esc(k.get("sub",""))}</div></div>' for k in p["kpis"])
 
-    selo = ("ok" if c["veredito"] == "CONFORME" else "al")
-    txt_selo = (p["panorama"]["selo"] if p.get("panorama", {}).get("selo") else
-                ("O saldo cobrado confere com a metodologia do contrato."
-                 if c["veredito"] == "CONFORME" else
-                 "O saldo cobrado diverge da metodologia do contrato."))
-
-    barras = ""
-    if p.get("panorama", {}).get("barras"):
-        # Valor negativo (ex.: saldo credor) não vira largura negativa: barra vazia + rótulo.
-        mx = max([float(b["valor"]) for b in p["panorama"]["barras"]] + [0.0]) or 1
-        for b in p["panorama"]["barras"]:
-            v = float(b["valor"])
-            w = max(0.0, v / mx * 100)
-            neg = " (negativo)" if v < 0 else ""
-            barras += (f'<div style="font-size:7.5pt;color:var(--mut);margin-top:5px">'
-                       f'{esc(b["rotulo"])} — <b style="color:var(--ink)">{brl_rs(v)}</b>{neg}</div>'
-                       f'<div class="barra"><i style="width:{w:.1f}%;background:{esc(b.get("cor","#B08A4E"))}"></i></div>')
+    verificado = "".join(f"<p>{esc(t)}</p>" for t in p['panorama']['verificado'])
+    advertencia = ""
+    if _ramo(p) == "conta":
+        selo, txt_selo, rec_conta, barras = _panorama_conta(p)
+        verificado = rec_conta + verificado
+        advertencia = f'\n  <div class="cx nt">{ADVERTENCIA_CONTA}</div>'
+    else:
+        c = p["conferencia"]
+        selo = ("ok" if c["veredito"] == "CONFORME" else "al")
+        txt_selo = (p["panorama"]["selo"] if p.get("panorama", {}).get("selo") else
+                    ("O saldo cobrado confere com a metodologia do contrato."
+                     if c["veredito"] == "CONFORME" else
+                     "O saldo cobrado diverge da metodologia do contrato."))
+        barras = _barras(p["panorama"]["barras"], _cor_destaque(tm)) \
+            if p.get("panorama", {}).get("barras") else ""
 
     secoes = "".join(
         f'<div class="faixa">{esc(s["titulo"])}</div>' + "".join(f"<p>{esc(t)}</p>" for t in s["paragrafos"])
@@ -432,16 +668,16 @@ def render_panorama(p: dict) -> str:
 
     return f"""<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
 <title>Panorâmica estratégica — {esc(p['identificacao'].get('referencia',''))}</title>
-{FONTES}<style>{CSS}</style></head><body><div class="doc">
-{_cabecalho(p, 'Panorâmica estratégica')}
+{_fontes_html(tm)}<style>{_css(tm)}</style></head><body><div class="doc">
+{_cabecalho(p, 'Panorâmica estratégica', tm)}
   <h1>{esc(p['panorama']['titulo'])}</h1>
   <div class="sub">{esc(p['panorama']['subtitulo'])}</div>
   <div class="kpis">{kpis}</div>
   <div class="cx {selo}"><b>Veredito.</b> {esc(txt_selo)}</div>
 
   <div class="faixa">O que foi verificado</div>
-  {"".join(f"<p>{esc(t)}</p>" for t in p['panorama']['verificado'])}
-  {barras}
+  {verificado}
+  {barras}{advertencia}
 
 {secoes}
 
@@ -453,7 +689,7 @@ def render_panorama(p: dict) -> str:
   {bloco_pend}
 
 {_assinatura(p)}
-{_rodape(p)}
+{_rodape(p, tm)}
 </div></body></html>"""
 
 
@@ -464,15 +700,29 @@ def render_panorama(p: dict) -> str:
 XLSX_AMB, XLSX_ABG = "FF8A6A1F", "FFFDF8EC"      # âmbar — mesmo par do CSS (--amb/--abg)
 
 
-def render_planilha(p: dict, destino: Path) -> Path:
+def render_planilha(p: dict, destino: Path, tema: dict | None = None) -> Path:
     if openpyxl is None:
         raise ImportError("openpyxl não está instalado e a planilha foi pedida — "
                           "instale (`pip install openpyxl`) ou gere sem `planilha` em --formatos.")
+    tm, _ = _tema_normalizado(tema)
 
     GOLD, GPALE, GLT = "FFB8952E", "FFFAF7EF", "FFEDE0B8"
     INK, MUT, RED, GRN = "FF1A1A1A", "FF888888", "FFA62B2B", "FF2F6B45"
     RBG, GBG = "FFFCF3F3", "FFF2F8F4"
     AMB, ABG = XLSX_AMB, XLSX_ABG
+    FAIXA_TXT = "FF7A5F10"                         # texto das faixas de seção (destaque escurecido)
+    if tm is not None:                             # cor do tema só onde ela difere da padrão
+        padrao, c = tema_mod.PADRAO["cores"], tm["cores"]
+        if c["destaque"] != padrao["destaque"]:
+            GOLD = tema_mod.argb(c["destaque"])
+        if c["fundo_destaque"] != padrao["fundo_destaque"]:
+            GPALE = tema_mod.argb(c["fundo_destaque"])
+        if c["destaque_claro"] != padrao["destaque_claro"]:
+            GLT = tema_mod.argb(c["destaque_claro"])
+        if c["tinta"] != padrao["tinta"]:
+            INK = tema_mod.argb(c["tinta"])
+        FAIXA_TXT = tema_mod.argb(tema_mod.cor_texto_destaque(c["destaque"], c["fundo_destaque"]))
+    conta = _ramo(p) == "conta"
     # Mesma classificação do HTML (CORES): verde / vermelho / âmbar; fora da lista, sem cor.
     PALETA = {"grn": (GBG, GRN), "red": (RBG, RED), "amb": (ABG, AMB)}
     thin = Side("thin", color="FFD9D9D9")
@@ -514,7 +764,7 @@ def render_planilha(p: dict, destino: Path) -> Path:
     def faixa(ws, r, txt, ncols):
         ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=ncols)
         c = ws.cell(r, 1, txt)
-        c.font = F(9, True, "FF7A5F10")
+        c.font = F(9, True, FAIXA_TXT)
         c.fill = fill(GPALE)
         c.alignment = Alignment(horizontal="left", vertical="center", indent=1)
         for j in range(1, ncols + 1):
@@ -530,6 +780,22 @@ def render_planilha(p: dict, destino: Path) -> Path:
             c.alignment = CE
             c.border = BD
         ws.row_dimensions[r].height = 24
+        return r + 1
+
+    def linha_valor(ws, r, rotulo, valor, formato=None, cor=INK):
+        """Linha 'rótulo | valor' do dashboard da rota CONTA (B | C:D mesclado)."""
+        ws.cell(r, 2, rotulo).font = F(8, False, MUT)
+        ws.cell(r, 2).alignment = LE
+        ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=4)
+        numero = isinstance(valor, (int, float)) and not isinstance(valor, bool)
+        cel = ws.cell(r, 3, valor)
+        cel.font = F(9, True, cor)
+        cel.alignment = RI if numero else LE
+        if numero and formato:
+            cel.number_format = formato
+        for j in range(2, 5):
+            ws.cell(r, j).border = BD
+        ws.row_dimensions[r].height = 15
         return r + 1
 
     # ---- aba 1: dashboard
@@ -583,31 +849,90 @@ def render_planilha(p: dict, destino: Path) -> Path:
         r += 1
 
     r += 1
-    r = faixa(ws, r, f"CONFERÊNCIA DO SALDO — VEREDITO {p['conferencia']['veredito']}", 8)
-    r = cab(ws, r, ["", "Premissa de evolução do débito", "Taxa a.a.", "Saldo (R$)", "", "Diferença (R$)", "", ""])
-    for l in p["conferencia"]["cenarios"]:
-        ws.cell(r, 2, l["premissa"]).font = F(8)
-        ws.cell(r, 2).alignment = LE
-        taxa = taxa_aa_pct(l.get("taxa_aa"))
-        ws.cell(r, 3, (taxa if taxa is not None else "—")).alignment = CE
-        ws.cell(r, 3).font = F(8)
-        if taxa is not None:
-            ws.cell(r, 3).number_format = '0.0000"%"'
-        ws.merge_cells(start_row=r, start_column=4, end_row=r, end_column=5)
-        cv = ws.cell(r, 4, float(l["saldo"]))
-        cv.number_format = M
-        cv.font = F(9, True)
-        cv.alignment = RI
-        ws.merge_cells(start_row=r, start_column=6, end_row=r, end_column=8)
-        cd = ws.cell(r, 6, float(l["diferenca"]) if l.get("diferenca") is not None else "—")
-        if l.get("diferenca") is not None:
-            cd.number_format = M
-        cd.font = F(9, True)
-        cd.alignment = RI
-        for j in range(2, 9):
-            ws.cell(r, j).border = BD
-        ws.row_dimensions[r].height = 15
+    if conta:
+        cc = p["conta"]
+        rec, enc, lider_nome = cc["reconciliacao"], cc["encontro"], cc["cenario_lider"]
+        jan, lider = rec["janela"], _lider_conta(p)
+        r = faixa(ws, r, f"RECONCILIAÇÃO DO EXTRATO — VEREDITO {rec['veredito']}", 8)
+        r = linha_valor(ws, r, "Pontos conferidos", rec["pontos_conferidos"])
+        r = linha_valor(ws, r, "Janela da apuração",
+                        f"{_data_br(jan['data_inicial'])} a {_data_br(jan['data_final'])}")
+        r = linha_valor(ws, r, "Divergências de saldo", len(rec["divergencias"]))
+        r = linha_valor(ws, r, "Competências sem lançamento", len(rec["competencias_sem_lancamento"]))
+
         r += 1
+        r = faixa(ws, r, "TRINCA DE CENÁRIOS — FAIXA, NÃO PONTO", 8)
+        r = cab(ws, r, ["", "Cenário", "Excesso final (R$)", "", "Condição de aplicabilidade", "", "", ""])
+        ws.merge_cells(start_row=r - 1, start_column=3, end_row=r - 1, end_column=4)
+        ws.merge_cells(start_row=r - 1, start_column=5, end_row=r - 1, end_column=8)
+        for cen in cc["cenarios"]:
+            eh_lider = cen["cenario"] == lider_nome
+            ws.cell(r, 2, rotulo_cenario(cen["cenario"]) + (" (líder)" if eh_lider else "")).font = F(8, True)
+            ws.cell(r, 2).alignment = LE
+            ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=4)
+            ws.merge_cells(start_row=r, start_column=5, end_row=r, end_column=8)
+            if cen.get("omitido"):
+                valor = ws.cell(r, 3, "—")
+                valor.font, valor.alignment = F(9, True), CE
+                texto = f"Omitido — {cen['motivo']}"
+            else:
+                valor = ws.cell(r, 3, float(cen["excesso_final"]))
+                valor.number_format = M
+                valor.font, valor.alignment = F(9, True, RED if cen["favoravel"] else AMB), RI
+                texto = cen["condicao"] + ("" if cen["favoravel"] else
+                                           " — Desfavorável: não reduz o saldo cobrado (ver ressalvas).")
+            ws.cell(r, 5, texto).font = F(8, False, "FF4A4A4A")
+            ws.cell(r, 5).alignment = LE
+            for j in range(2, 9):
+                ws.cell(r, j).border = BD
+                if eh_lider:
+                    ws.cell(r, j).fill = fill(GPALE)
+            ws.row_dimensions[r].height = max(15, 11 * -(-len(texto) // 70))
+            r += 1
+
+        r += 1
+        r = faixa(ws, r, f"ENCONTRO DE CONTAS (CENÁRIO LÍDER: {rotulo_cenario(lider_nome).upper()})", 8)
+        r = linha_valor(ws, r, "Base de repetição simples (R$)", float(enc["base_repeticao_simples"]), M)
+        r = linha_valor(ws, r, "Base de repetição em dobro (R$)", float(enc["base_repeticao_dobro"]), M)
+        r = linha_valor(ws, r, "Excesso final (R$)", float(enc["excesso_final"]), M,
+                        RED if lider["favoravel"] else AMB)
+        r = linha_valor(ws, r, "Competência de corte", _data_br(enc["competencia_corte"]))
+        for texto, negrito, bg, tam in ((enc["nota"], False, None, 110), (ADVERTENCIA_CONTA, True, GPALE, 110)):
+            ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=8)
+            ws.cell(r, 2, texto).font = F(8, negrito, INK if negrito else MUT)
+            ws.cell(r, 2).alignment = LE
+            for j in range(2, 9):
+                if bg:
+                    ws.cell(r, j).fill = fill(bg)
+                ws.cell(r, j).border = BD
+            ws.row_dimensions[r].height = max(15, 11 * -(-len(texto) // tam))
+            r += 1
+    else:
+        r = faixa(ws, r, f"CONFERÊNCIA DO SALDO — VEREDITO {p['conferencia']['veredito']}", 8)
+        r = cab(ws, r, ["", "Premissa de evolução do débito", "Taxa a.a.", "Saldo (R$)", "", "Diferença (R$)", "", ""])
+        for l in p["conferencia"]["cenarios"]:
+            ws.cell(r, 2, l["premissa"]).font = F(8)
+            ws.cell(r, 2).alignment = LE
+            taxa = taxa_aa_pct(l.get("taxa_aa"))
+            ws.cell(r, 3, (taxa if taxa is not None else "—")).alignment = CE
+            ws.cell(r, 3).font = F(8)
+            if taxa is not None:
+                ws.cell(r, 3).number_format = '0.0000"%"'
+            ws.merge_cells(start_row=r, start_column=4, end_row=r, end_column=5)
+            cv = ws.cell(r, 4, float(l["saldo"]))
+            cv.number_format = M
+            cv.font = F(9, True)
+            cv.alignment = RI
+            ws.merge_cells(start_row=r, start_column=6, end_row=r, end_column=8)
+            cd = ws.cell(r, 6, float(l["diferenca"]) if l.get("diferenca") is not None else "—")
+            if l.get("diferenca") is not None:
+                cd.number_format = M
+            cd.font = F(9, True)
+            cd.alignment = RI
+            for j in range(2, 9):
+                ws.cell(r, j).border = BD
+            ws.row_dimensions[r].height = 15
+            r += 1
 
     r += 1
     r = faixa(ws, r, "SÍNTESE DOS ACHADOS", 8)
@@ -645,7 +970,7 @@ def render_planilha(p: dict, destino: Path) -> Path:
                 cel.border = BD
                 cel.font = F(8)
                 if isinstance(v, (int, float)) and not isinstance(v, bool):
-                    cel.number_format = M
+                    cel.number_format = "#,##0" if isinstance(v, int) else M
                     cel.alignment = RI
                 else:
                     cel.alignment = CE if j <= 2 else LE
@@ -660,7 +985,7 @@ def render_planilha(p: dict, destino: Path) -> Path:
                 cel.font = F(9, True)
                 cel.border = Border(thin, thin, Side("medium", color=GOLD), thin)
                 if isinstance(v, (int, float)) and not isinstance(v, bool):
-                    cel.number_format = M
+                    cel.number_format = "#,##0" if isinstance(v, int) else M
                     cel.alignment = RI
         ws.freeze_panes = "A4"
 
@@ -680,6 +1005,50 @@ def render_planilha(p: dict, destino: Path) -> Path:
         for j in (2, 3):
             ws.cell(r, j).border = BD
         ws.row_dimensions[r].height = 26
+        r += 1
+    if conta:
+        cc = p["conta"]
+        r += 1
+        r = faixa(ws, r, "SÉRIES CONSULTADAS", 3)
+        for s in cc["series"]:
+            ws.cell(r, 2, f"{s['serie']} (código {s['codigo']})").font = F(8, True)
+            ws.cell(r, 2).alignment = LE
+            ws.cell(r, 3, f"Procedência: {s['procedencia']}. Período: {s['periodo']}.").font = \
+                F(8, False, "FF4A4A4A")
+            ws.cell(r, 3).alignment = LE
+            for j in (2, 3):
+                ws.cell(r, j).border = BD
+            ws.row_dimensions[r].height = 26
+            r += 1
+        if not cc["series"]:
+            ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
+            ws.cell(r, 2, "Nenhuma série externa foi declarada nesta apuração.").font = F(8, False, "FF4A4A4A")
+            r += 1
+        if cc.get("correcao"):
+            cor = cc["correcao"]
+            r += 1
+            r = faixa(ws, r, "CORREÇÃO DO INDÉBITO (CONECTOR)", 3)
+            for rotulo, valor in (("Valor corrigido (R$)", float(cor["valor_corrigido"])),
+                                  ("Data final", _data_br(cor["data_final"])),
+                                  ("Índice / regime", cor["indice"]), ("Hash de auditoria", cor["hash"])):
+                ws.cell(r, 2, rotulo).font = F(8, True)
+                ws.cell(r, 2).alignment = LE
+                ws.cell(r, 3, valor).font = F(8, False, "FF4A4A4A")
+                ws.cell(r, 3).alignment = LE
+                if isinstance(valor, float):
+                    ws.cell(r, 3).number_format = M
+                for j in (2, 3):
+                    ws.cell(r, j).border = BD
+                r += 1
+        r += 1
+        r = faixa(ws, r, "ADVERTÊNCIA", 3)
+        ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
+        ws.cell(r, 2, ADVERTENCIA_CONTA).font = F(8, True)
+        ws.cell(r, 2).alignment = LE
+        for j in (2, 3):
+            ws.cell(r, j).fill = fill(GPALE)
+            ws.cell(r, j).border = BD
+        ws.row_dimensions[r].height = 28
         r += 1
     if p.get("premissas"):
         r += 1
@@ -721,6 +1090,7 @@ def render_planilha(p: dict, destino: Path) -> Path:
 # ORQUESTRAÇÃO
 # ─────────────────────────────────────────────────────────────────────
 
+# No ramo "conta", `conferencia` dá lugar a `conta` (ver `validar_detalhado`).
 OBRIGATORIOS = ["marca", "titulo", "subtitulo", "tipo_doc", "emissao", "identificacao",
                 "kpis", "objeto", "metodologia", "conferencia", "achados", "conclusao",
                 "assinatura", "panorama"]
@@ -732,14 +1102,24 @@ def validar_detalhado(p: dict, formatos: set[str] | None = None) -> dict:
     `erros` recusa a geração; `avisos` não recusam (vão ao stderr em `gerar()`).
 
     Sub-chaves só são inspecionadas quando o bloco pai existe e é do tipo certo — o bloco
-    ausente já consta em `erros` pelo nome, sem ruído de sub-chaves."""
+    ausente já consta em `erros` pelo nome, sem ruído de sub-chaves.
+
+    `ramo` ("instrumento", o padrão, ou "conta") decide qual bloco é exigido: `conferencia` ou
+    `conta` (este, com as travas da rota CONTA, em `_validar_conta`)."""
     formatos = formatos or {"premium", "panorama", "planilha"}
     erros: list[str] = []
     avisos: list[str] = []
     if not isinstance(p, dict):
         return {"erros": ["payload não é um objeto JSON"], "avisos": []}
 
+    ramo = p.get("ramo") or "instrumento"
+    if ramo not in RAMOS:
+        erros.append(f"ramo ({ramo!r} — esperado instrumento ou conta)")
     exigidos = [k for k in OBRIGATORIOS if k != "panorama" or "panorama" in formatos]
+    if ramo == "conta":                  # a seção 3 vem do bloco `conta`, não de `conferencia`
+        exigidos = ["conta" if k == "conferencia" else k for k in exigidos]
+    elif ramo != "instrumento":
+        exigidos = [k for k in exigidos if k != "conferencia"]
     erros += [k for k in exigidos if k not in p]
 
     def bloco(nome, tipo=dict):
@@ -784,7 +1164,15 @@ def validar_detalhado(p: dict, formatos: set[str] | None = None) -> dict:
             if not isinstance(item, dict) or "lab" not in item or "val" not in item:
                 erros.append(f"kpis[{k}] (lab/val)")
 
-    c = bloco("conferencia")
+    if ramo == "conta":
+        _validar_conta(p, erros, avisos)
+        if p.get("conferencia") is not None:
+            avisos.append("conferencia presente e ignorada: no ramo conta a seção 3 vem de `conta`")
+    elif p.get("conta") is not None:
+        avisos.append("bloco `conta` presente, mas `ramo` é instrumento — para laudo de conta use "
+                      "`ramo: \"conta\"`")
+
+    c = bloco("conferencia") if ramo == "instrumento" else None
     if c is not None:
         chaves(c, "conferencia", ("veredito", "data_base", "diferenca_pct"))
         ver = c.get("veredito")
@@ -841,19 +1229,159 @@ def validar_detalhado(p: dict, formatos: set[str] | None = None) -> dict:
     if "panorama" in formatos:
         pan = bloco("panorama")
         if pan is not None:
-            chaves(pan, "panorama", ("titulo", "subtitulo", "selo", "verificado", "barras",
-                                     "secoes", "recomendacao"))
+            # No ramo conta o selo e as barras saem de `conta` (o líder e os cenários não omitidos);
+            # `selo` do payload, se vier, substitui só o texto padrão.
+            chaves(pan, "panorama", ("titulo", "subtitulo", "verificado", "secoes", "recomendacao")
+                   if ramo == "conta" else
+                   ("titulo", "subtitulo", "selo", "verificado", "barras", "secoes", "recomendacao"))
             for nome in ("verificado", "secoes", "recomendacao"):
                 if nome in pan and not isinstance(pan[nome], list):
                     erros.append(f"panorama.{nome} (lista)")
             for k, s in enumerate(pan.get("secoes") or []):
                 if not isinstance(s, dict) or "titulo" not in s or "paragrafos" not in s:
                     erros.append(f"panorama.secoes[{k}] (titulo/paragrafos)")
-            for k, b in enumerate(pan.get("barras") or []):
+            for k, b in enumerate((pan.get("barras") or []) if ramo != "conta" else []):
                 if not isinstance(b, dict) or "rotulo" not in b or "valor" not in b:
                     erros.append(f"panorama.barras[{k}] (rotulo/valor)")
 
     return {"erros": erros, "avisos": avisos}
+
+
+def _numero(v) -> bool:
+    """Número JSON de verdade: nem booleano, nem texto, nem NaN/infinito."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def _validar_conta(p: dict, erros: list, avisos: list) -> None:
+    """Bloco `conta` do ramo CONTA. Além da estrutura, aqui estão as travas de conteúdo da rota:
+    extração não reconciliada é lacuna bloqueante (C1), o líder tem de existir e ter rodado,
+    simples + dobro fecha com o excesso final, e cenário desfavorável vai em `ressalvas`."""
+    c = p.get("conta")
+    if c is None:
+        return                                       # já consta em `erros` pelo nome
+    if not isinstance(c, dict):
+        erros.append("conta (esperado dict)")
+        return
+
+    def chaves(obj, prefixo, nomes):
+        erros.extend(f"{prefixo}.{k}" for k in nomes if k not in obj)
+
+    chaves(c, "conta", ("reconciliacao", "cenarios", "cenario_lider", "encontro", "series"))
+
+    rec = c.get("reconciliacao")
+    if rec is not None and not isinstance(rec, dict):
+        erros.append("conta.reconciliacao (esperado dict)")
+    elif rec is not None:
+        chaves(rec, "conta.reconciliacao", ("veredito", "pontos_conferidos", "divergencias",
+                                            "competencias_sem_lancamento", "janela"))
+        ver = rec.get("veredito")
+        if "veredito" in rec and ver not in VEREDITOS:
+            erros.append(f"conta.reconciliacao.veredito ({ver!r} — esperado CONFORME ou DIVERGENTE)")
+        elif ver == "DIVERGENTE":
+            erros.append("conta.reconciliacao.veredito (DIVERGENTE: lacuna bloqueante — o saldo "
+                         "recomposto não fecha com o impresso; corrigir a extração na C1 antes do laudo)")
+        for nome, causa in (("divergencias", "lançamento perdido, duplicado ou com valor errado"),
+                            ("competencias_sem_lancamento", "extrato faltante — pedir o período ao usuário")):
+            valor = rec.get(nome)
+            if nome in rec and not isinstance(valor, list):
+                erros.append(f"conta.reconciliacao.{nome} (esperada lista)")
+            elif valor:
+                erros.append(f"conta.reconciliacao.{nome} (não vazia, {len(valor)} item(ns): lacuna "
+                             f"bloqueante — {causa})")
+        pontos = rec.get("pontos_conferidos")
+        if "pontos_conferidos" in rec and (not isinstance(pontos, int) or isinstance(pontos, bool)
+                                           or pontos < 0):
+            erros.append("conta.reconciliacao.pontos_conferidos (esperado inteiro >= 0)")
+        elif pontos == 0:
+            avisos.append("conta.reconciliacao.pontos_conferidos=0 — a extração não foi conferida contra "
+                          "nenhum saldo impresso; preencher `saldo_informado` na C1 dá poder à reconciliação")
+        jan = rec.get("janela")
+        if "janela" in rec:
+            if not isinstance(jan, dict):
+                erros.append("conta.reconciliacao.janela (esperado dict)")
+            else:
+                chaves(jan, "conta.reconciliacao.janela", ("data_inicial", "data_final"))
+
+    por_nome: dict = {}
+    cenarios = c.get("cenarios")
+    if "cenarios" in c:
+        if not isinstance(cenarios, list) or not cenarios:
+            erros.append("conta.cenarios (esperada lista não vazia)")
+        else:
+            tem_ressalvas = isinstance(p.get("ressalvas"), list) and \
+                any(str(t).strip() for t in p["ressalvas"])
+            for k, x in enumerate(cenarios):
+                pre = f"conta.cenarios[{k}]"
+                if not isinstance(x, dict) or not isinstance(x.get("cenario"), str) or not x["cenario"]:
+                    erros.append(f"{pre} (esperado objeto com `cenario`)")
+                    continue
+                if x["cenario"] in por_nome:
+                    erros.append(f"{pre}.cenario ({x['cenario']!r} repetido)")
+                por_nome[x["cenario"]] = x
+                if x.get("omitido"):
+                    if not x.get("motivo"):
+                        erros.append(f"{pre}.motivo (obrigatório no cenário omitido)")
+                    continue
+                chaves(x, pre, ("condicao", "excesso_final", "favoravel"))
+                if "excesso_final" in x and not _numero(x["excesso_final"]):
+                    erros.append(f"{pre}.excesso_final (esperado número)")
+                if "favoravel" in x and not isinstance(x["favoravel"], bool):
+                    erros.append(f"{pre}.favoravel (esperado booleano)")
+                if x.get("favoravel") is False and not tem_ressalvas:
+                    erros.append(f"{pre}.favoravel=false exige `ressalvas` não vazio — cenário "
+                                 "desfavorável é reportado, não escondido")
+
+    lider_nome = c.get("cenario_lider")
+    if "cenario_lider" in c and por_nome:
+        if not isinstance(lider_nome, str) or lider_nome not in por_nome:
+            erros.append(f"conta.cenario_lider ({lider_nome!r} não consta de conta.cenarios)")
+        elif por_nome[lider_nome].get("omitido"):
+            erros.append(f"conta.cenario_lider ({lider_nome!r} foi omitido e não pode ser o líder)")
+
+    enc = c.get("encontro")
+    if enc is not None and not isinstance(enc, dict):
+        erros.append("conta.encontro (esperado dict)")
+    elif enc is not None:
+        valores = ("excesso_final", "base_repeticao_simples", "base_repeticao_dobro")
+        chaves(enc, "conta.encontro", (*valores, "competencia_corte", "nota"))
+        invalidos = [n for n in valores if n in enc and not _numero(enc[n])]
+        erros.extend(f"conta.encontro.{n} (esperado número)" for n in invalidos)
+        if all(n in enc for n in valores) and not invalidos:
+            soma = enc["base_repeticao_simples"] + enc["base_repeticao_dobro"]
+            if abs(soma - enc["excesso_final"]) > TOLERANCIA_ENCONTRO + 1e-9:
+                erros.append(f"conta.encontro (base_repeticao_simples + base_repeticao_dobro = {brl(soma)}, "
+                             f"mas excesso_final = {brl(enc['excesso_final'])}; tolerância de 0,01)")
+            lider = por_nome.get(lider_nome) if isinstance(lider_nome, str) else None
+            if lider and not lider.get("omitido") and _numero(lider.get("excesso_final")) and \
+                    abs(lider["excesso_final"] - enc["excesso_final"]) > TOLERANCIA_ENCONTRO + 1e-9:
+                avisos.append(f"conta.encontro.excesso_final ({brl(enc['excesso_final'])}) difere do "
+                              f"excesso do cenário líder ({brl(lider['excesso_final'])}) — o encontro "
+                              "deve vir do mesmo cenário")
+        if enc.get("cenario") is not None and enc["cenario"] != lider_nome:
+            erros.append(f"conta.encontro.cenario ({enc['cenario']!r}) difere do cenario_lider "
+                         f"({lider_nome!r})")
+
+    series = c.get("series")
+    if "series" in c:
+        if not isinstance(series, list):
+            erros.append("conta.series (esperada lista)")
+        else:
+            for k, s in enumerate(series):
+                if not isinstance(s, dict):
+                    erros.append(f"conta.series[{k}] (esperado objeto)")
+                else:
+                    chaves(s, f"conta.series[{k}]", ("serie", "codigo", "procedencia", "periodo"))
+            if not series:
+                avisos.append("conta.series vazia — a procedência das séries consultadas deve constar do laudo")
+
+    corr = c.get("correcao")
+    if corr is not None:
+        if not isinstance(corr, dict):
+            erros.append("conta.correcao (esperado dict)")
+        else:
+            chaves(corr, "conta.correcao", ("valor_corrigido", "data_final", "indice", "hash"))
+            if "valor_corrigido" in corr and not _numero(corr["valor_corrigido"]):
+                erros.append("conta.correcao.valor_corrigido (esperado número)")
 
 
 def validar(p: dict, formatos: set[str] | None = None) -> list[str]:
@@ -878,8 +1406,9 @@ def render_agenda(p: dict) -> str:
 
 
 def gerar(payload: dict, saida: Path, slug: str = None,
-          formatos: set[str] | None = None) -> list[Path]:
+          formatos: set[str] | None = None, tema: dict | None = None) -> list[Path]:
     """formatos: subconjunto de {"premium","panorama","planilha"}. None = todos.
+    tema: identidade visual (`tema.py`); None = o visual padrão do plugin.
 
     A validação é condicional ao que foi pedido no gate de entrega: exigir `panorama`
     quando só o laudo foi solicitado é incoerência entre o gate e o validador.
@@ -890,7 +1419,10 @@ def gerar(payload: dict, saida: Path, slug: str = None,
         raise ValueError("payload incompleto — campos ausentes ou inválidos: " + ", ".join(v["erros"]))
     for a in v["avisos"]:
         print(f"  aviso: {a}", file=sys.stderr)
-    # Dependência conferida ANTES de qualquer escrita: sem openpyxl, nada sai pela metade.
+    # Tema e dependência conferidos ANTES de qualquer escrita: nada sai pela metade.
+    tm, avisos_tema = _tema_normalizado(tema)
+    for a in avisos_tema:
+        print(f"  aviso: tema: {a}", file=sys.stderr)
     if "planilha" in formatos and openpyxl is None:
         raise ImportError("openpyxl não está instalado e a planilha foi pedida — nenhum arquivo "
                           "foi gerado. Instale (`pip install openpyxl`) ou gere sem `planilha` "
@@ -901,7 +1433,7 @@ def gerar(payload: dict, saida: Path, slug: str = None,
     out = []
     if "premium" in formatos:
         f1 = saida / f"laudo-premium-{slug}.html"
-        f1.write_text(render_premium(payload), encoding="utf-8")
+        f1.write_text(render_premium(payload, tm), encoding="utf-8")
         out.append(f1)
     if payload.get("agenda_jusia"):
         fa = saida / f"INTERNO-agenda-pesquisa-{slug}.md"
@@ -909,10 +1441,10 @@ def gerar(payload: dict, saida: Path, slug: str = None,
         out.append(fa)
     if "panorama" in formatos:
         f2 = saida / f"panorama-estrategico-{slug}.html"
-        f2.write_text(render_panorama(payload), encoding="utf-8")
+        f2.write_text(render_panorama(payload, tm), encoding="utf-8")
         out.append(f2)
     if "planilha" in formatos:
-        out.append(render_planilha(payload, saida / f"planilha-{slug}.xlsx"))
+        out.append(render_planilha(payload, saida / f"planilha-{slug}.xlsx", tm))
     return out
 
 
@@ -971,6 +1503,115 @@ def _payload_demo() -> dict:
                                  "paragrafos": ["O custo informado é 2,76 vezes menor que o praticado."]}],
                      "recomendacao": ["Atacar o vício de informação, não o quantum do saldo."]},
     }
+
+
+def _payload_demo_conta() -> dict:
+    """Payload sintético do ramo CONTA, com nomes genéricos e valores fictícios: serve ao
+    autoteste e aos testes, nunca a um caso. O bloco `conta` tem a forma que
+    `conta_corrente.bloco_payload` produz a partir das saídas do motor."""
+    p = _payload_demo()
+    p.pop("conferencia")
+    p.update({
+        "ramo": "conta",
+        "titulo": "Recomposição de conta corrente com cheque especial",
+        "subtitulo": "Conta de demonstração — payload sintético do autoteste, sem dado de caso real.",
+        "identificacao": {"referencia": "DEMO-CONTA-0001", "slug": "demo-conta", "campos": [
+            ("Titular", "Titular Exemplo Ltda.", "extrato"),
+            ("Instituição", "Banco Exemplo S.A.", "extrato"),
+            ("Agência / conta", "0000 / 00000-0", "extrato"),
+            ("Modalidade", "Cheque especial PJ", "extrato"),
+            ("Período apurado", "02/01/2019 a 28/06/2024", "extrato"),
+        ]},
+        "kpis": [{"lab": "Excesso — cenário líder", "val": "R$ 48.213,55", "cor": "red",
+                  "sub": "C1 — Taxa média BACEN"},
+                 {"lab": "Reconciliação do extrato", "val": "CONFORME", "cor": "grn",
+                  "sub": "212 pontos conferidos"},
+                 {"lab": "Cenários apurados", "val": "2 de 3", "sub": "C2 omitido, sem taxa contratada"},
+                 {"lab": "Base do dobro", "val": "R$ 16.343,45", "sub": "após o corte de 03/2021"}],
+        "objeto": ["Payload sintético do ramo CONTA para o autoteste do renderizador: reconciliação "
+                   "do extrato, trinca de cenários e encontro de contas."],
+        "documentos": [("Extratos de conta corrente (jan/2019 a jun/2024)", "28/06/2024",
+                        "instituição financeira")],
+        "metodologia": [
+            "Saldo diário reconstruído lançamento a lançamento a partir do CSV canônico aprovado na "
+            "extração e conferido, dia a dia, contra o saldo impresso no extrato.",
+            "Juros pelo método hamburguês sobre o saldo devedor diário, taxa-dia linear_mes, "
+            "capitalização mensal e imputação dos créditos aos juros antes do capital (art. 354 do CC).",
+            "Taxa média da modalidade obtida da série oficial do BACEN pelo conector, com a procedência "
+            "registrada na tabela de séries."],
+        "achados": [
+            {"id": "A1", "tier": "T1", "resultado": "Excesso",
+             "titulo": "Juros debitados acima da taxa média da modalidade",
+             "detalhe": "O cenário C1 apura excesso sobre o saldo cobrado (seção 3).",
+             "fundamento": "Súmula 530/STJ — taxa média de mercado quando a taxa contratada não é comprovada."},
+            {"id": "A2", "tier": "T2", "resultado": "A verificar",
+             "titulo": "Capitalização diária não comprovada como pactuada",
+             "detalhe": "Depende do instrumento de abertura do limite, não exibido.",
+             "fundamento": "Arts. 396 a 404 do CPC — exibição de documento."},
+            {"id": "A3", "tier": "—", "resultado": "Conforme",
+             "titulo": "Reconciliação do extrato fechou em todos os pontos conferidos",
+             "detalhe": "Nenhum lançamento perdido ou duplicado na extração.",
+             "fundamento": "Reconciliação por dia contra o saldo impresso."}],
+        "ressalvas": ["O cenário C3 mantém os juros cobrados e apura excesso menor; a escolha do "
+                      "cenário líder depende do exame do instrumento, que não foi exibido."],
+        "lacunas": ["Instrumento de abertura da conta e do limite de cheque especial não apresentado.",
+                    "Taxa contratada não comprovada: o cenário C2 não foi apurado."],
+        "agenda_jusia": ["Pesquisar o tratamento da capitalização diária em conta corrente sem "
+                         "pactuação expressa."],
+        "memoria": {"titulo": "Indébito por competência (extrato)", "nota": "Demonstração.",
+                    "colunas": ["#", "Competência", "Excesso (R$)"],
+                    "linhas": [[1, "2021-02", 120.15], [2, "2021-03", 98.40]]},
+        "abas": [{"nome": "Indébito por competência", "titulo": "INDÉBITO POR COMPETÊNCIA",
+                  "nota": "Demonstração.", "colunas": ["#", "Competência", "Excesso (R$)"],
+                  "larguras": [7, 14, 18], "linhas": [[1, "2021-02", 120.15], [2, "2021-03", 98.40]],
+                  "totais": ["TOTAIS", "—", 218.55]}],
+        "conclusao": ["No cenário líder a conta apresenta excesso; o valor integra uma faixa entre "
+                      "cenários e depende de prova pericial contábil."],
+        "conta": {
+            "reconciliacao": {"veredito": "CONFORME", "pontos_conferidos": 212, "divergencias": [],
+                              "competencias_sem_lancamento": [],
+                              "janela": {"data_inicial": "2019-01-02", "data_final": "2024-06-28"}},
+            "cenarios": [
+                {"cenario": "C1_TAXA_MEDIA",
+                 "condicao": "Taxa contratada abusiva (razão ≥ limiar) ou não comprovada (Súmula 530/STJ): "
+                             "juros recompostos pela taxa média BACEN da modalidade, capitalização "
+                             "mensal; encargos sem lastro expurgados",
+                 "excesso_final": 48213.55, "favoravel": True},
+                {"cenario": "C2_CAP_MENSAL", "omitido": True,
+                 "motivo": ("taxa ausente: nenhuma taxa comprovada nos documentos para este cenário, "
+                            "que por isso não foi apurado (lacuna)")},
+                {"cenario": "C3_TAXA_LIMPA",
+                 "condicao": "Juros e capitalização mantidos como cobrados; ataque restrito aos "
+                             "encargos sem lastro contratual (tarifas, seguros, CP disfarçada) e "
+                             "seu efeito composto no saldo",
+                 "excesso_final": 9120.40, "favoravel": True}],
+            "cenario_lider": "C1_TAXA_MEDIA",
+            "encontro": {"cenario": "C1_TAXA_MEDIA", "excesso_final": 48213.55,
+                         "base_repeticao_simples": 31870.10, "base_repeticao_dobro": 16343.45,
+                         "competencia_corte": "2021-03",
+                         "nota": "valores nominais por competência; incrementos negativos abatem a base "
+                                 "da respectiva fase (simples + dobro = excesso final); a competência "
+                                 "2021-03, que contém o corte de 2021-03-30 (Tema 929), entra inteira na "
+                                 "base simples — critério de menor excesso; correção monetária e a "
+                                 "aplicação do dobro vão ao conector (atualizar_debito, valores[]) na C6"},
+            "series": [{"serie": "Taxa média de juros — cheque especial PJ (série fictícia)",
+                        "codigo": "000000",
+                        "procedencia": "SGS/BACEN, via cache do conector (valor oficial congelado)",
+                        "periodo": "01/2019 a 06/2024"}],
+            "correcao": {"valor_corrigido": 61478.22, "data_final": "2024-06-28",
+                         "indice": "IPCA + taxa legal (regime de demonstração)",
+                         "hash": "9f2c4e1a7b3d5860"}},
+        "panorama": {"titulo": "Panorâmica estratégica da conta",
+                     "subtitulo": "Síntese para reunião com o cliente.",
+                     "verificado": ["Reconstruímos a conta a partir dos extratos e conferimos cada "
+                                    "lançamento contra o saldo impresso."],
+                     "secoes": [{"titulo": "Onde estão os problemas",
+                                 "paragrafos": ["O cenário líder aponta excesso sobre o saldo cobrado; "
+                                                "os demais cenários formam a faixa."]}],
+                     "recomendacao": ["Requerer prova pericial contábil e a exibição do instrumento "
+                                      "de abertura da conta."]},
+    })
+    return p
 
 
 def _autoteste() -> tuple[int, int, int]:
@@ -1207,6 +1848,187 @@ def _autoteste() -> tuple[int, int, int]:
         and "metodologia efetivamente pactuada" not in hq)
     chk("natureza default mantem a nota de conferencia",
         "não constituem proposta de recomposição" in h1 and "metodologia efetivamente pactuada" in h1)
+
+    # ------------------------------------------------------------------ ramo CONTA
+    pc = _payload_demo_conta()
+    hc1, hc2 = render_premium(pc), render_panorama(pc)
+    chk("conta: payload demo e valido, sem o bloco conferencia",
+        validar(pc) == [] and "conferencia" not in pc and pc["ramo"] == "conta")
+    chk("conta: premium troca a seção 3 pela reconciliação e recomposição da conta",
+        "3 — Reconciliação do extrato e recomposição da conta" in hc1
+        and "Conferência do saldo devedor" not in hc1 and "Reconciliação do extrato — CONFORME" in hc1
+        and "212 pontos de conferência" in hc1 and "02/01/2019 a 28/06/2024" in hc1)
+    chk("conta: premium mantem as outras seções, na mesma ordem",
+        [hc1.index(f) for f in ("1 — Objeto", "2 — Metodologia", "3 — Reconciliação", "4 — Quadro de achados",
+                                "5 — Lacunas", "6 — Conclusão")] == sorted(
+            hc1.index(f) for f in ("1 — Objeto", "2 — Metodologia", "3 — Reconciliação",
+                                   "4 — Quadro de achados", "5 — Lacunas", "6 — Conclusão")))
+    chk("conta: advertência fixa em caixa nt logo depois da seção 3",
+        f'<div class="cx nt">{ADVERTENCIA_CONTA}</div>' in hc1
+        and hc1.index("Correção do indébito") < hc1.index(ADVERTENCIA_CONTA) < hc1.index("4 — Quadro de achados"))
+    chk("conta: trinca com rótulos, líder marcado e cenário omitido com o motivo",
+        all(r in hc1 for r in ROTULOS_CENARIOS.values()) and hc1.count("cenário líder") >= 1
+        and "Omitido." in hc1 and "nenhuma taxa comprovada nos documentos" in hc1)
+    chk("conta: encontro de contas com as duas bases, o corte e a nota do motor",
+        all(t in hc1 for t in ("31.870,10", "16.343,45", "48.213,55", "03/2021", "critério de menor excesso")))
+    chk("conta: procedência das séries e correção do conector",
+        "Série consultada" in hc1 and "000000" in hc1 and "Correção do indébito (conector)" in hc1
+        and "9f2c4e1a7b3d5860" in hc1 and "R$ 61.478,22" in hc1 and "28/06/2024" in hc1)
+    chk("conta: panorama — o selo diz que há excesso no líder, o CONFORME do extrato vai à parte",
+        '<div class="cx al"><b>Veredito.</b> No cenário líder (C1 — Taxa média BACEN)' in hc2
+        and "excesso de R$ 48.213,55" in hc2 and "Reconciliação do extrato — CONFORME" in hc2)
+    chk("conta: panorama com barras só dos cenários não omitidos, e a advertência",
+        hc2.count('class="barra"') == 2 and "(líder)" in hc2 and "Capitalização mensal" not in hc2
+        and ADVERTENCIA_CONTA in hc2 and "Panorâmica estratégica" in hc2)
+    q = clone(pc)
+    q["conta"]["cenarios"][0].update(excesso_final=-35.33, favoravel=False)
+    chk("conta: líder sem excesso => selo verde, e o cenário desfavorável sai marcado",
+        '<div class="cx ok"><b>Veredito.</b> No cenário líder (C1 — Taxa média BACEN) a conta não'
+        in render_panorama(q) and "Desfavorável" in render_premium(q))
+    chk("conta: selo do payload substitui só o texto padrão",
+        "Selo do payload." in render_panorama({**pc, "panorama": {**pc["panorama"], "selo": "Selo do payload."}}))
+
+    def recusa_conta(nome, mut, chave):
+        q = clone(pc)
+        mut(q)
+        e = validar(q)
+        chk(f"conta: validar recusa {nome}", e != [] and any(chave in x for x in e), str(e)[:70])
+
+    recusa_conta("reconciliação DIVERGENTE",
+                 lambda q: q["conta"]["reconciliacao"].update(veredito="DIVERGENTE"), "DIVERGENTE")
+    recusa_conta("competência sem lançamento",
+                 lambda q: q["conta"]["reconciliacao"].update(competencias_sem_lancamento=["2021-05"]),
+                 "competencias_sem_lancamento")
+    recusa_conta("divergência de saldo mesmo com veredito CONFORME",
+                 lambda q: q["conta"]["reconciliacao"].update(divergencias=[{"data": "2021-05-03"}]),
+                 "divergencias")
+    recusa_conta("simples + dobro que não fecha com o excesso final",
+                 lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=16000.0),
+                 "base_repeticao_simples + base_repeticao_dobro")
+    recusa_conta("diferença de 0,02 entre as bases e o excesso",
+                 lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=16343.47), "excesso_final")
+    recusa_conta("líder omitido", lambda q: q["conta"].update(cenario_lider="C2_CAP_MENSAL"), "omitido")
+    recusa_conta("líder que não consta dos cenários",
+                 lambda q: q["conta"].update(cenario_lider="C9"), "cenario_lider")
+    recusa_conta("encontro de outro cenário",
+                 lambda q: q["conta"]["encontro"].update(cenario="C3_TAXA_LIMPA"), "encontro.cenario")
+    recusa_conta("cenário desfavorável sem ressalva",
+                 lambda q: (q["conta"]["cenarios"][2].update(favoravel=False, excesso_final=-10.0),
+                            q.pop("ressalvas")), "favoravel=false")
+    recusa_conta("valor monetário em texto",
+                 lambda q: q["conta"]["cenarios"][0].update(excesso_final="48213,55"), "excesso_final")
+    recusa_conta("ramo desconhecido", lambda q: q.update(ramo="cartao"), "ramo")
+    recusa_conta("ramo conta sem o bloco conta", lambda q: q.pop("conta"), "conta")
+    recusa_conta("série sem procedência", lambda q: q["conta"]["series"][0].pop("procedencia"), "procedencia")
+    q = clone(pc)
+    q["conta"]["encontro"]["base_repeticao_dobro"] = 16343.46
+    chk("conta: diferença de 0,01 entre as bases e o excesso está na tolerância", validar(q) == [])
+    q = clone(pc)
+    q["conta"]["cenarios"][2].update(favoravel=False, excesso_final=-10.0)
+    chk("conta: cenário desfavorável COM ressalva é aceito (reportado, não escondido)", validar(q) == [])
+    q = clone(pc)
+    q["conferencia"] = {"veredito": "CONFORME"}
+    chk("conta: conferencia sobrando não é exigida nem validada, só avisada",
+        validar(q) == [] and any("conferencia presente e ignorada" in a for a in validar_detalhado(q)["avisos"]))
+    q = clone(p)
+    q["conta"] = clone(pc)["conta"]
+    chk("instrumento: bloco conta sobrando só gera aviso e o ramo segue exigindo conferencia",
+        validar(q) == [] and any("`ramo` é instrumento" in a for a in validar_detalhado(q)["avisos"]))
+    q = clone(p)
+    q.pop("conferencia")
+    chk("instrumento: sem conferencia continua recusado", "conferencia" in validar(q))
+
+    with tempfile.TemporaryDirectory() as td:
+        arqs = gerar(pc, Path(td), None, None if planilha else {"premium", "panorama"})
+        chk("conta: gera os 3 entregáveis mais a agenda apartada",
+            len(arqs) == (4 if planilha else 3)
+            and {a.name for a in arqs} >= {"laudo-premium-demo-conta.html", "panorama-estrategico-demo-conta.html",
+                                           "INTERNO-agenda-pesquisa-demo-conta.md"})
+        if planilha:
+            import openpyxl
+            wb = openpyxl.load_workbook(next(a for a in arqs if a.suffix == ".xlsx"))
+            celulas = [str(c.value) for ws in wb for row in ws.iter_rows() for c in row if c.value is not None]
+            chk("conta: planilha — dashboard com reconciliação, trinca e encontro",
+                wb.sheetnames[0] == "Dashboard"
+                and all(any(t.startswith(ini) for t in celulas) for ini in (
+                    "RECONCILIAÇÃO DO EXTRATO — VEREDITO CONFORME", "TRINCA DE CENÁRIOS", "ENCONTRO DE CONTAS")))
+            chk("conta: planilha — rótulos da trinca, omitido com motivo e advertência",
+                all(any(t.startswith(r) for t in celulas) for r in ROTULOS_CENARIOS.values())
+                and any(t.startswith("Omitido — ") for t in celulas) and ADVERTENCIA_CONTA in celulas)
+            chk("conta: planilha — abas de memória como hoje e metodologia com as séries",
+                "Indébito por competência" in wb.sheetnames and wb.sheetnames[-1] == "Metodologia e fontes"
+                and "SÉRIES CONSULTADAS" in celulas and "CORREÇÃO DO INDÉBITO (CONECTOR)" in celulas)
+        else:
+            pula("conta: planilha — dashboard com reconciliação, trinca e encontro",
+                 "conta: planilha — rótulos da trinca, omitido com motivo e advertência",
+                 "conta: planilha — abas de memória como hoje e metodologia com as séries")
+
+    # ------------------------------------------------------------------ identidade visual
+    import base64
+    azul = {"nome": "Tema de teste", "cores": {"tinta": "#102A43", "destaque": "#0A5C8A",
+                                               "destaque_claro": "#BCE0F5", "fundo_destaque": "#EEF6FB"},
+            "fontes": {"titulo": "Playfair Display", "texto": "Lato"},
+            "fontes_url": "https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lato&display=swap",
+            "cabecalho_linha": "Rua Exemplo, 100 — Cidade-UF", "rodape": "Uso <restrito>"}
+    ht, hp = render_premium(p, azul), render_panorama(p, azul)
+    chk("tema: o tema padrão (PADRAO) desenha o mesmo HTML de antes, byte a byte",
+        render_premium(p, tema_mod.PADRAO) == h1 and render_panorama(p, tema_mod.PADRAO) == h2
+        and render_premium(p, {}) == h1)
+    chk("tema: cores e fontes do tema entram no CSS, o semáforo não muda",
+        "--ink:#102A43;--gold:#0A5C8A;--glt:#BCE0F5;--gpale:#EEF6FB;" in ht and "'Playfair Display'" in ht
+        and "'Lato'" in ht and "DM Sans" not in ht and "Space Grotesk" not in ht and "'JetBrains Mono'" in ht
+        and all(f"--{n}:{c}" in ht for n, c in (("red", "#A62B2B"), ("grn", "#2F6B45"), ("amb", "#8A6A1F"))))
+    chk("tema: a fontes_url do tema substitui o link do Google das fontes padrão",
+        "family=Playfair+Display&amp;family=Lato" in ht and "family=DM+Sans" not in ht
+        and "family=DM+Sans" in h1)
+    chk("tema: linha do cabeçalho e rodapé do tema passam por esc()",
+        '<div class="linha">Rua Exemplo, 100 — Cidade-UF</div>' in ht and "Uso &lt;restrito&gt;" in ht
+        and "Documento confidencial" not in ht and "Uso <restrito>" not in ht)
+    chk("tema: o panorama usa o destaque do tema nas barras sem cor própria",
+        "background:#0A5C8A" in render_panorama({**p, "panorama": {**p["panorama"],
+                                                                    "barras": [{"rotulo": "x", "valor": 1}]}}, azul)
+        and "--gold:#0A5C8A" in hp)
+    with tempfile.TemporaryDirectory() as td:
+        png = Path(td) / "logo.png"
+        png.write_bytes(base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="))
+        hl = render_premium(p, {**azul, "logo": str(png)})
+        chk("tema: logo embutido como data URI, à esquerda do nome da marca",
+            '<img class="logo" src="data:image/png;base64,iVBOR' in hl
+            and hl.index('<img class="logo"') < hl.index('<div class="marca">') and "max-height:14mm" in hl
+            and 'class="logo"' not in ht)
+        ruins = {"cor fora de #RRGGBB": {"cores": {"tinta": "preto"}},
+                 "chave desconhecida": {"cor": "#000000"},
+                 "fonte com caractere perigoso": {"fontes": {"titulo": "Arial';}</style>"}},
+                 "fontes_url fora do Google": {"fontes_url": "https://exemplo.com/css2?family=X"},
+                 "logo inexistente": {"logo": str(Path(td) / "nao-existe.png")},
+                 "logo com extensão errada": {"logo": str(png.with_suffix(".gif"))}}
+        (Path(td) / "grande.png").write_bytes(b"0" * (tema_mod.LOGO_MAX_BYTES + 1))
+        ruins["logo grande demais"] = {"logo": str(Path(td) / "grande.png")}
+        (Path(td) / "ativo.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" onload="x()"/>', encoding="utf-8")
+        ruins["SVG com evento"] = {"logo": str(Path(td) / "ativo.svg")}
+        (Path(td) / "script.svg").write_text("<svg><SCRIPT>x()</SCRIPT></svg>", encoding="utf-8")
+        ruins["SVG com script"] = {"logo": str(Path(td) / "script.svg")}
+        for nome, dados in ruins.items():
+            try:
+                render_premium(p, dados)
+                recusou = False
+            except ValueError:
+                recusou = True
+            chk(f"tema: {nome} é recusado", recusou)
+        (Path(td) / "ok.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" patternContentUnits="x"/>',
+                                         encoding="utf-8")
+        chk("tema: SVG simples é aceito (atributo patternContentUnits não é evento)",
+            "data:image/svg+xml;base64," in render_premium(p, {"logo": str(Path(td) / "ok.svg")}))
+        if planilha:
+            import openpyxl
+            x = render_planilha(pc, Path(td) / "tema.xlsx", azul)
+            ws = openpyxl.load_workbook(x)["Dashboard"]
+            faixa_ident = next(c for row in ws.iter_rows() for c in row if c.value == "IDENTIFICAÇÃO DA OPERAÇÃO")
+            cabecalho = next(c for row in ws.iter_rows() for c in row if c.value == "Cenário")
+            chk("tema: a planilha usa fundo de destaque e tinta do tema nas faixas e cabeçalhos",
+                faixa_ident.fill.fgColor.rgb == "FFEEF6FB" and cabecalho.fill.fgColor.rgb == "FF102A43")
+        else:
+            pula("tema: a planilha usa fundo de destaque e tinta do tema nas faixas e cabeçalhos")
 
     # 10 — openpyxl ausente: ImportError antes de escrever qualquer arquivo
     g = globals()
