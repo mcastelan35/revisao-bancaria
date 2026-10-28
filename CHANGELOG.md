@@ -2,6 +2,21 @@
 
 ## [Não lançado]
 
+### Fundamentação das regras conferida na fonte (STJ e Planalto, 28/10/2026)
+
+- R04 e R06: a vedação de TAC e TEC desde 30/04/2008 é o **Tema 619/STJ** (R04 citava o 618, que
+  trata da validade até essa data); paradigmas REsps 1.251.331/RS e 1.255.573/RS. A
+  `pesquisa-base.md` descrevia os Temas 618 e 619 de forma trocada.
+- R15 e pendência do Tema 1378: a suspensão alcança só REsp e AREsp sobre a questão, no STJ ou na
+  origem (art. 1.037, II, CPC); ação e apelação seguem. O tema segue afetado, sem julgamento.
+- R34: o REsp 1.070.297/PR é o **Tema 48/STJ** (capitalização vedada no SFH em qualquer
+  periodicidade); o art. 6º, e, da Lei 4.380/64 não trata de capitalização nem limita juros
+  (Tema 49; Súmula 422). A vedação vale para contratos anteriores à Lei 11.977/2009, que incluiu o
+  art. 15-A (capitalização mensal pactuada permitida); a regra ganha alerta para datar o
+  contrato. O corte automático no motor (marco novo) fica pendente.
+- R39: o REsp 2.218.731/PE passa a constar como contrário (não conhecido, Súmula 7).
+- R28 já citava os arts. 6º, 369 e 429, II, do CPC, como a tese do Tema 1061: sem mudança.
+
 ### Repertório jurisprudencial validado e espelho da petição inicial
 
 - `referencia/repertorio-jurisprudencial.md`: julgados por regra do motor ou tese própria, com a
@@ -29,6 +44,14 @@
   ainda sem julgado específico; R23 e R24 sem favorável do STJ (lei recente e temas afetados).
   Complemento do TJPR pelo portal do tribunal: nove apelações das Câmaras Cíveis (juros acima da
   média, capitalização sem pactuação, assinatura impugnada e capitalização vedada fora do SFN).
+- Segunda onda, só TJPR pelo portal do tribunal: 35 apelações de Câmaras Cíveis para as teses
+  que não tinham julgado do TJPR (comissão de permanência e a disfarçada, cédulas, PJ, TAC e TEC,
+  serviços de terceiros, correspondente, seguro, flat, RMC, SFH e intimação por edital). O
+  repertório passa a 106 entradas (105 citáveis). Cada íntegra foi conferida contra o próprio
+  processo; saíram as que o portal mostra de outro caso. Sem favorável de Câmara Cível no TJPR:
+  teto de 100% do cartão (R23). Jurisprudência majoritariamente contrária no TJPR, registrada nas
+  observações: RMC (R24), CDC para PJ em capital de giro e TAC em contrato de PJ.
+- O validador recusa julgado escrito fora de uma seção de tese (antes, era ignorado sem aviso).
 - Teste de sigilo: número CNJ estadual só é admitido dentro do repertório, no título ou em
   `classe_numero` ou no link de entrada com fonte pública (Jusbrasil ou portal do tribunal), ou
   citado na ementa integral dela.

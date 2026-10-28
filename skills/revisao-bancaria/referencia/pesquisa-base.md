@@ -21,8 +21,8 @@ CP disfarçada: tribunais reconhecem quando o mesmo encargo é cobrado sob outra
 Marco temporal: 30/04/2008 (Resolução CMN 3.518/2007).
 
 Repetitivos REsp 1.251.331/RS e REsp 1.255.573/RS (Temas 618-621, Segunda Seção, j. 28/08/2013):
-- Tema 618: TAC válida apenas antes de 30/04/2008
-- Tema 619: TEC válida apenas antes de 30/04/2008
+- Tema 618: TAC e TEC válidas nos contratos até 30/04/2008, ressalvado abuso no caso concreto
+- Tema 619: desde 30/04/2008 (Res. CMN 3.518/2007), TAC e TEC sem respaldo legal para pessoa física
 - Tema 620: Tarifa de cadastro válida no início do relacionamento
 - Tema 621: IOF financiado lícito com pactuação expressa
 
@@ -38,7 +38,7 @@ Parâmetro: taxa média BACEN da espécie. Discrepância expressiva exigida. Raz
 
 Súmula 530 (Tema 233): se taxa incomprovável, aplica-se a média BACEN salvo se a cobrada for menor.
 
-**TEMA 1378/STJ (pendente, suspensão nacional):** afetado 02/09/2025, Rel. Min. Antonio Carlos Ferreira. Questões: suficiência da taxa média como fundamento exclusivo + admissibilidade de REsp para rediscutir conclusões fáticas. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR, 2.227.287/MG, 2.227.844/RS.
+**TEMA 1378/STJ (pendente; suspensos só REsp e AREsp sobre a questão, no STJ ou na origem):** afetado 02/09/2025, Rel. Min. Antonio Carlos Ferreira. Questões: suficiência da taxa média como fundamento exclusivo + admissibilidade de REsp para rediscutir conclusões fáticas. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR, 2.227.287/MG, 2.227.844/RS.
 
 ## 4. Encargos e serviços não especificados
 
@@ -83,7 +83,7 @@ Súmula 603 (desconto em conta-corrente) foi CANCELADA — não usar.
 
 | Tema | Questão | Status | Paradigmas |
 |---|---|---|---|
-| 1378 | Critério de abusividade de juros (taxa média BACEN como fundamento exclusivo) | Afetado 02/09/2025, suspensão nacional | REsp 2.227.276/AL e outros |
+| 1378 | Critério de abusividade de juros (taxa média BACEN como fundamento exclusivo) | Afetado 02/09/2025; suspensos só REsp e AREsp | REsp 2.227.276/AL e outros |
 | 1328 | Dano moral in re ipsa em RMC invalidada | Afetado 11/04/2025, suspensão | REsp 2.145.244/SC |
 | 1414 | Abusos em cartão consignado RMC/RCC | Afetado, suspensão ampliada | REsp 2.224.599/PE e outros |
 | 929 | Repetição em dobro — modulação | Pendente de conclusão na Corte Especial | EAREsp 676.608/RS |
