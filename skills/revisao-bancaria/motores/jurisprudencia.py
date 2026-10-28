@@ -110,6 +110,8 @@ def _parse(texto: str) -> tuple[dict, list[dict], list[str]]:
                 teses[tese] = {"id": tese, "titulo": m.group(2).strip(), "tese": "", "linha": n}
             continue
         if tese is None:
+            if linha.startswith("### "):
+                defeitos.append(f"linha {n}: julgado fora de uma seção de tese (## <ID> — título)")
             continue
         if linha.startswith("### "):
             fechar()
@@ -532,6 +534,8 @@ def _testes() -> tuple[int, int]:
     v = validar(base, ids, hoje="2026-10-27")
     chk("entrada completa valida", not v["erros"] and v["entradas"] == 1)
     chk("cerca de código ignorada", validar("```\n" + base + "```\n", ids, "2026-10-27")["entradas"] == 0)
+    chk("julgado fora de seção recusado", any("fora de uma seção" in e for e in validar(
+        "```\n" + cab + "```\n" + _entrada_teste() + "\n" + base, ids, "2026-10-27")["erros"]))
     chk("TJ adverso recusado", any("só entra favorável" in e for e in validar(
         cab + _entrada_teste(tribunal="TJPR", posicao="ADV"), ids, "2026-10-27")["erros"]))
     chk("url fora do Jusbrasil recusada", any("fora do Jusbrasil" in e for e in validar(
