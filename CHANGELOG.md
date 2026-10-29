@@ -56,9 +56,18 @@
   favorável de Câmara Cível para o teto de 100% do cartão (R23), um agravo de instrumento em
   tutela de urgência, registrado como tal. A observação da R23 lista as linhas contrárias das
   Câmaras (teto por operação, débito anterior a 2024, ônus do demonstrativo nos embargos
-  monitórios). O repertório passa a 109 entradas (108 citáveis). A conferência das ementas do STJ
-  no Jusbrasil e a busca de favorável do STJ para R23 e R24 seguem pendentes (cota do conector
-  esgotada).
+  monitórios). O repertório passa a 109 entradas (108 citáveis).
+- Conferência na fonte das 56 entradas que não são do TJPR (STJ, TJSP, TJMG, TJMT, TJRS, TJSC e
+  TRF4), pelo Jus IA no navegador (painel "Fontes"), e das 14 entradas do TJPR que ainda não
+  tinham passado pelo portal do tribunal (29/10/2026). Nenhuma entrada deixou de ser localizada
+  e todas sustentam a tese. Correções de digitação na ementa (R01, R03, R04, R06 e R28), trema
+  no nome da relatora (R24, TJRS), nome do relator de um precedente citado na ementa (R35, TJSC),
+  data de julgamento do TJMG da R17 (22/03/2023, conferida na citação do acórdão feita pelo
+  próprio tribunal) e datas de julgamento de três Turmas Recursais do TJPR (pelo portal). A
+  Turma Recursal da R23 foi conferida no portal e deixou de ser CONFERIR. Cinco links do TJPR
+  passam a apontar para o portal. Anotado na R23 o recurso extraordinário posterior no AREsp
+  3.191.218/MT. Continua pendente a busca de favorável do STJ para R24, R03 e R10 (para o teto
+  de 100% da R23, o conector e o Jus IA indicam que não há acórdão de mérito do STJ).
 - O validador recusa julgado escrito fora de uma seção de tese (antes, era ignorado sem aviso).
 - Teste de sigilo: número CNJ estadual só é admitido dentro do repertório, no título ou em
   `classe_numero` ou no link de entrada com fonte pública (Jusbrasil ou portal do tribunal), ou
