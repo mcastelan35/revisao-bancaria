@@ -11,7 +11,7 @@ import pytest
 from conftest import SKILL
 from motores import VERSAO, comum, relatorios
 
-CONTAGENS = {"comum": 17, "calculo": 77, "cet": 97, "cartao": 53, "conta_corrente": 63}
+CONTAGENS = {"comum": 17, "calculo": 77, "cet": 97, "cartao": 53, "conta_corrente": 67}
 MODULOS = ("comum", "calculo", "cet", "cartao", "conta_corrente", "relatorios", "regras")
 
 
@@ -40,7 +40,7 @@ def test_autoteste_do_renderizador_com_planilha(capsys):
     pytest.importorskip("openpyxl")
     assert relatorios.PLANILHA_DISPONIVEL is True
     assert relatorios.autoteste(verbose=False) == {
-        "modulo": "relatorios", "passaram": 60, "falharam": 0, "pulados": 0}
+        "modulo": "relatorios", "passaram": 110, "falharam": 0, "pulados": 0}
     _mudo(capsys)
 
 
@@ -48,14 +48,14 @@ def test_autoteste_do_renderizador_pula_so_a_planilha(monkeypatch, capsys):
     """Simula a ausência do openpyxl: o HTML continua testado e nada falha."""
     monkeypatch.setattr(relatorios, "PLANILHA_DISPONIVEL", False)
     r = relatorios.autoteste(verbose=False)
-    assert (r["falharam"], r["pulados"], r["passaram"]) == (0, 9, 51)
+    assert (r["falharam"], r["pulados"], r["passaram"]) == (0, 13, 97)
     _mudo(capsys)
 
 
 def test_autoteste_do_renderizador_pula_a_planilha_se_o_modulo_some_depois_do_import(monkeypatch, capsys):
     monkeypatch.setattr(relatorios, "openpyxl", None)
     r = relatorios.autoteste(verbose=False)
-    assert (r["falharam"], r["pulados"], r["passaram"]) == (0, 9, 51)
+    assert (r["falharam"], r["pulados"], r["passaram"]) == (0, 13, 97)
     _mudo(capsys)
 
 
@@ -70,7 +70,7 @@ def test_renderizador_importa_e_testa_sem_openpyxl_de_verdade():
     assert p.returncode == 0, p.stderr
     disponivel, resultado = json.loads(p.stdout)
     assert disponivel is False
-    assert resultado["falharam"] == 0 and resultado["pulados"] == 9 and resultado["passaram"] == 51
+    assert resultado["falharam"] == 0 and resultado["pulados"] == 13 and resultado["passaram"] == 97
 
 
 def test_autoteste_verbose_true_imprime_as_linhas(capsys):

@@ -387,7 +387,7 @@
           "Súmula 565/STJ"
         ],
         "temas_repetitivos": [
-          "Tema 618/STJ (REsp 1.251.331/RS)"
+          "Tema 619/STJ (REsps 1.251.331/RS e 1.255.573/RS)"
         ],
         "legislacao": [
           "Resolução CMN 3.518/2007"
@@ -470,7 +470,7 @@
           "Súmula 565/STJ"
         ],
         "temas_repetitivos": [
-          "Tema 619/STJ (REsp 1.255.573/RS)"
+          "Tema 619/STJ (REsps 1.251.331/RS e 1.255.573/RS)"
         ],
         "legislacao": [
           "Resolução CMN 3.518/2007"
@@ -833,7 +833,7 @@
       "consequencia": "Consumerista: reduzir os juros remuneratórios à taxa média BACEN da espécie (REsp 1.112.879/PR e REsp 1.112.880/PR). Civil-empresarial: a razão contratada/média é sempre apurada e exibida como KPI; a redução à média exige demonstração concreta de abusividade (arts. 421, 422 e 478 do CC/02), sem a inversão do art. 6º, VIII, e sem o art. 51 do CDC — ver campo `regime`.",
       "tier": "T1",
       "status": "suspensa",
-      "alerta": "TEMA 1378/STJ (afetado 02/09/2025, suspensão nacional): a Segunda Seção vai decidir se a taxa média BACEN basta como fundamento exclusivo para aferir abusividade. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR, 2.227.287/MG, 2.227.844/RS. RECOMENDAÇÃO: fundamentar com análise fática robusta (contexto econômico, tipo de crédito, garantias, risco), não apenas comparação aritmética com a média.",
+      "alerta": "TEMA 1378/STJ (afetado 02/09/2025; ainda sem julgamento em 28/10/2026): a Segunda Seção vai decidir se a taxa média BACEN basta como fundamento exclusivo para aferir abusividade. A suspensão alcança só os recursos especiais e agravos em recurso especial sobre a questão, no STJ ou ainda na origem (art. 1.037, II, CPC): a ação e a apelação seguem normalmente. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR (instrução concentrada nele), 2.227.287/MG, 2.227.844/RS. RECOMENDAÇÃO: fundamentar com análise fática robusta (contexto econômico, tipo de crédito, garantias, risco), não apenas comparação aritmética com a média.",
       "regime": {
         "descricao": "A regra dispara em qualquer tipo de contrato; o que muda com o regime qualificado na L0/C0 é a consequência e o ônus.",
         "consumerista": {
@@ -1536,17 +1536,17 @@
       "id": "R34",
       "categoria": "habitacional_sfh_sfi",
       "nome": "SFH — capitalização de juros em qualquer periodicidade",
-      "descricao": "No SFH a capitalização é vedada em qualquer periodicidade (art. 6º, e, Lei 4.380/64). A simples adoção da Tabela Price NÃO prova anatocismo (REsp 2.168.394/SP; REsp 2.103.041/DF; Súmulas 5 e 7): o achado depende de demonstrar, na conta gráfica, que juros vencidos foram incorporados ao saldo e renderam novos juros. Sem conta gráfica desde a origem o achado é `A verificar` e exige perícia — que o TRF4 costuma indeferir quando os documentos bastam.",
+      "descricao": "No SFH a capitalização é vedada em qualquer periodicidade, ainda que pactuada (Tema 48/STJ; Decreto 22.626/1933, art. 4º; Súmula 121/STF), nos contratos anteriores à Lei 11.977/2009, que incluiu o art. 15-A na Lei 4.380/64 e passou a permitir a capitalização mensal pactuada. O art. 6º, e, da Lei 4.380/64 não trata de capitalização nem limita os juros (Tema 49/STJ; Súmula 422/STJ). A simples adoção da Tabela Price NÃO prova anatocismo (REsp 2.168.394/SP; REsp 2.103.041/DF; Súmulas 5 e 7): o achado depende de demonstrar, na conta gráfica, que juros vencidos foram incorporados ao saldo e renderam novos juros. Sem conta gráfica desde a origem o achado é `A verificar` e exige perícia — que o TRF4 costuma indeferir quando os documentos bastam.",
       "fundamentacao": {
         "sumulas": [
           "Súmula 450/STJ"
         ],
         "temas_repetitivos": [
-          "REsp 1.070.297/PR (Tema 10x — Price sob Súmulas 5 e 7)"
+          "Tema 48/STJ (REsp 1.070.297/PR): capitalização vedada no SFH em qualquer periodicidade; Price sob Súmulas 5 e 7"
         ],
         "legislacao": [
-          "Lei 4.380/1964, art. 6º, c e e",
-          "Decreto 22.626/1933, art. 4º"
+          "Decreto 22.626/1933, art. 4º",
+          "Lei 4.380/1964, art. 15-A (incluído pela Lei 11.977/2009): permite a capitalização mensal pactuada dali em diante"
         ],
         "precedentes": [
           {
@@ -1587,7 +1587,7 @@
       "consequencia": "Recalcular com juros impagos em conta apartada, só com correção monetária (R36); diferença é indébito. Amortização negativa NÃO afasta a mora (REsp 1.476.395/RS) — não pedir descaracterização da mora por este fundamento.",
       "tier": "T1",
       "status": "vigente",
-      "alerta": null
+      "alerta": "DATAR O CONTRATO: a vedação em qualquer periodicidade, ainda que pactuada (Súmula 121/STF), vale para contratos do SFH anteriores à Lei 11.977, de 07/07/2009. Daí em diante o art. 15-A da Lei 4.380/64 permite a capitalização mensal pactuada: o achado só se sustenta se não houver pactuação expressa. O motor ainda não aplica esse corte sozinho."
     },
     {
       "id": "R35",
@@ -1812,7 +1812,7 @@
             "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
           },
           {
-            "ref": "STJ, REsp 2.218.731/PE, data-base 23/10/2025",
+            "ref": "STJ, REsp 2.218.731/PE, data-base 23/10/2025 (contrário: não conhecido, Súmula 7; edital válido após frustrada a notificação pessoal, sem reexame das diligências)",
             "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
           },
           {
@@ -2355,7 +2355,7 @@
       {
         "tema": "Tema 1378/STJ",
         "questao": "Taxa média BACEN como fundamento exclusivo de abusividade dos juros remuneratórios",
-        "status": "afetado em 02/09/2025 com suspensão nacional — julgamento não conferido",
+        "status": "afetado em 02/09/2025, sem julgamento; suspensos só REsp e AREsp sobre a questão (no STJ ou na origem)",
         "regras_afetadas": [
           "R15"
         ],
@@ -2365,7 +2365,7 @@
           "REsp 2.227.287/MG",
           "REsp 2.227.844/RS"
         ],
-        "verificado_em": "2026-08-26"
+        "verificado_em": "2026-10-28"
       },
       {
         "tema": "Tema 929/STJ",

@@ -7,10 +7,11 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
-from conftest import SKILL
+from conftest import PNG_1X1, SKILL
 from motores import operador, relatorios
 
 REVISAO = SKILL / "revisao.py"
@@ -36,6 +37,8 @@ def cli(tmp_path):
         if config_dir:
             ambiente["REVISAO_BANCARIA_CONFIG_DIR"] = str(config)
         ambiente.update(env or {})
+        if args and args[0] == "gerar" and "--pdf" not in args:
+            args = (*args, "--pdf", "nao")           # o PDF tem testes próprios (test_pdf.py): aqui, sem navegador
         p = subprocess.run([sys.executable, str(REVISAO), *map(str, args)], capture_output=True, text=True,
                            encoding="utf-8", env=ambiente, cwd=str(cwd or tmp_path), timeout=300)
         return Resultado(p)
@@ -99,16 +102,16 @@ def test_autoteste_compacto(cli):
     linhas = r.out.splitlines()
     assert r.codigo == 0, r.out + r.err
     assert [l.split()[1] for l in linhas[:-1]] == ["comum", "calculo", "cet", "cartao", "conta_corrente",
-                                                    "relatorios", "regras"]
+                                                    "relatorios", "regras", "jurisprudencia"]
     for linha in linhas[:-1]:
         assert linha.split()[0] in ("OK", "PULADO") and "FALHOU" not in linha
     assert "  OK      calculo          77 passaram" in linhas
     assert linhas[-1].startswith("total: ") and " 0 falharam" in linhas[-1] and "PASS" not in r.out
     if any(l.startswith("  PULADO  relatorios") for l in linhas):
-        assert "openpyxl ausente — 9 asserções da planilha puladas (HTML testado)" in r.out
-        assert linhas[-1].endswith("9 pulados")
+        assert "openpyxl ausente — 13 asserções da planilha puladas (HTML testado)" in r.out
+        assert linhas[-1].endswith("13 pulados")
     else:
-        assert "  OK      relatorios       60 passaram" in linhas and linhas[-1].endswith("0 pulados")
+        assert "  OK      relatorios       110 passaram" in linhas and linhas[-1].endswith("0 pulados")
 
 
 def test_autoteste_de_um_modulo(cli):
@@ -481,20 +484,24 @@ def test_gerar_monta_o_payload_do_renderizador(tmp_path, monkeypatch, capsys):
                      "cidade": CIDADE, "skill_peticao": "x"}, config)
     recebido = {}
 
-    def espiao(payload, saida, slug=None, formatos=None):
-        recebido.update(payload=payload, saida=saida, formatos=formatos)
+    def espiao(payload, saida, slug=None, formatos=None, tema=None):
+        recebido.update(payload=payload, saida=saida, formatos=formatos, tema=tema)
         return [saida / "a.html"]
 
     monkeypatch.setattr(revisao.relatorios, "gerar", espiao)
     sem_nada = escrever_payload(tmp_path / "p1.json", assinatura=None, marca={"logo": "x.png"})
-    assert revisao.main(["gerar", str(sem_nada), "--saida", str(tmp_path / "s"), "--formatos", "premium, planilha"]) == 0
+    assert revisao.main(["gerar", str(sem_nada), "--saida", str(tmp_path / "s"), "--formatos", "premium, planilha",
+                         "--pdf", "nao"]) == 0
     assert recebido["payload"]["marca"] == {"logo": "x.png", "nome": ENTIDADE}
     assert recebido["payload"]["assinatura"] == {"nome": NOME, "registro": OAB, "entidade": ENTIDADE, "cidade": CIDADE}
     assert recebido["formatos"] == {"premium", "planilha"} and recebido["saida"] == tmp_path / "s"
-    assert json.loads(capsys.readouterr().out) == {"arquivos": [str(tmp_path / "s" / "a.html")], "operador_aplicado": True}
+    assert recebido["tema"] is None                                  # sem tema.json, o visual padrão
+    assert json.loads(capsys.readouterr().out) == {
+        "arquivos": [str(tmp_path / "s" / "a.html")], "operador_aplicado": True, "tema": "padrao",
+        "pdf": {"gerado": False, "motivo": "desligado por --pdf nao"}}
 
     completo = escrever_payload(tmp_path / "p2.json")
-    assert revisao.main(["gerar", str(completo), "--saida", str(tmp_path / "s")]) == 0
+    assert revisao.main(["gerar", str(completo), "--saida", str(tmp_path / "s"), "--pdf", "nao"]) == 0
     assert recebido["payload"]["marca"] == {"nome": "Escritório Exemplo"} and recebido["formatos"] is None
     assert recebido["payload"]["assinatura"]["nome"] == "Nome do Responsável"
     assert json.loads(capsys.readouterr().out)["operador_aplicado"] is False
@@ -568,3 +575,201 @@ def test_gerar_aceita_payload_com_bom(cli, tmp_path):
     payload = escrever_payload(tmp_path / "payload.json", assinatura=None, marca={})
     payload.write_bytes(b"\xef\xbb\xbf" + payload.read_bytes())
     assert cli("gerar", payload, "--saida", tmp_path / "saida", "--formatos", "premium").codigo == 0
+
+
+# ── skill_layout, tema e o JSON do gerar ──────────────────────────────
+
+def escrever_tema(caminho, **mudancas):
+    tema = {"nome": "Identidade do escritório", "skill_origem": "skill-de-layout-exemplo",
+            "cores": {"tinta": "#12263F", "destaque": "#0A5C8A", "destaque_claro": "#BCE0F5",
+                      "fundo_destaque": "#EEF6FB"},
+            "fontes": {"titulo": "Playfair Display", "texto": "Lato"},
+            "fontes_url": "https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lato&display=swap",
+            "cabecalho_linha": "Rua Exemplo, 100 — Cidade-UF", "rodape": "Uso restrito do escritório"}
+    for chave, valor in mudancas.items():
+        if valor is None:
+            tema.pop(chave, None)
+        else:
+            tema[chave] = valor
+    caminho.write_text(json.dumps(tema, ensure_ascii=False), encoding="utf-8")
+    return caminho
+
+
+def test_operador_salvar_registra_a_skill_de_layout(cli):
+    salvo = salvar_operador(cli, skill_layout="skill-de-layout-exemplo")
+    assert salvo["operador"]["skill_layout"] == "skill-de-layout-exemplo"
+    assert cli("operador", "mostrar").json()["operador"]["skill_layout"] == "skill-de-layout-exemplo"
+    assert "skill_layout" not in cli("operador", "salvar", "--tipo", "advogado").json()["operador"]
+
+
+def test_tema_mostrar_sem_tema_usa_o_padrao_e_sai_com_0(cli):
+    r = cli("tema", "mostrar")
+    assert r.codigo == 0 and r.json() == {"pasta": str(cli.config), "tema": None, "em_uso": "padrao", "avisos": []}
+
+
+def test_tema_salvar_mostrar_e_remover(cli, tmp_path):
+    r = cli("tema", "salvar", "--arquivo", escrever_tema(tmp_path / "tema.json"))
+    assert r.codigo == 0, r.err
+    saida = r.json()
+    assert saida["pasta"] == str(cli.config) and saida["arquivo"] == str(cli.config / "tema.json")
+    assert saida["avisos"] == [] and saida["tema"]["cores"]["destaque"] == "#0A5C8A"
+    assert saida["tema"]["fontes"] == {"titulo": "Playfair Display", "texto": "Lato", "mono": "JetBrains Mono"}
+    mostrar = cli("tema", "mostrar").json()
+    assert mostrar["em_uso"] == "Identidade do escritório" and mostrar["tema"] == saida["tema"]
+    r = cli("tema", "remover")
+    assert r.codigo == 0 and r.json() == {"pasta": str(cli.config), "removido": True}
+    assert not (cli.config / "tema.json").exists() and cli("tema", "mostrar").json()["em_uso"] == "padrao"
+    assert cli("tema", "remover").json()["removido"] is False
+
+
+def test_tema_salvar_avisa_fonte_sem_link(cli, tmp_path):
+    r = cli("tema", "salvar", "--arquivo", escrever_tema(tmp_path / "t.json", fontes_url=None))
+    assert r.codigo == 0 and len(r.json()["avisos"]) == 1 and "fontes_url" in r.json()["avisos"][0]
+
+
+def test_tema_salvar_logo_relativo_ao_arquivo_vira_copia_na_pasta(cli, tmp_path):
+    (tmp_path / "layout").mkdir()
+    (tmp_path / "layout" / "marca.png").write_bytes(PNG_1X1)
+    arquivo = escrever_tema(tmp_path / "layout" / "tema.json", logo="marca.png")
+    r = cli("tema", "salvar", "--arquivo", arquivo, cwd=tmp_path)         # cwd diferente da pasta do arquivo
+    assert r.codigo == 0, r.err
+    assert (cli.config / "tema-logo.png").read_bytes() == PNG_1X1
+    assert json.loads((cli.config / "tema.json").read_text(encoding="utf-8"))["logo"] == "tema-logo.png"
+    assert r.json()["tema"]["logo"] == str(cli.config / "tema-logo.png")
+    assert cli("tema", "remover").json()["removido"] is True and not (cli.config / "tema-logo.png").exists()
+
+
+@pytest.mark.parametrize("mudanca,trecho", [
+    ({"cores": {"tinta": "preto"}}, "cores.tinta"),
+    ({"cor": "x"}, "chave desconhecida no tema: cor"),
+    ({"logo": "nao-existe.png"}, "logo não encontrado"),
+    ({"fontes_url": "https://exemplo.com/css2?family=X"}, "fontes_url")])
+def test_tema_salvar_invalido_sai_com_2_e_nao_grava(cli, tmp_path, mudanca, trecho):
+    r = cli("tema", "salvar", "--arquivo", escrever_tema(tmp_path / "t.json", **mudanca))
+    assert r.codigo == 2 and r.out == "" and r.err.startswith("erro: ") and trecho in r.err
+    assert not cli.config.exists()
+
+
+def test_tema_salvar_arquivo_ilegivel_ou_sem_argumento_sai_com_2(cli, tmp_path):
+    assert cli("tema", "salvar", "--arquivo", tmp_path / "nao-existe.json").codigo == 2
+    ruim = tmp_path / "ruim.json"
+    ruim.write_text("{ quebrado", encoding="utf-8")
+    r = cli("tema", "salvar", "--arquivo", ruim)
+    assert r.codigo == 2 and "JSON" in r.err
+    assert cli("tema", "salvar").codigo == 2 and cli("tema").codigo == 2
+
+
+def test_tema_config_dir_vence_a_variavel_de_ambiente(cli, tmp_path):
+    outra = tmp_path / "outra"
+    assert cli("tema", "salvar", "--arquivo", escrever_tema(tmp_path / "t.json"), "--config-dir", outra).codigo == 0
+    assert (outra / "tema.json").is_file() and not (cli.config / "tema.json").exists()
+    assert cli("tema", "mostrar").json()["em_uso"] == "padrao"
+    assert cli("tema", "mostrar", "--config-dir", outra).json()["em_uso"] == "Identidade do escritório"
+
+
+def test_tema_fica_na_mesma_pasta_do_operador(cli, tmp_path):
+    salvar_operador(cli)
+    cli("tema", "salvar", "--arquivo", escrever_tema(tmp_path / "t.json"))
+    assert sorted(p.name for p in cli.config.iterdir()) == ["operador.json", "tema.json"]
+
+
+def test_gerar_usa_o_tema_gravado_e_informa_o_nome(cli, tmp_path):
+    payload = escrever_payload(tmp_path / "payload.json")
+    padrao = cli("gerar", payload, "--saida", tmp_path / "a", "--formatos", "premium")
+    assert padrao.json()["tema"] == "padrao"
+    assert padrao.json()["pdf"] == {"gerado": False, "motivo": "desligado por --pdf nao"}
+    html_padrao = (tmp_path / "a" / "laudo-premium-demo.html").read_text(encoding="utf-8")
+    assert "--gold:#B08A4E" in html_padrao and "Documento confidencial" in html_padrao
+
+    (tmp_path / "layout").mkdir()
+    (tmp_path / "layout" / "marca.png").write_bytes(PNG_1X1)
+    arquivo = escrever_tema(tmp_path / "layout" / "tema.json", logo="marca.png")
+    assert cli("tema", "salvar", "--arquivo", arquivo).codigo == 0
+    com = cli("gerar", payload, "--saida", tmp_path / "b", "--formatos", "premium,panorama")
+    assert com.codigo == 0 and com.json()["tema"] == "Identidade do escritório"
+    for nome in ("laudo-premium-demo.html", "panorama-estrategico-demo.html"):
+        html = (tmp_path / "b" / nome).read_text(encoding="utf-8")
+        assert "--gold:#0A5C8A" in html and "Uso restrito do escritório" in html and "'Playfair Display'" in html
+        assert 'src="data:image/png;base64,' in html and "Documento confidencial" not in html
+
+    sem = cli("gerar", payload, "--saida", tmp_path / "c", "--formatos", "premium", "--sem-tema")
+    assert sem.json()["tema"] == "padrao"
+    assert (tmp_path / "c" / "laudo-premium-demo.html").read_text(encoding="utf-8") == html_padrao
+
+
+def test_gerar_com_tema_quebrado_recusa_dizendo_como_sair_e_sem_tema_contorna(cli, tmp_path):
+    (tmp_path / "layout").mkdir()
+    (tmp_path / "layout" / "marca.png").write_bytes(PNG_1X1)
+    arquivo = escrever_tema(tmp_path / "layout" / "tema.json", logo="marca.png")
+    assert cli("tema", "salvar", "--arquivo", arquivo).codigo == 0
+    (cli.config / "tema-logo.png").unlink()                                # o logo copiado sumiu
+    payload = escrever_payload(tmp_path / "payload.json")
+    r = cli("gerar", payload, "--saida", tmp_path / "s", "--formatos", "premium")
+    assert r.codigo == 2 and r.out == "" and "logo não encontrado" in r.err
+    assert "tema salvar" in r.err and "tema remover" in r.err and "--sem-tema" in r.err
+    assert not (tmp_path / "s").exists()                                   # nada foi escrito
+    assert cli("gerar", payload, "--saida", tmp_path / "s", "--formatos", "premium", "--sem-tema").codigo == 0
+    (cli.config / "tema.json").write_text("{ quebrado", encoding="utf-8")
+    r = cli("gerar", payload, "--saida", tmp_path / "s2", "--formatos", "premium")
+    assert r.codigo == 2 and "JSON válido" in r.err and "--sem-tema" in r.err
+    assert cli("gerar", payload, "--saida", tmp_path / "s2", "--formatos", "premium", "--sem-tema").codigo == 0
+
+
+def test_gerar_ramo_conta_pela_linha_de_comando(cli, tmp_path):
+    payload = tmp_path / "conta.json"
+    payload.write_text(json.dumps(relatorios._payload_demo_conta(), ensure_ascii=False), encoding="utf-8")
+    r = cli("gerar", payload, "--saida", tmp_path / "s", "--formatos", "premium,panorama")
+    assert r.codigo == 0, r.err
+    assert sorted(os.path.basename(a) for a in r.json()["arquivos"]) == [
+        "INTERNO-agenda-pesquisa-demo-conta.md", "laudo-premium-demo-conta.html",
+        "panorama-estrategico-demo-conta.html"]
+    html = (tmp_path / "s" / "laudo-premium-demo-conta.html").read_text(encoding="utf-8")
+    assert "3 — Reconciliação do extrato e recomposição da conta" in html
+    assert "Os valores apurados na conta corrente formam uma faixa entre cenários de recomposição" in html
+
+
+def test_gerar_conta_com_extracao_nao_reconciliada_e_recusado_com_2(cli, tmp_path):
+    ruim = relatorios._payload_demo_conta()
+    ruim["conta"]["reconciliacao"]["veredito"] = "DIVERGENTE"
+    payload = tmp_path / "conta.json"
+    payload.write_text(json.dumps(ruim, ensure_ascii=False), encoding="utf-8")
+    r = cli("gerar", payload, "--saida", tmp_path / "s")
+    assert r.codigo == 2 and r.out == "" and "DIVERGENTE" in r.err and "lacuna bloqueante" in r.err
+    assert not (tmp_path / "s").exists()
+
+
+# ── jurisprudência e espelho ─────────────────────────────────────────
+
+def test_jurisprudencia_validar_e_cobertura(cli):
+    r = cli("jurisprudencia", "validar")
+    assert r.codigo == 0, r.out + r.err
+    assert r.json()["erros"] == []
+    c = cli("jurisprudencia", "cobertura").json()
+    assert {l["id"] for l in c["regras"]} >= {"R01", "R40"}
+
+
+def test_jurisprudencia_consultar_recusa_lista_vazia(cli):
+    r = cli("jurisprudencia", "consultar", "--regras", " , ")
+    assert r.codigo == 2 and "ao menos uma regra" in r.err
+
+
+def test_espelho_formato_neutro_e_skill_canonica(cli, tmp_path):
+    achados = relatorios._payload_demo()["achados"]
+    for a in achados:
+        a["regras"] = ["R04"]
+    payload = escrever_payload(tmp_path / "p.json", achados=achados)
+    r = cli("espelho", payload, "--saida", tmp_path / "saida")
+    assert r.codigo == 0, r.err
+    saida = r.json()
+    texto = Path(saida["arquivo"]).read_text(encoding="utf-8")
+    assert Path(saida["arquivo"]).name.startswith("espelho-peticao-")
+    assert "neutro" in texto and saida["skill_peticao"] is None
+    salvar_operador(cli, skill_peticao="peticoes-escritorio")
+    texto = Path(cli("espelho", payload, "--saida", tmp_path / "saida").json()["arquivo"]).read_text(encoding="utf-8")
+    assert "`peticoes-escritorio`" in texto
+
+
+def test_espelho_recusa_payload_sem_achados(cli, tmp_path):
+    payload = escrever_payload(tmp_path / "p.json", achados=None)
+    r = cli("espelho", payload, "--saida", tmp_path / "saida")
+    assert r.codigo == 2 and "achados" in r.err

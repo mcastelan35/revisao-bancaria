@@ -1,5 +1,116 @@
 # CHANGELOG
 
+## [Não lançado]
+
+### Fundamentação das regras conferida na fonte (STJ e Planalto, 28/10/2026)
+
+- R04 e R06: a vedação de TAC e TEC desde 30/04/2008 é o **Tema 619/STJ** (R04 citava o 618, que
+  trata da validade até essa data); paradigmas REsps 1.251.331/RS e 1.255.573/RS. A
+  `pesquisa-base.md` descrevia os Temas 618 e 619 de forma trocada.
+- R15 e pendência do Tema 1378: a suspensão alcança só REsp e AREsp sobre a questão, no STJ ou na
+  origem (art. 1.037, II, CPC); ação e apelação seguem. O tema segue afetado, sem julgamento.
+- R34: o REsp 1.070.297/PR é o **Tema 48/STJ** (capitalização vedada no SFH em qualquer
+  periodicidade); o art. 6º, e, da Lei 4.380/64 não trata de capitalização nem limita juros
+  (Tema 49; Súmula 422). A vedação vale para contratos anteriores à Lei 11.977/2009, que incluiu o
+  art. 15-A (capitalização mensal pactuada permitida); a regra ganha alerta para datar o
+  contrato. O corte automático no motor (marco novo) fica pendente.
+- R39: o REsp 2.218.731/PE passa a constar como contrário (não conhecido, Súmula 7).
+- R28 já citava os arts. 6º, 369 e 429, II, do CPC, como a tese do Tema 1061: sem mudança.
+
+### Repertório jurisprudencial validado e espelho da petição inicial
+
+- `referencia/repertorio-jurisprudencial.md`: julgados por regra do motor ou tese própria, com a
+  ementa na íntegra copiada do inteiro teor lido no conector Jusbrasil (para o TJPR, também do
+  portal de jurisprudência do tribunal, com o link permanente do acórdão), a identificação completa
+  e a url canônica. Erro de digitação e defeito de extração da ementa (palavra emendada, acento
+  faltando) são corrigidos; o conteúdo, não. STJ e STF entram favoráveis e, quando fixam o limite da tese, adversos (viram
+  ressalva); tribunais locais só favoráveis, TJPR primeiro. Cada entrada vale um ano desde
+  `verificado_em`.
+- `motores/jurisprudencia.py` e os subcomandos `jurisprudencia consultar | cobertura | validar`:
+  o agente pede só os julgados das regras do caso; entrada `CONFERIR`, vencida ou incompleta não
+  sai, vira aviso. O validador recusa campo faltando, url fora do Jusbrasil (ou do portal
+  oficial do próprio tribunal), tribunal local adverso, regra inexistente, julgado repetido, data no futuro e ementa curta demais.
+- Subcomando `espelho`: `espelho-peticao-<slug>.md` com fatos e números do laudo, um tópico por
+  achado contra o banco (T1 antes de T2) com tese, ementas e links, argumentos contrários
+  previstos, provas (perícia, exibição), pedidos tirados da `consequencia` de cada regra e as
+  pendências antes de protocolar. A `skill_peticao` gravada na `configurar` é a skill canônica de
+  redação; sem ela, o espelho sai em formato neutro.
+- Payload: `achados[*].regras` (ids do motor) e `valor_causa`, opcionais, usados só pelo espelho.
+- Regra de conduta 3 e gate pós-entrega da L4 apontam para o repertório validado.
+- Primeira onda do repertório: as teses T1 de contratos de consumo PF (comissão de permanência,
+  TAC/TEC, serviços de terceiros, correspondente, seguro prestamista, juros, capitalização,
+  repetição em dobro, assinatura), empresarial PJ (vulnerabilidade, teto de 12% nas cédulas),
+  cartão (teto de 100%, RMC) e habitacional (SFH, SFI, intimação por edital). As teses R10 e R29
+  ainda sem julgado específico; R23 e R24 sem favorável do STJ (lei recente e temas afetados).
+  Complemento do TJPR pelo portal do tribunal: nove apelações das Câmaras Cíveis (juros acima da
+  média, capitalização sem pactuação, assinatura impugnada e capitalização vedada fora do SFN).
+- Segunda onda, só TJPR pelo portal do tribunal: 35 apelações de Câmaras Cíveis para as teses
+  que não tinham julgado do TJPR (comissão de permanência e a disfarçada, cédulas, PJ, TAC e TEC,
+  serviços de terceiros, correspondente, seguro, flat, RMC, SFH e intimação por edital). O
+  repertório passa a 106 entradas (105 citáveis). Cada íntegra foi conferida contra o próprio
+  processo; saíram as que o portal mostra de outro caso. Sem favorável de Câmara Cível no TJPR:
+  teto de 100% do cartão (R23). Jurisprudência majoritariamente contrária no TJPR, registrada nas
+  observações: RMC (R24), CDC para PJ em capital de giro e TAC em contrato de PJ.
+- O validador recusa julgado escrito fora de uma seção de tese (antes, era ignorado sem aviso).
+- Teste de sigilo: número CNJ estadual só é admitido dentro do repertório, no título ou em
+  `classe_numero` ou no link de entrada com fonte pública (Jusbrasil ou portal do tribunal), ou
+  citado na ementa integral dela.
+
+Entregáveis padronizados: a rota CONTA ganha o renderizador, o laudo ganha a identidade visual do
+escritório e o `gerar` passa a entregar o PDF. **Nenhum cálculo, tese, súmula, tier, limiar ou
+regra mudou**. O HTML sem tema só difere do anterior na contagem inteira da memória, que sai sem
+casas ("1", não "1,00"). A versão do pacote segue 6.0.0.
+
+### Ramo CONTA no renderizador
+
+- Payload com `ramo: "conta"` (o padrão segue `"instrumento"`): o bloco `conferencia` dá lugar ao
+  bloco `conta` — reconciliação do extrato, trinca de cenários, líder, encontro de contas, séries
+  consultadas e, opcionalmente, a correção do conector. Especificação em
+  `referencia/payload-schema.md`, "Ramo CONTA" (substitui a seção "Ramo CONTA — pendente").
+- `conta_corrente.bloco_payload(reconciliacao, trinca, cenario_lider, encontro, series, correcao)`
+  monta o bloco a partir das saídas dos motores, sem número digitado.
+- PREMIUM com a seção 3 "Reconciliação do extrato e recomposição da conta" e a advertência fixa da
+  regra de conduta 20; PANORAMA com selo do cenário líder (o CONFORME do extrato não vira "sem
+  excesso"), barras dos cenários não omitidos e a mesma advertência; PLANILHA com reconciliação,
+  trinca e encontro no Dashboard e as séries na aba de metodologia. Rótulos amigáveis dos cenários
+  em `ROTULOS_CENARIOS`.
+- Validação do ramo: reconciliação DIVERGENTE ou competência sem lançamento é erro (lacuna
+  bloqueante da C1), líder inexistente ou omitido, simples + dobro que não fecha com o excesso
+  final (tolerância de 0,01) e cenário desfavorável sem `ressalvas`.
+- C6: o entregável passa a sair por `<rb> gerar`; o fallback em HTML manual com o CSS de
+  `html-pdf-impressao-segura` foi removido, e a regra de conduta 14 não tem mais exceção de rota.
+
+- Cenário omitido por falta de taxa leva motivo legível no laudo ("nenhuma taxa comprovada nos
+  documentos para este cenário"), não a mensagem interna do motor.
+
+### Identidade visual do escritório
+
+- `motores/tema.py`: `tema.json` na mesma pasta do `operador.json`, com esquema fechado — cores
+  (`tinta`, `destaque`, `destaque_claro`, `fundo_destaque`), fontes (`titulo`, `texto`, `mono`),
+  `fontes_url` do Google Fonts, `logo` (PNG, JPG ou SVG de até 300 KB, embutido no cabeçalho e
+  copiado para a pasta de dados), `cabecalho_linha` e `rodape`. As cores do semáforo não são
+  configuráveis. `render_premium`, `render_panorama`, `render_planilha` e `gerar` aceitam `tema=`.
+- `revisao.py tema mostrar|salvar --arquivo|remover`; o `gerar` lê o tema da pasta de configuração
+  (`--sem-tema` força o padrão) e informa `"tema"` no JSON. `operador salvar --skill-layout`
+  registra a skill de layout escolhida (só registro).
+- `configurar`: nova etapa "Identidade visual", que importa o tema de uma skill de layout do
+  escritório quando houver uma na sessão.
+
+### PDF pelo `gerar`
+
+- `motores/pdf.py`: converte cada HTML gerado em PDF, ao lado dele, com Chrome, Edge, Chromium ou
+  Brave instalado (`REVISAO_BANCARIA_NAVEGADOR` indica um), em headless e com perfil temporário.
+  Sem navegador o HTML segue e o JSON traz `"pdf": {"gerado": false, "motivo": …}`; com navegador
+  traz `arquivos` e `paginas`, e avisa quando o PANORAMA passa de três páginas.
+- `gerar --pdf auto|sim|nao` (padrão `auto`; `sim` sem PDF sai com código 1).
+- L4, passo 5: a paginação passa a ser conferida pelas `paginas` do JSON do `gerar`.
+
+### Testes
+
+Novos `tests/test_tema.py`, `tests/test_pdf.py` (navegador simulado e, havendo navegador, uma
+conversão de verdade) e `tests/test_conta_relatorio.py` (do motor ao laudo); o autoteste do
+renderizador e o do motor da conta cobrem o ramo CONTA e o bloco do payload.
+
 ## v6.0.0 — 26/10/2026 — Plugin `revisao-bancaria`
 
 A skill `revisao-contratos-bancarios` vira o plugin `revisao-bancaria`, no padrão dos demais

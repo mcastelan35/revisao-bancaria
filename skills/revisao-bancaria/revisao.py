@@ -13,10 +13,14 @@ Chamada de qualquer pasta, só com a biblioteca padrão (o `openpyxl` é exigido
     python3 revisao.py comparar --sistema price|sac --pv V --n N
                        --taxa-contratada-pct X --taxa-revisada-pct Y [--unidade U] [--tabela]
     python3 revisao.py gerar payload.json --saida DIR [--formatos premium,panorama,planilha]
+                       [--pdf auto|sim|nao] [--sem-tema]
     python3 revisao.py operador mostrar | salvar --tipo advogado|contador [--nome ...]
+    python3 revisao.py tema mostrar | salvar --arquivo tema.json | remover
+    python3 revisao.py jurisprudencia consultar --regras R04,R13 [--sem-adversos] | cobertura | validar
+    python3 revisao.py espelho payload.json --saida DIR [--config-dir DIR]
 
-Saída em JSON (salvo `autoteste`). Códigos de saída: 0 ok · 1 autoteste com falha ·
-2 erro de entrada · 3 operador não configurado.
+Saída em JSON (salvo `autoteste`). Códigos de saída: 0 ok · 1 autoteste com falha ou
+`gerar --pdf sim` sem o PDF · 2 erro de entrada · 3 operador não configurado.
 """
 
 from __future__ import annotations
@@ -32,10 +36,11 @@ PASTA_SKILL = Path(__file__).resolve().parent
 if str(PASTA_SKILL) not in sys.path:
     sys.path.insert(0, str(PASTA_SKILL))
 
-from motores import VERSAO, calculo, operador, regras, relatorios  # noqa: E402
+from motores import VERSAO, calculo, jurisprudencia, operador, pdf, regras, relatorios, tema  # noqa: E402
 from motores.comum import arredondar, saida_utf8                    # noqa: E402
 
-MODULOS_AUTOTESTE = ("comum", "calculo", "cet", "cartao", "conta_corrente", "relatorios", "regras")
+MODULOS_AUTOTESTE = ("comum", "calculo", "cet", "cartao", "conta_corrente", "relatorios", "regras",
+                     "jurisprudencia")
 DICA_OPERADOR = ("configure o operador: revisao.py operador salvar --tipo advogado|contador "
                  "--nome ... --registro ... --entidade ... --cidade ...")
 
@@ -186,6 +191,19 @@ def _sem_identidade(payload: dict) -> bool:
     return "assinatura" not in payload or not nome
 
 
+def _tema_da_pasta(args) -> dict | None:
+    """O tema gravado na pasta de configuração, já validado; None com `--sem-tema` ou sem tema.
+    Tema corrompido ou com logo que sumiu recusa a geração, com o caminho de saída."""
+    if args.sem_tema:
+        return None
+    try:
+        dados = tema.ler(args.config_dir)
+        return None if dados is None else tema.validar(dados)[0]
+    except ValueError as erro:
+        raise ValueError(f"{erro} — corrija com `tema salvar`, apague com `tema remover` "
+                         "ou gere com --sem-tema") from None
+
+
 def cmd_gerar(args) -> int:
     caminho = Path(args.payload)
     try:
@@ -208,14 +226,23 @@ def cmd_gerar(args) -> int:
         if nome_marca and (marca is None or (isinstance(marca, dict) and not marca.get("nome"))):
             payload["marca"] = {**(marca or {}), "nome": nome_marca}
             aplicado = True
+    tema_ativo = _tema_da_pasta(args)
+    extras = {} if tema_ativo is None else {"tema": tema_ativo}      # sem tema, a chamada de sempre
     try:
         arquivos = relatorios.gerar(payload, Path(args.saida),
-                                    formatos=relatorios.parse_formatos(args.formatos))
+                                    formatos=relatorios.parse_formatos(args.formatos), **extras)
     except ValueError as erro:
         if op is None and _sem_identidade(payload):
             raise ValueError(f"{erro} — {DICA_OPERADOR}") from None
         raise
-    _imprimir({"arquivos": [str(a) for a in arquivos], "operador_aplicado": aplicado})
+    resultado_pdf = pdf.converter_todos(arquivos, args.pdf)
+    _imprimir({"arquivos": [str(a) for a in arquivos], "operador_aplicado": aplicado,
+               "tema": tema.nome_do_tema(tema_ativo), "pdf": resultado_pdf})
+    esperados = [a for a in arquivos if a.suffix.lower() == ".html"]
+    if args.pdf == "sim" and len(resultado_pdf.get("arquivos", [])) < len(esperados):
+        motivos = [m for m in (resultado_pdf.get("motivo"), *resultado_pdf.get("avisos", [])) if m]
+        print("erro: --pdf sim e o PDF não saiu: " + "; ".join(motivos), file=sys.stderr)
+        return 1
     return 0
 
 
@@ -227,12 +254,79 @@ def cmd_operador_mostrar(args) -> int:
 
 def cmd_operador_salvar(args) -> int:
     dados = {"tipo": args.tipo}
-    for chave in ("nome", "registro", "entidade", "cidade", "skill_peticao"):
+    for chave in ("nome", "registro", "entidade", "cidade", "skill_peticao", "skill_layout"):
         valor = getattr(args, chave)
         if valor is not None:
             dados[chave] = valor
     arquivo, avisos = operador.salvar(dados, args.config_dir)
     _imprimir({"arquivo": str(arquivo), "avisos": avisos, "operador": operador.ler(args.config_dir)})
+    return 0
+
+
+def cmd_tema_mostrar(args) -> int:
+    ativo, avisos = tema.carregar(args.config_dir)
+    _imprimir({"pasta": str(operador.pasta_config(args.config_dir)), "tema": ativo,
+               "em_uso": tema.nome_do_tema(ativo), "avisos": avisos})
+    return 0
+
+
+def cmd_tema_salvar(args) -> int:
+    caminho = Path(args.arquivo)
+    try:
+        dados = json.loads(caminho.read_text(encoding="utf-8-sig"))
+    except OSError as erro:
+        raise ValueError(f"não foi possível ler o tema {caminho}: {erro.strerror or erro}") from None
+    except ValueError as erro:                       # JSON malformado ou texto que não é UTF-8
+        raise ValueError(f"tema {caminho} não é um JSON UTF-8 válido: {erro}") from None
+    arquivo, avisos = tema.salvar(dados, args.config_dir, base=caminho.resolve().parent)
+    _imprimir({"pasta": str(arquivo.parent), "arquivo": str(arquivo), "avisos": avisos,
+               "tema": tema.carregar(args.config_dir)[0]})
+    return 0
+
+
+def cmd_tema_remover(args) -> int:
+    _imprimir({"pasta": str(operador.pasta_config(args.config_dir)),
+               "removido": tema.remover(args.config_dir)})
+    return 0
+
+
+# ─────────────────────────────────────────────────────────────────────
+# jurisprudencia, espelho
+# ─────────────────────────────────────────────────────────────────────
+
+def cmd_juris_consultar(args) -> int:
+    ids = [i.strip().upper() for i in args.regras.split(",") if i.strip()]
+    if not ids:
+        raise ValueError("informe ao menos uma regra em --regras (ex.: R04,R13)")
+    _imprimir(jurisprudencia.consultar(ids, incluir_adversos=not args.sem_adversos, hoje=args.hoje))
+    return 0
+
+
+def cmd_juris_cobertura(args) -> int:
+    _imprimir(jurisprudencia.cobertura(hoje=args.hoje))
+    return 0
+
+
+def cmd_juris_validar(args) -> int:
+    resultado = jurisprudencia.validar(hoje=args.hoje)
+    _imprimir(resultado)
+    return 1 if resultado["erros"] else 0
+
+
+def cmd_espelho(args) -> int:
+    caminho = Path(args.payload)
+    try:
+        payload = json.loads(caminho.read_text(encoding="utf-8-sig"))
+    except OSError as erro:
+        raise ValueError(f"não foi possível ler o payload {caminho}: {erro.strerror or erro}") from None
+    except ValueError as erro:
+        raise ValueError(f"payload {caminho} não é um JSON UTF-8 válido: {erro}") from None
+    if not isinstance(payload, dict):
+        raise ValueError(f"payload {caminho} deve ser um objeto JSON")
+    op = operador.ler(args.config_dir) or {}
+    arquivo, resumo = jurisprudencia.gerar_espelho(payload, Path(args.saida),
+                                                   skill_peticao=op.get("skill_peticao"), hoje=args.hoje)
+    _imprimir({"arquivo": str(arquivo), "skill_peticao": op.get("skill_peticao"), **resumo})
     return 0
 
 
@@ -243,8 +337,8 @@ def cmd_operador_salvar(args) -> int:
 def _parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="revisao.py", description="Linha de comando do plugin revisao-bancaria.",
-        epilog="Saída em JSON (salvo `autoteste`). Códigos: 0 ok · 1 autoteste com falha · "
-               "2 erro de entrada · 3 operador não configurado.")
+        epilog="Saída em JSON (salvo `autoteste`). Códigos: 0 ok · 1 autoteste com falha ou "
+               "`gerar --pdf sim` sem o PDF · 2 erro de entrada · 3 operador não configurado.")
     ap.add_argument("--version", action="version", version=f"revisao-bancaria {VERSAO}")
     sub = ap.add_subparsers(dest="comando", required=True, metavar="COMANDO")
 
@@ -303,7 +397,12 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("payload")
     p.add_argument("--saida", required=True, help="pasta de saída")
     p.add_argument("--formatos", help="premium,panorama,planilha (padrão: todos)")
-    p.add_argument("--config-dir", help="pasta do operador.json")
+    p.add_argument("--config-dir", help="pasta do operador.json e do tema.json")
+    p.add_argument("--pdf", choices=("auto", "sim", "nao"), default="auto",
+                   help="PDF ao lado de cada HTML, por Chrome/Edge/Chromium/Brave instalado: auto tenta "
+                        "(sem navegador, só o HTML), sim exige (código 1 se não sair), nao não tenta")
+    p.add_argument("--sem-tema", action="store_true",
+                   help="ignora o tema.json da pasta de configuração e usa o visual padrão do plugin")
     p.set_defaults(func=cmd_gerar)
 
     p = sub.add_parser("operador", help="identidade de quem assina os laudos")
@@ -313,10 +412,44 @@ def _parser() -> argparse.ArgumentParser:
     m.set_defaults(func=cmd_operador_mostrar)
     s = acao.add_parser("salvar", help="grava o operador")
     s.add_argument("--tipo", required=True, help="advogado | contador")
-    for opcao in ("nome", "registro", "entidade", "cidade", "skill-peticao"):
+    for opcao in ("nome", "registro", "entidade", "cidade", "skill-peticao", "skill-layout"):
         s.add_argument(f"--{opcao}")
     s.add_argument("--config-dir")
     s.set_defaults(func=cmd_operador_salvar)
+
+    p = sub.add_parser("tema", help="identidade visual dos entregáveis (cores, fontes, logo)")
+    acao = p.add_subparsers(dest="acao", required=True, metavar="AÇÃO")
+    m = acao.add_parser("mostrar", help="mostra o tema gravado (ou que o padrão está em uso)")
+    m.add_argument("--config-dir")
+    m.set_defaults(func=cmd_tema_mostrar)
+    s = acao.add_parser("salvar", help="valida e grava o tema de um arquivo JSON")
+    s.add_argument("--arquivo", required=True, help="tema.json de origem (esquema em motores/tema.py)")
+    s.add_argument("--config-dir")
+    s.set_defaults(func=cmd_tema_salvar)
+    r = acao.add_parser("remover", help="apaga o tema gravado e volta ao visual padrão")
+    r.add_argument("--config-dir")
+    r.set_defaults(func=cmd_tema_remover)
+
+    p = sub.add_parser("jurisprudencia", help="repertório jurisprudencial validado (Jusbrasil)")
+    acao = p.add_subparsers(dest="acao", required=True, metavar="AÇÃO")
+    c = acao.add_parser("consultar", help="julgados citáveis das regras ou teses informadas")
+    c.add_argument("--regras", required=True, help="ids separados por vírgula: R04,R13,PJ-VULN")
+    c.add_argument("--sem-adversos", action="store_true", help="omite os julgados ADV (limites da tese)")
+    c.add_argument("--hoje", help="AAAA-MM-DD, data de referência da validade (padrão: hoje)")
+    c.set_defaults(func=cmd_juris_consultar)
+    c = acao.add_parser("cobertura", help="julgados por regra e regras T1 sem precedente superior")
+    c.add_argument("--hoje")
+    c.set_defaults(func=cmd_juris_cobertura)
+    c = acao.add_parser("validar", help="confere o formato do repertório (código 1 se houver erro)")
+    c.add_argument("--hoje")
+    c.set_defaults(func=cmd_juris_validar)
+
+    p = sub.add_parser("espelho", help="espelho da petição inicial: achados do laudo + repertório")
+    p.add_argument("payload")
+    p.add_argument("--saida", required=True, help="pasta de saída")
+    p.add_argument("--config-dir", help="pasta do operador.json (skill de petição canônica)")
+    p.add_argument("--hoje", help="AAAA-MM-DD (padrão: hoje)")
+    p.set_defaults(func=cmd_espelho)
     return ap
 
 

@@ -26,7 +26,7 @@ from pathlib import Path
 
 NOME_ARQUIVO = "operador.json"
 TIPOS = ("advogado", "contador")
-CHAVES = ("tipo", "nome", "registro", "entidade", "cidade", "skill_peticao")
+CHAVES = ("tipo", "nome", "registro", "entidade", "cidade", "skill_peticao", "skill_layout")
 CHAVES_ASSINATURA = ("nome", "registro", "entidade", "cidade")
 PREFIXO_REGISTRO = {"advogado": "OAB/", "contador": "CRC/"}
 EXEMPLO_REGISTRO = {"advogado": "OAB/UF 00.000", "contador": "CRC/UF 000000/O"}
@@ -77,8 +77,10 @@ def salvar(dados: dict, config_dir=None) -> tuple[Path, list[str]]:
     """Grava o operador (UTF-8, indent 2) e devolve (arquivo, avisos).
 
     Chaves aceitas: tipo ('advogado' | 'contador', obrigatória), nome, registro, entidade,
-    cidade, skill_peticao. Chave desconhecida é ValueError. Registro fora do padrão
-    (OAB/ para advogado, CRC/ para contador) gera aviso, não erro."""
+    cidade, skill_peticao, skill_layout (a skill de layout do escritório escolhida na
+    `configurar`; só registro — o código Python nunca chama skill, e a identidade visual em si
+    fica em `tema.json`, ver `tema.py`). Chave desconhecida é ValueError. Registro fora do
+    padrão (OAB/ para advogado, CRC/ para contador) gera aviso, não erro."""
     desconhecidas = sorted(k for k in dados if k not in CHAVES and k != "atualizado_em")
     if desconhecidas:
         raise ValueError(f"chave desconhecida no operador: {', '.join(desconhecidas)}. "

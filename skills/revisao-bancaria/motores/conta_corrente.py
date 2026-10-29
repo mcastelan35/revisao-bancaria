@@ -24,6 +24,7 @@ Executar `python3 revisao.py autoteste --modulo conta_corrente` roda a suíte de
 """
 
 from __future__ import annotations
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
@@ -392,7 +393,8 @@ class CenarioConta:
                     f"— lacuna bloqueante (obter a série completa no conector)")
             return guard_taxa(float(self.taxa[comp]), f"cenário {self.nome!r}, taxa de {comp}")
         if self.taxa is None:
-            raise ValueError(f"cenário {self.nome!r}: taxa ausente com recompor_juros=True")
+            raise ValueError("taxa ausente: nenhuma taxa comprovada nos documentos para este cenário, "
+                             "que por isso não foi apurado (lacuna)")
         return guard_taxa(float(self.taxa), f"cenário {self.nome!r}, taxa")
 
 
@@ -645,7 +647,61 @@ def encontro_de_contas(resultado_cenario: dict) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────────────
-# 6. EXIBIÇÃO
+# 6. BLOCO `conta` DO PAYLOAD
+# ─────────────────────────────────────────────────────────────────────
+
+def _copiar(origem: dict, chaves: tuple[str, ...], onde: str) -> dict:
+    """Só as `chaves` que `origem` tem, copiadas (nenhuma referência compartilhada)."""
+    if not isinstance(origem, dict):
+        raise ValueError(f"{onde}: esperado dict, recebido {type(origem).__name__}")
+    return {k: deepcopy(origem[k]) for k in chaves if k in origem}
+
+
+def bloco_payload(reconciliacao: dict, trinca: list[dict], cenario_lider, encontro: dict,
+                  series: list[dict], correcao: dict | None = None) -> dict:
+    """Bloco `conta` do payload do renderizador (`ramo: "conta"`, ver
+    `referencia/payload-schema.md`), montado das SAÍDAS dos motores — nenhum número é digitado.
+
+    reconciliacao   saída de `reconciliar`
+    trinca          saída de `rodar_trinca` (cenário omitido segue com `omitido` e `motivo`)
+    cenario_lider   nome do cenário ("C1_TAXA_MEDIA") ou o dict dele, o mesmo que foi a
+                    `encontro_de_contas`
+    encontro        saída de `encontro_de_contas(cenario_lider)`
+    series          [{serie, codigo, procedencia, periodo}] da consulta ao conector
+    correcao        opcional: {valor_corrigido, data_final, indice, hash} do `atualizar_debito`
+
+    Copia só os campos que o payload usa. Não julga o conteúdo: veredito DIVERGENTE, competência
+    sem lançamento, líder omitido ou soma que não fecha seguem para o bloco e são RECUSADOS por
+    `relatorios.validar` — a trava é uma só, no renderizador."""
+    if not isinstance(trinca, list) or not isinstance(series, list):
+        raise ValueError("trinca e series devem ser listas")
+    rec = _copiar(reconciliacao, ("veredito", "pontos_conferidos", "divergencias",
+                                  "competencias_sem_lancamento"), "reconciliacao")
+    if "janela" in reconciliacao:
+        rec["janela"] = _copiar(reconciliacao["janela"], ("data_inicial", "data_final"),
+                                "reconciliacao.janela")
+    cenarios = []
+    for k, c in enumerate(trinca):
+        omitido = isinstance(c, dict) and c.get("omitido")
+        cenarios.append(_copiar(c, ("cenario", "omitido", "motivo") if omitido else
+                                ("cenario", "condicao", "excesso_final", "favoravel"), f"trinca[{k}]"))
+    bloco = {
+        "reconciliacao": rec,
+        "cenarios": cenarios,
+        "cenario_lider": cenario_lider["cenario"] if isinstance(cenario_lider, dict) else cenario_lider,
+        "encontro": _copiar(encontro, ("cenario", "excesso_final", "base_repeticao_simples",
+                                       "base_repeticao_dobro", "competencia_corte", "nota"), "encontro"),
+        "series": [_copiar(s, ("serie", "codigo", "procedencia", "periodo"), f"series[{k}]")
+                   for k, s in enumerate(series)],
+    }
+    if correcao is not None:
+        bloco["correcao"] = _copiar(correcao, ("valor_corrigido", "data_final", "indice", "hash"),
+                                    "correcao")
+    return bloco
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 7. EXIBIÇÃO
 # ─────────────────────────────────────────────────────────────────────
 
 def brl(v: float) -> str:
@@ -654,7 +710,7 @@ def brl(v: float) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────
-# 7. AUTOTESTE
+# 8. AUTOTESTE
 # ─────────────────────────────────────────────────────────────────────
 
 def _testes() -> tuple[int, int]:
@@ -1023,6 +1079,32 @@ def _testes() -> tuple[int, int]:
     chk("saldo intermediário do dia é ignorado (1 ignorado, 1 ponto, CONFORME)",
         r_ext["veredito"] == "CONFORME" and r_ext["saldos_intradia_ignorados"] == 1
         and r_ext["pontos_conferidos"] == 1)
+
+    # ── bloco `conta` do payload: copia das saídas dos motores, sem número digitado ──
+    serie_b = [{"serie": "Taxa média — modalidade de teste", "codigo": "000000",
+                "procedencia": "teste", "periodo": "2025-04", "extra": "fora do payload"}]
+    bloco = bloco_payload(reconciliar(ls_c, 0.0), tr, "C1_TAXA_MEDIA", encontro_de_contas(tr[0]), serie_b)
+    chk("bloco_payload tem só os blocos do payload e o líder pelo nome",
+        list(bloco) == ["reconciliacao", "cenarios", "cenario_lider", "encontro", "series"]
+        and bloco["cenario_lider"] == "C1_TAXA_MEDIA" and "correcao" not in bloco)
+    chk("bloco_payload copia os números da trinca e do encontro sem alterá-los",
+        [c["cenario"] for c in bloco["cenarios"]] == [t["cenario"] for t in tr]
+        and bloco["cenarios"][0]["excesso_final"] == tr[0]["excesso_final"]
+        and bloco["encontro"]["base_repeticao_dobro"] == encontro_de_contas(tr[0])["base_repeticao_dobro"]
+        and "parametros" not in bloco["cenarios"][0] and "extra" not in bloco["series"][0]
+        and set(bloco["reconciliacao"]["janela"]) == {"data_inicial", "data_final"})
+    bloco2 = bloco_payload(reconciliar(ls_c, 0.0), tr2, tr2[0], encontro_de_contas(tr2[0]), [],
+                           {"valor_corrigido": 1.0, "data_final": "2025-05-30", "indice": "x", "hash": "h",
+                            "memoria": "fora"})
+    chk("bloco_payload aceita o dict do líder, preserva o omitido com motivo e a correção",
+        bloco2["cenario_lider"] == "C1_TAXA_MEDIA" and bloco2["cenarios"][1] ==
+        {"cenario": "C2_CAP_MENSAL", "omitido": True, "motivo": tr2[1]["motivo"]}
+        and set(bloco2["correcao"]) == {"valor_corrigido", "data_final", "indice", "hash"})
+    try:
+        bloco_payload("não é dict", tr, "C1_TAXA_MEDIA", {}, [])
+        chk("bloco_payload recusa reconciliação que não é dict", False)
+    except ValueError:
+        chk("bloco_payload recusa reconciliação que não é dict", True)
 
     print(f"\n  {ok} passaram · {fail} falharam")
     return ok, fail

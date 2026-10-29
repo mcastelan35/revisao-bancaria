@@ -201,15 +201,20 @@ Confirmar a lista de lacunas e o requerimento de exibição.
    corrigida da sua data-base, memória linha a linha e hash de auditoria.
 
 3. **Entregável.** Gate de formato como na L4 (Premium / Panorâmica / os dois / só
-   planilha). Enquanto o renderizador (`motores/relatorios.py`) não tiver o ramo CONTA no payload
-   (pendência declarada no CHANGELOG), o entregável HTML sai pelo padrão visual
-   financeiro com o CSS canônico de `html-pdf-impressao-segura`, contendo
-   obrigatoriamente: metodologia (convenções declaradas: hamburguês, base de dias,
-   linear_30/exponencial_30, capitalização), veredito da reconciliação com pontos
-   conferidos, procedência das séries, trinca com condições, ressalvas e lacunas, e a
-   advertência da regra de conduta 20: os valores instruem a perícia e dependem de
-   confirmação pericial — o briefing para peça inclui requerimento expresso de prova
-   pericial contábil.
+   planilha). O entregável sai por `<rb> gerar` com `ramo: "conta"` no payload
+   (`referencia/payload-schema.md`, "Ramo CONTA"), nos mesmos três formatos e com o PDF e o tema
+   da L4. O bloco `conta` do payload é montado pelo motor, não à mão:
+   `conta_corrente.bloco_payload(reconciliacao, trinca, cenario_lider, encontro, series,
+   correcao)`, com a reconciliação da C1, a trinca da C4, o `encontro_de_contas` do item 1, as
+   séries consultadas (`serie`, `codigo`, `procedencia`, `periodo`) e, se houve a correção do
+   item 2, o resumo dela (`valor_corrigido`, `data_final`, `indice`, `hash`). O resto do payload
+   segue a L4: `metodologia` com as convenções declaradas (hamburguês, base de dias,
+   linear_30/exponencial_30, capitalização), `ressalvas` — o cenário desfavorável é
+   **obrigatório** nelas —, `lacunas` e `achados`. O renderizador recusa o que a C1 já
+   bloqueia (reconciliação DIVERGENTE ou competência sem lançamento), líder omitido e encontro cuja
+   soma não fecha, e acrescenta sozinho a advertência da regra de conduta 20: os valores instruem
+   a perícia e dependem de confirmação pericial. O briefing para peça inclui requerimento
+   expresso de prova pericial contábil.
 
 4. **Fundamentação jurídica** apenas via `referencia/repertorio-jurisprudencial-contas.md`
    (regra de conduta 3: ementa na íntegra, padrão sanduíche, identificação completa ao
