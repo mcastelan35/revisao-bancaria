@@ -51,6 +51,14 @@
   processo; saíram as que o portal mostra de outro caso. Sem favorável de Câmara Cível no TJPR:
   teto de 100% do cartão (R23). Jurisprudência majoritariamente contrária no TJPR, registrada nas
   observações: RMC (R24), CDC para PJ em capital de giro e TAC em contrato de PJ.
+- Terceira onda, TJPR pelo portal (29/10/2026): mais duas apelações de Câmara Cível para o
+  correspondente bancário (R10), ambas com contrato posterior a 25/02/2011, e o primeiro
+  favorável de Câmara Cível para o teto de 100% do cartão (R23), um agravo de instrumento em
+  tutela de urgência, registrado como tal. A observação da R23 lista as linhas contrárias das
+  Câmaras (teto por operação, débito anterior a 2024, ônus do demonstrativo nos embargos
+  monitórios). O repertório passa a 109 entradas (108 citáveis). A conferência das ementas do STJ
+  no Jusbrasil e a busca de favorável do STJ para R23 e R24 seguem pendentes (cota do conector
+  esgotada).
 - O validador recusa julgado escrito fora de uma seção de tese (antes, era ignorado sem aviso).
 - Teste de sigilo: número CNJ estadual só é admitido dentro do repertório, no título ou em
   `classe_numero` ou no link de entrada com fonte pública (Jusbrasil ou portal do tribunal), ou
