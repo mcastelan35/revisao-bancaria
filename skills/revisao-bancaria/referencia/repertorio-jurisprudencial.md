@@ -325,6 +325,35 @@ ementa:
 > IV. DISPOSITIVO
 > 6. Resultado do Julgamento: Recurso provido para restabelecer a sentença de primeiro grau.
 
+### STJ · AREsp 2.671.164/GO
+- regras: R03
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: AREsp 2.671.164/GO
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2025-10-20
+- publicacao: 2025-10-29
+- precedente_qualificado: não (delimita o alcance do Tema 52/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6267493482
+- verificado_em: 2026-11-02
+- status: VERIFICADO
+- uso_na_peca: Ressalva da peça: o STJ reformou acórdão do TJGO que tratara os juros remuneratórios do período de inadimplência como "comissão de permanência disfarçada" e os excluíra; nas cédulas de crédito rural (e, na fundamentação, industrial e comercial), a comissão de permanência é inexigível, mas o banco pode cobrar, após o vencimento, juros remuneratórios (até 12% ao ano) mais 1% ao ano de mora, multa e correção monetária (Decreto-Lei 167/1967, art. 5º, parágrafo único). A tese R03 não deve ser invocada para cédulas rurais, industriais ou comerciais; vale para os contratos bancários comuns regidos pelos repetitivos 1.058.114/RS e 1.063.343/RS.
+- observacao: O fundamento do STJ é o escopo dos repetitivos (excluem cédulas de crédito rural, industrial e comercial, contratos de cooperativas de crédito, SFH e consignado, conforme trecho do voto da Min. Nancy Andrighi transcrito no acórdão), não uma rejeição da equiparação em si. O voto cita a premissa do TJGO ("comissão de permanência disfarçada") só para dizer que ela se apoiou em precedente inaplicável. A mesma exclusão pode ser invocada pela parte contrária em cooperativas e consignado; conferir a modalidade antes de citar R03. Publicação pela data do Jusbrasil (sessão virtual de 14 a 20/10/2025). Há acórdão no mesmo sentido, de 29/10/2026 (AgInt no REsp 2.255.341/MT, cédula rural), visto só no trecho de busca e não aberto.
+
+ementa:
+> DIREITO CIVIL. AGRAVO EM RECURSO ESPECIAL. REVISÃO DE CLÁUSULAS CONTRATUAIS. CÉDULA DE CRÉDITO RURAL. JUROS REMUNERATÓRIOS. COMISSÃO DE PERMANÊNCIA. RECURSO PARCIALMENTE PROVIDO.
+> I. Caso em exame
+> 1. Agravo contra decisão que inadmitiu recurso especial interposto por instituição financeira contra acórdão proferido em ação ordinária de revisão de cláusulas contratuais relativa à cédula rural pignoratícia e hipotecária.
+> II. Questão em discussão
+> 2. Há três questões em discussão: (i) saber se houve negativa de prestação jurisdicional e ausência de fundamentação no acórdão recorrido; (ii) saber se a petição inicial seria inepta por ausência de discriminação das cláusulas controvertidas e do valor incontroverso; e (iii) saber se o afastamento da comissão de permanência implica supressão dos juros remuneratórios no período de inadimplência.
+> III. Razões de decidir
+> 3. O acórdão recorrido não violou os arts. 489 e 1.022 do CPC, pois apresentou fundamentação suficiente para resolver a controvérsia, analisando os argumentos sobre a manutenção dos juros remuneratórios no período de inadimplência.
+> 4. A ausência de depósito do valor incontroverso não torna inepta a petição inicial em ação revisional, sendo tal depósito exigido apenas para concessão de tutela antecipada, conforme entendimento consolidado no REsp 1.061.530/RS.
+> 5. Nas cédulas de crédito rural, a comissão de permanência é inexigível, mas a instituição financeira está autorizada a cobrar juros remuneratórios limitados a 12% ao ano, acrescidos de juros de mora de 1% ao ano, multa de 10% e correção monetária, conforme o art. 5º, parágrafo único, do Decreto-Lei 167/1967 e jurisprudência do STJ.
+> IV. Dispositivo e tese
+> 6. Resultado do Julgamento: Recurso parcialmente provido para autorizar a incidência de juros remuneratórios no período de inadimplência, nos termos da jurisprudência do STJ.
+
 ### TJMT · Apelação Cível 1028080-89.2024.8.11.0015
 - regras: R03
 - posicao: FAV
@@ -877,6 +906,42 @@ ementa:
 Tese: É abusiva a cláusula que transfere ao consumidor o ressarcimento da comissão do correspondente bancário em contratos celebrados a partir de 25/02/2011, data de vigência da Res. CMN 3.954/2011, devendo o valor ser restituído.
 
 O REsp 1.578.553/SP (tese 2.2), listado sob R09 com `regras: R09, R10, R29`, também serve a esta tese.
+
+### STJ · AgInt no REsp 2.179.148/SP
+- regras: R10
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: AgInt no REsp 2.179.148/SP
+- orgao: Terceira Turma
+- relator: Min. Humberto Martins
+- julgamento: 2026-10-27
+- publicacao: 2026-10-29
+- precedente_qualificado: aplica o Tema 958/STJ (tese 2.2)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/7745058766
+- verificado_em: 2026-11-02
+- status: VERIFICADO
+- uso_na_peca: Ressalva de peça: a Terceira Turma reafirma que a tese 2.2 do Tema 958 tem marco em 25/02/2011 (Res. CMN 3.954/2011) e que a cláusula de ressarcimento da comissão do correspondente é válida em contrato anterior, salvo onerosidade excessiva; a petição deve demonstrar a data do contrato e, havendo cobrança genérica de "serviços de terceiros", invocar também a tese 2.1.
+- observacao: Arrendamento mercantil de veículo, contrato anterior à Res. CMN 3.954/2011, cláusula mantida como válida. Agravo improvido; o STJ distinguiu a cobrança genérica de serviços de terceiros (tese 2.1) da comissão do correspondente (tese 2.2, marco de 25/02/2011) e aplicou as Súmulas 5 e 7 ao ponto da especificação do serviço. Publicação pela data do Jusbrasil (o texto não traz a data do DJe).
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. AGRAVO INTERNO EM RECURSO ESPECIAL. ARRENDAMENTO MERCANTIL FINANCEIRO. VRG. PRESCRIÇÃO E COMPENSAÇÃO. CORREÇÃO MONETÁRIA. SERVIÇOS DE TERCEIROS. IMPUGNAÇÃO ESPECÍFICA. ÓBICES SUMULARES.
+> I. Caso em exame 1. Agravo interno interposto contra decisão monocrática que conheceu em parte de recurso especial e, nessa extensão, negou-lhe provimento, majorando honorários advocatícios, em ação de indenização relativa a arrendamento mercantil de veículo.
+> 2. Pedidos e fundamentos. Pretensões de: (i) reconhecimento de prescrição das contraprestações vencidas e não pagas; (ii) alteração do termo inicial da correção monetária do Valor Residual Garantido (VRG) contratado; (iii) devolução de cobranças de serviços de terceiros; e (iv) reconhecimento de violação do art. 1.022 do CPC e afastamento dos óbices das Súmulas 5, 7 e 83/STJ.
+> 3. As decisões anteriores. Acórdão do Tribunal de origem manteve a sentença, afastou a prescrição (prazo "sequer teve início"), reconheceu a compensação das parcelas inadimplidas com o produto da venda do bem, fixou a correção monetária a partir da alienação do bem e reputou legítima a cobrança de serviços de terceiros em contrato anterior à Resolução CMN nº 3.954/2011. Embargos de declaração rejeitados.
+> II. Questão em discussão 4. A questão em discussão consiste em saber se houve negativa de prestação jurisdicional (art. 1.022 do CPC) diante de alegada omissão não enfrentada pelo Tribunal de origem, à luz do dever de impugnação específica (art. 1.021, § 1º, do CPC) e do art. 489, § 1º, IV, do CPC.
+> 5. A questão em discussão consiste em definir os efeitos da prescrição quinquenal (art. 206, § 5º, I, do CC) sobre a compensação das parcelas inadimplidas com o VRG, notadamente o momento da coexistência e exigibilidade recíproca das dívidas no arrendamento mercantil e a possibilidade de reconhecimento da compensação legal após a rescisão e venda do bem.
+> 6. A questão em discussão consiste em verificar o termo inicial da correção monetária do VRG para apuração do saldo no regime do Tema 500/STJ e se a insurgência recursal se dissocia do fundamento do acórdão recorrido.
+> 7. Há duas questões em discussão: (i) saber se é abusiva a tarifa de serviços de terceiros à luz do Tema 958/STJ e da Resolução CMN nº 3.954/2011; e (ii) saber se a revisão pretendida demanda interpretação de cláusula contratual e reexame de prova (Súmulas 5 e 7/STJ).
+> 8. A questão em discussão consiste em saber se há demonstração adequada de divergência jurisprudencial (alínea c do art. 105, III, da CF/1988), com cotejo analítico e identificação dos paradigmas (art. 1.029, § 1º, do CPC e art. 255, § 1º, do RISTJ), e se incide a Súmula 83/STJ.
+> 9. A questão em discussão consiste em definir a incidência da multa do art. 1.021, § 4º, do CPC e a possibilidade de nova majoração de honorários (art. 85, § 11, do CPC).
+> III. Razões de decidir 10. Não se verifica negativa de prestação jurisdicional. A parte não individualiza omissão relevante, não demonstra sua suscitação oportuna, tampouco sua aptidão para alterar o resultado, atraindo a aplicação do art. 489, § 1º, IV, do CPC e, por deficiência de fundamentação, da Súmula 284/STF.
+> 11. O prazo prescricional para cobrança das parcelas inadimplidas é quinquenal (art. 206, § 5º, I, do CC), mas a controvérsia reside nos efeitos da prescrição sobre compensação já operada. A compensação legal (arts. 368 e 369 do CC) extingue obrigações até onde se compensarem, com efeitos que retroagem ao momento da coexistência de dívidas líquidas e exigíveis; a prescrição posterior não impede o reconhecimento desses efeitos (arts. 189 e 882 do CC). O art. 190 do CC não obsta a declaração de compensação já aperfeiçoada. Orientação alinhada ao Tema 500/STJ e ao REsp 1.983.238/SP.
+> 12. No arrendamento mercantil, o momento de coexistência das dívidas ocorre na rescisão do contrato e na venda do bem, quando se apura o saldo e se consolida o direito ao VRG e à cobrança das parcelas inadimplidas. A tese recursal pressupõe premissas fáticas diversas das fixadas, demandando reexame de datas, valores, planilhas e critérios de cálculo, o que é vedado pela Súmula 7/STJ. Incide, ademais, a Súmula 83/STJ por conformidade do acórdão recorrido com a jurisprudência desta Corte.
+> 13. Quanto ao termo inicial da correção monetária, o acórdão fixou a data da alienação do bem, em consonância com a finalidade de recomposição do valor da moeda e com o momento de apuração do saldo no Tema 500/STJ. A insurgência recursal dissocia-se do fundamento adotado, atraindo a Súmula 284/STF; eventual revisão exigiria análise de planilhas e cálculos, obstada pela Súmula 7/STJ.
+> 14. A tarifa de serviços de terceiros é abusiva quando desprovida de especificação do serviço efetivamente prestado (Tema 958/STJ). Todavia, é válida a cláusula de ressarcimento da comissão de correspondente bancário em contratos anteriores à Resolução CMN nº 3.954/2011, ressalvada a onerosidade excessiva. O acórdão reconheceu a discriminação do serviço e sua legitimidade; a revisão demandaria interpretação de cláusula contratual e reexame de prova, atraindo as Súmulas 5 e 7/STJ.
+> 15. A divergência jurisprudencial não foi demonstrada: faltam identificação do órgão prolator, natureza da decisão, data, repositório, cotejo analítico e similitude fática, em violação do art. 1.029, § 1º, do CPC e do art. 255, § 1º, do RISTJ. Quando o dissídio decorre de circunstâncias fáticas, não há divergência quanto à interpretação da lei federal.
+> 16. A multa do art. 1.021, § 4º, do CPC não incide automaticamente, exigindo manifesta inadmissibilidade ou improcedência, circunstância não verificada. Incabível nova majoração de honorários, já promovida na decisão agravada (art. 85, § 11, do CPC).
+> IV. Dispositivo Agravo interno improvido.
 
 ### TJPR · Apelação Cível 0031063-92.2024.8.16.0030
 - regras: R10
@@ -1624,6 +1689,41 @@ ementa:
 ## R24 — Cartão de crédito consignado com RMC/RCC em benefício previdenciário — nulidade/conversão em empréstimo consignado por falta de informação
 
 Tese: A contratação de cartão de crédito consignado com reserva de margem consignável por consumidor que pretendia empréstimo consignado comum, sem informação clara sobre a natureza do produto e sobre a amortização, caracteriza falha no dever de informação e vício de consentimento, devendo o contrato ser anulado ou convertido em empréstimo consignado (juros pela taxa média do BACEN), com restituição do que foi pago a maior e indenização por danos morais.
+
+### STJ · AREsp 3.118.740/MG
+- regras: R24
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: AREsp 3.118.740/MG
+- orgao: Quarta Turma
+- relator: Min. João Otávio de Noronha
+- julgamento: 2026-09-29
+- publicacao: 2026-10-02
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/7547184856
+- verificado_em: 2026-11-02
+- status: VERIFICADO
+- uso_na_peca: Ressalva de prazo: a Quarta Turma tem como orientação do STJ (Súmula 83) que a pretensão de anular o cartão consignado por vício de consentimento (erro) decai em 4 anos (CC, art. 178, II), contados da celebração do contrato, sem renovação a cada desconto; a peça deve ajuizar dentro do prazo ou estruturar o pedido para além da anulação (nulidade declaratória, abusividade, art. 51 do CDC, prescrição decenal).
+- observacao: Candidato ADV, não FAV. Decide por Súmula 83 e Súmulas 5/7, mas a tese de julgamento (item 1) afirma a decadência quadrienal com termo na celebração do contrato. Cita no mesmo sentido AREsp 3.006.231/MG (3ª T., j. 01/12/2025) e AREsp 2.803.298/BA (3ª T., j. 20/10/2025). Contraponto na Terceira Turma: AREsp 3.104.258/MT. Publicação pela data do Jusbrasil. Na ementa, a lista de artigos do CDC do item 5 veio embaralhada no Jusbrasil e foi refeita pela lista de dispositivos citados no próprio acórdão (arts. 4º, I e III, 6º, III, 14, 39, IV, 46, 51, IV e 54, §§ 3º e 4º). Alerta: o Tema 1.414/STJ (Segunda Seção, afetado em 06/03/2026, com suspensão nacional) trata da validade do cartão consignado, da consequência da invalidação (conversão ou restituição) e do dano moral; sem tese fixada até onde se conferiu (último andamento visto: 03/07/2026), confirmar no ScON antes de usar a R24 em peça.
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. AGRAVO EM RECURSO ESPECIAL. CONTRATO DE CARTÃO DE CRÉDITO CONSIGNADO. VÍCIO DE CONSENTIMENTO. DECADÊNCIA DO ART. 178, II, DO CC. TERMO INICIAL NA CELEBRAÇÃO DO CONTRATO. AGRAVO EM RECURSO ESPECIAL DESPROVIDO.
+> I. CASO EM EXAME
+> 1. Agravo em recurso especial interposto contra decisão de inadmissibilidade do recurso especial, por incidência da Súmula n. 7 do STJ, consonância do acórdão recorrido com a orientação do Superior Tribunal de Justiça (Súmula n. 83 do STJ) e prejudicialidade do dissídio pela alínea c , mantendo-se o não processamento do especial contra acórdão do Tribunal de Justiça de Minas Gerais.
+> 2. A controvérsia envolve ação de obrigação de fazer c/c restituição em dobro c/c danos morais, com pedido de conversão de contrato de cartão de crédito consignado em empréstimo consignado, sob alegação de erro substancial.
+> 3. O Juízo de primeiro grau reconheceu, de ofício, a decadência do art. 178, II, do Código Civil, extinguiu o mérito e fixou honorários com exigibilidade suspensa.
+> 4. A Corte de origem manteve a improcedência, por consumação da decadência desde a celebração do contrato, convalidando a avença e julgando prejudicários os pedidos de conversão e indenizatórios.
+> II. QUESTÃO EM DISCUSSÃO
+> 5. Há seis questões em discussão: (i) saber se incide a decadência do art. 178, II, do Código Civil em pretensão fundada em vício de consentimento por erro substancial; (ii) saber se a natureza de trato sucessivo desloca o termo inicial para o último desconto, com aplicação dos arts. 26 e 27 do Código de Defesa do Consumidor; (iii) saber se a conversão do contrato prescinde de anulação prévia; (iv) saber se houve falha do dever de informação, prática abusiva e responsabilidade objetiva à luz dos arts. 4º, I e III, 6º, III, 14, 39, IV, 46, 51, IV e 54, §§ 3º e 4º, do Código de Defesa do Consumidor; (v) saber se há responsabilidade civil por danos materiais e morais (arts. 186 e 927 do Código Civil e art. 5º, V e X, da Constituição Federal); e (vi) saber se há divergência jurisprudencial pela alínea c do art. 105, III, da Constituição Federal.
+> III. RAZÕES DE DECIDIR
+> 6. Incide a Súmula n. 83 do STJ porque o acórdão recorrido está em conformidade com a jurisprudência desta Corte quanto à decadência quadrienal do art. 178, II, do Código Civil, com termo inicial na celebração do contrato, relativamente ao ponto jurídico do vício de consentimento por erro.
+> 7. Incidem as Súmulas n. 5 e 7 do STJ porque a revisão da qualificação do vício, a interpretação de cláusulas e o revolvimento do conteúdo fático-probatório seriam necessários para afastar a conclusão de erro substancial e a convalidação do contrato, relativamente aos pedidos de conversão e indenização.
+> 8. Do exame de suposta violação dos arts. 5º, V e X, da Constituição Federal não se pode conhecer, por incompetência desta Corte para análise de matéria constitucional.
+> 9. Do dissídio jurisprudencial não se pode conhecer, por prejudicialidade decorrente do não processamento pela alínea a e da incidência da Súmula n. 83 do STJ sobre o tema da decadência.
+> IV. DISPOSITIVO E TESE
+> 10. Agravo em recurso especial desprovido. Tese de julgamento: "1. Incide a Súmula n. 83 do STJ quando o acórdão recorrido aplica o art. 178, II, do Código Civil para reconhecer a decadência quadrienal, com termo inicial na celebração do contrato, em pretensão de anulação por vício de consentimento.
+> 2. Incidem as Súmulas n. 5 e 7 do STJ quando o acolhimento do recurso demandaria interpretação de cláusulas contratuais e reexame do acervo fático-probatório sobre a existência de erro substancial e seus efeitos. 3. Não se conhece de alegação fundada nos arts. 5º, V e X, da Constituição Federal em sede de recurso especial, por usurpação da competência do Supremo Tribunal Federal.
+> 4. Do dissídio jurisprudencial não se pode conhecer quando a matéria está obstada pela solução pela alínea a e pela incidência da Súmula n. 83 do STJ.". Dispositivos relevantes citados: CC, arts. 178, II, 186 e 927; CDC, arts. 4º, I e III, 6º, III, 14, 26, 27, 39, IV, 46, 51, IV e 54, §§ 3º e 4º; CPC, art. 85, § 11; CF, arts. 5º, V e X, e 105, III, a e c. Jurisprudência relevante citada: STJ, Súmulas n. 5, 7 e 83; STJ, AgInt nos EDcl no AREsp n. 2.380.393/SP, relator Ministro Raul Araújo, Quarta Turma, julgados em 8/4/2024; STJ, AREsp n. 3.006.231/MG, relatora Ministra Daniela Teixeira, Terceira Turma, julgado em 1/12/2025; STJ, REsp n. 1.630.108/MG, relatora Ministra Nancy Andrighi, Terceira Turma, julgado em 27/2/2018; STJ, AREsp n. 2.803.298/BA, relatora Ministra Daniela Teixeira, Terceira Turma, julgado em 20/10/2025.
 
 ### TJRS · Apelação Cível 5004183-61.2022.8.21.0077
 - regras: R24

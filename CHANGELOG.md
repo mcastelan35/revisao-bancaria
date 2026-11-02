@@ -2,6 +2,14 @@
 
 ## [Não lançado]
 
+### Reforço do STJ por tese (02/11/2026)
+
+- Busca de acórdãos do STJ favoráveis para R24, R03 e R10: **nenhum FAV de mérito encontrado**; o STJ
+  não afirma essas teses em acórdão de Turma (Súmulas 5/7 e decisões monocráticas). Entraram três
+  ressalvas (ADV): AREsp 3.118.740/MG (R24, decadência de 4 anos), AREsp 2.671.164/GO (R03, cédula
+  rural não admite a tese) e AgInt no REsp 2.179.148/SP (R10, marco de 25/02/2011).
+- R24: alerta do Tema 1.414/STJ (afetado, suspensão nacional, sem tese fixada).
+
 ### Fundamentação das regras conferida na fonte (STJ e Planalto, 28/10/2026)
 
 - R04 e R06: a vedação de TAC e TEC desde 30/04/2008 é o **Tema 619/STJ** (R04 citava o 618, que
