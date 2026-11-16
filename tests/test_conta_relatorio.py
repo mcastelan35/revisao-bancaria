@@ -57,7 +57,9 @@ def test_bloco_do_motor_passa_na_validacao_e_o_encontro_fecha(motor):
     p = payload_de(*motor)
     enc = p["conta"]["encontro"]
     assert abs(enc["base_repeticao_simples"] + enc["base_repeticao_dobro"] - enc["excesso_final"]) <= 0.01
-    assert enc["base_repeticao_simples"] > 0 and enc["base_repeticao_dobro"] > 0     # o corte de 2021-03 reparte
+    # sem corte de data (Tema 929): cobrança sem lastro vai toda em dobro, inclusive 02 e 03/2021
+    assert enc["base_repeticao_simples"] == 0.0 and enc["base_repeticao_dobro"] > 0
+    assert "competencia_corte" not in enc
     assert validar(p) == [] and json.loads(json.dumps(p["conta"])) == p["conta"]
     assert enc["origem_indebito"] == "sem_lastro_contratual" and enc["base_dobro_afastada"] == 0.0
 
@@ -68,8 +70,8 @@ def test_engano_justificavel_leva_tudo_a_base_simples_e_o_laudo_diz_a_origem(mot
     não tem base de dobro; a parcela posterior ao corte sai informada, não somada."""
     p = payload_de(*motor, origem=origem)
     enc = p["conta"]["encontro"]
-    dobro_por_data = payload_de(*motor)["conta"]["encontro"]["base_repeticao_dobro"]
-    assert enc["base_repeticao_dobro"] == 0.0 and enc["base_dobro_afastada"] == dobro_por_data > 0
+    dobro_sem_lastro = payload_de(*motor)["conta"]["encontro"]["base_repeticao_dobro"]
+    assert enc["base_repeticao_dobro"] == 0.0 and enc["base_dobro_afastada"] == dobro_sem_lastro > 0
     assert abs(enc["base_repeticao_simples"] - enc["excesso_final"]) <= 0.01
     assert validar(p) == []
     html = relatorios.render_premium(p)
@@ -99,7 +101,7 @@ def test_os_numeros_do_motor_chegam_aos_tres_formatos(motor, tmp_path):
                   trinca[2]["excesso_final"]):
         assert brl(valor) in premium, valor
     assert brl_rs(trinca[0]["excesso_final"]) in panorama and "5 pontos de conferência" in premium
-    assert "01/02/2021 a 31/05/2021" in premium and "03/2021" in premium and ADVERTENCIA_CONTA in premium
+    assert "01/02/2021 a 31/05/2021" in premium and "sem corte de data" in premium and ADVERTENCIA_CONTA in premium
 
 
 def test_planilha_traz_os_numeros_do_motor(motor, tmp_path):

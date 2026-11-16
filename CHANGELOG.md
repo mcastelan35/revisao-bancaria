@@ -2,6 +2,38 @@
 
 ## [Não lançado]
 
+### Tema 929 sem modulação: o dobro deixa de depender da data (16/11/2026)
+
+Inteiro teor do REsp 1.963.770/CE lido no Jusbrasil. A Corte Especial fixou a tese do Tema 929
+"sem modulação de efeitos": na retificação de voto, o relator adere ao voto do Ministro Luis Felipe
+Salomão e afasta a modulação do EAREsp 676.608/RS, que limitava o dobro, nos contratos privados, às
+cobranças posteriores a 30/03/2021 (não houve alteração de jurisprudência dominante, art. 927, § 3º,
+do CPC). No caso concreto, financiamento com banco, a restituição em dobro foi determinada.
+**Muda o cálculo:** a cobrança sem lastro contratual vai inteira à base do dobro, qualquer que seja
+a data do pagamento.
+
+- R26 e R27 sem corte temporal: quem reparte dobro × simples é a origem do indébito (gate da R26).
+  R26: dobro para a cobrança sem lastro contratual, em qualquer data. R27: simples só para o engano
+  justificável (tese i.c). R13: a repetição do seguro segue a origem, não o MT05.
+- MT05 (30/03/2021) fica como registro histórico, marcado `superado`, sem regras; o
+  `resolver_marcos` informa a superação e o `validar_dados` recusa regra que corte por marco
+  superado.
+- `conta_corrente.encontro_de_contas` sem corte de data: sem lastro contratual, todo o indébito na
+  base do dobro; com engano justificável, todo na base simples e em `base_dobro_afastada`. Sai o
+  campo `competencia_corte` (o renderizador não o exige mais) e a constante `CORTE_TEMA_929`.
+- Pendência do Tema 929: agora os embargos de declaração até o trânsito; a providência manda pedir o
+  dobro sobre todo o período.
+- Repertório da R26: entra o REsp 1.963.770/CE (Tema 929, precedente qualificado, ementa do
+  inteiro teor); sai o AgInt no AREsp 1.777.647/DF (ADV), cujo limite temporal o repetitivo
+  derrubou; tese, EAREsp 676.608/RS, AREsp 3.194.853/PE e a Turma Recursal do TJPR deixam de
+  limitar o pedido por data. Dois usos de outras teses ganham a mesma ressalva.
+- Repertório da R28: o AgInt no AREsp 2.097.250/PR volta a VERIFICADO. O acórdão diz que o relator
+  é o Min. Paulo de Tarso Sanseverino e que o Min. Ricardo Villas Bôas Cueva presidiu e lavrou o
+  acórdão (art. 52, IV, b, do RISTJ) — é esse o nome da base oficial do STJ; a citação traz os dois.
+  O repertório fica com 112 entradas citáveis.
+- SKILL.md (regra de conduta 9), L0, L2, L3, C0-C6, pesquisa-base, payload-schema, README,
+  ARCHITECTURE e o prompt da tese 7 do repertório da conta.
+
 ### Jurisprudência conferida no conector (consultar_precedente e verificar_citacoes)
 
 Nenhum cálculo, tese, tier ou limiar mudou: muda como a situação dos temas e as citações são

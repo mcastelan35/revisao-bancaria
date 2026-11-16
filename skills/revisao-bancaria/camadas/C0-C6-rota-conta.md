@@ -194,12 +194,11 @@ Confirmar a lista de lacunas e o requerimento de exibição.
    encargo sem pactuação — admite o dobro) ou de cláusula pactuada **depois declarada nula** ou
    objeto de **divergência jurisprudencial** (engano justificável — tudo na base simples)?
    Origens misturadas: a de menor excesso. Então
-   `encontro_de_contas(cenario_lider, origem=...)`: excesso final, base de repetição simples
-   (competências até a que contém 30/03/2021, inteira — critério de menor excesso, declarado
-   na `nota`) e base do dobro (posteriores — corte do EAREsp 676.608/RS, condicionado ao regime
-   consumerista qualificado na C0). Com engano justificável a base do dobro é zero e a parcela
-   posterior ao corte sai em `base_dobro_afastada`. Sem `origem` o motor recusa. Incrementos
-   negativos entram nas bases: simples + dobro fecha com o excesso final.
+   `encontro_de_contas(cenario_lider, origem=...)`: excesso final e as duas bases, sem corte de
+   data (o Tema 929 foi fixado sem modulação). Sem lastro contratual, todo o indébito vai à base
+   do dobro (condicionada ao regime consumerista qualificado na C0); com engano justificável, tudo
+   vai à base simples e o total sai em `base_dobro_afastada`. Sem `origem` o motor recusa.
+   Incrementos negativos entram nas bases: simples + dobro fecha com o excesso final.
 
 2. **Correção do indébito → conector, uma chamada.** A série
    `indebito_por_competencia` do cenário vai inteira ao

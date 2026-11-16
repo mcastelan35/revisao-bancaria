@@ -87,10 +87,11 @@ Prompt JusIA:
 Posições a preencher: [PENDENTE-FAV] [PENDENTE-ADV] [PENDENTE-EST]
 
 Prompt JusIA:
-> Pesquisa Fundamentada. Aplicação atual do EAREsp 676.608 (Tema 929, modulação
-> 30/03/2021) à repetição de encargos de conta corrente: exigência de má-fé, incidência
-> em relação civil-empresarial e critérios de contagem por débito. Ementa integral,
-> identificação completa, correntes divergentes.
+> Pesquisa Fundamentada. Aplicação do Tema 929/STJ (REsp 1.963.770/CE, fixado sem
+> modulação em 15/09/2026) à repetição de encargos de conta corrente: dobro sem limite de
+> data, engano justificável da tese (i.c) quando a cobrança se funda em cláusula depois
+> declarada nula, incidência em relação civil-empresarial e critérios de contagem por débito.
+> Ementa integral, identificação completa, correntes divergentes.
 
 ---
 
