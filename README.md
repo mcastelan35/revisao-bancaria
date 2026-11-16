@@ -115,6 +115,12 @@ precedente consolidado não concluem: aparecem como alerta, e a decisão é do a
   tribunais estaduais (TJPR primeiro), só os favoráveis. Cada um foi aberto no inteiro teor pelo
   conector Jusbrasil (ou, no TJPR, no portal do próprio tribunal), tem a ementa copiada na íntegra, a identificação completa e o link de
   acesso, e vale por um ano até ser revalidado. A petição só cita o que está nele.
+- **Conferência no conector antes de protocolar:** os temas pendentes do STJ que afetam o caso
+  são conferidos no catálogo oficial de precedentes pelo conector Radar Apogeu
+  (`consultar_precedente`), e as citações do STJ e do STF da peça passam pelo
+  `verificar_citacoes`, que confere número, relator, órgão, datas e trecho citado na fonte
+  oficial. Tema que mudou de situação depois da versão instalada bloqueia a conclusão até rever a
+  tese.
 - **Petição:** na `configurar`, você indica a skill de petição do escritório, que passa a ser a
   canônica e recebe o espelho para redigir a inicial. Sem skill indicada, o espelho sai em formato
   neutro.

@@ -2363,14 +2363,20 @@
     ]
   },
   "pendencias_jurisprudenciais": {
-    "descricao": "Temas pendentes que alteram regras deste motor. `verificado_em` é a última data em que o status foi conferido por quem editou este arquivo — NÃO é a data de hoje. Se (hoje − verificado_em) > validade_dias, toda análise que invoque a regra afetada emite o alerta abaixo, além do alerta da própria regra. `providencia` (opcional) diz o que fazer no caso enquanto o tema não se resolve; o espelho da petição a lista nas pendências antes de protocolar.",
+    "descricao": "Temas pendentes que alteram regras deste motor. `verificado_em` é a última data em que o status foi conferido por quem editou este arquivo — NÃO é a data de hoje. Se (hoje − verificado_em) > validade_dias, toda análise que invoque a regra afetada emite o alerta abaixo, além do alerta da própria regra. `providencia` (opcional) diz o que fazer no caso enquanto o tema não se resolve; o espelho da petição a lista nas pendências antes de protocolar. `precedente` (temas e súmulas do STJ e do STF) traz os argumentos do `consultar_precedente` do conector, e `situacao_esperada`, a situação do catálogo BNP/CNJ na data de `verificado_em`: situação diferente quer dizer que o tema andou depois desta versão (`revisao.py pendencias`).",
     "validade_dias": 90,
-    "alerta_vencido": "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do {tema} foi conferida pela última vez em {verificado_em}. Validar via pesquisa-jurisprudencial-jusia antes de citar ou de emitir conclusão.",
+    "alerta_vencido": "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do {tema} foi conferida pela última vez em {verificado_em}. Conferir a situação atual com o `consultar_precedente` do conector (argumentos em `conferir_no_conector`) e comparar com `revisao.py pendencias --situacao`; sem tema no catálogo, validar via pesquisa-jurisprudencial-jusia. Não citar nem concluir antes.",
     "temas": [
       {
         "tema": "Tema 1378/STJ",
         "questao": "Taxa média BACEN como fundamento exclusivo de abusividade dos juros remuneratórios",
         "status": "afetado em 02/09/2025, sem julgamento em 16/11/2026 (catálogo BNP/CNJ); suspensos só REsp e AREsp sobre a questão (no STJ ou na origem)",
+        "precedente": {
+          "tribunal": "STJ",
+          "especie": "tema_repetitivo",
+          "numero": 1378
+        },
+        "situacao_esperada": "afetado",
         "regras_afetadas": [
           "R15"
         ],
@@ -2387,6 +2393,12 @@
         "tema": "Tema 929/STJ",
         "questao": "Repetição em dobro: teses do repetitivo e modulação temporal (o corte de 30/03/2021 vem do EAREsp 676.608/RS)",
         "status": "julgado em 15/09/2026 pela Corte Especial (REsp 1.963.770/CE, acórdão publicado em 03/11/2026), teses (i) a (i.c); a tese não repete o corte de 30/03/2021 — conferir no inteiro teor se o acórdão manteve, alterou ou afastou a modulação",
+        "precedente": {
+          "tribunal": "STJ",
+          "especie": "tema_repetitivo",
+          "numero": 929
+        },
+        "situacao_esperada": "outra",
         "regras_afetadas": [
           "R26",
           "R27"
@@ -2402,6 +2414,12 @@
         "tema": "Tema 1414/STJ",
         "questao": "Cartão consignado RMC: decadência (art. 178 do CC) ou nulidade sem prazo; parâmetros objetivos de validade e abusividade; consequência do vício (retorno ao estado anterior, conversão em consignado ou revisão) e dano moral in re ipsa",
         "status": "afetado em 06/03/2026 (Segunda Seção, Rel. Min. Raul Araújo); suspensão nacional referendada em 08/04/2026, salvo cumprimento de sentença; absorveu o Tema 1328 (cancelado em 02/10/2026); sem julgamento em 16/11/2026",
+        "precedente": {
+          "tribunal": "STJ",
+          "especie": "tema_repetitivo",
+          "numero": 1414
+        },
+        "situacao_esperada": "afetado",
         "regras_afetadas": [
           "R24"
         ],
@@ -2420,6 +2438,12 @@
         "tema": "Tema 1396/STJ",
         "questao": "Se a prova da prévia tentativa de solução extrajudicial é necessária para o interesse de agir nas ações de natureza prestacional das relações de consumo",
         "status": "afetado, sem julgamento em 16/11/2026 (catálogo BNP/CNJ); alcance da suspensão [CONFERIR]",
+        "precedente": {
+          "tribunal": "STJ",
+          "especie": "tema_repetitivo",
+          "numero": 1396
+        },
+        "situacao_esperada": "afetado",
         "regras_afetadas": [
           "R26",
           "R27"

@@ -400,7 +400,7 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
             w(f"- {' · '.join(str(x) for x in d if x)}")
     w("")
     w("## 3. Do direito")
-    sem_juris, julgados = [], 0
+    sem_juris, julgados, citacoes = [], 0, []
     for n, a in enumerate(achados, 1):
         w("")
         w(f"### 3.{n}. {a.get('titulo', 'Achado')} ({a.get('tier', '—')} · {a.get('resultado')})")
@@ -429,6 +429,7 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
             w(f"Jurisprudência ({rid}):")
             for e in fav:
                 julgados += 1
+                _anotar_citacao(citacoes, e)
                 w("")
                 w(f"**{_citacao(e)}.** Uso: {e['uso_na_peca']}{_cautela(e)}")
                 w("")
@@ -437,6 +438,7 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
                 w(f"Fonte: {e['url']}")
             for e in bloco.get("adversos", []):
                 julgados += 1
+                _anotar_citacao(citacoes, e)
                 w("")
                 w(f"**Argumento contrário previsto — {_citacao(e)}.** {e['uso_na_peca']}{_cautela(e)}")
                 w("")
@@ -475,7 +477,16 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
     w("")
     w("## 7. Pendências antes de protocolar")
     w("")
-    pend_juris = _pendencias_juris(ids, hoje)
+    pend_juris, conferir = _pendencias_juris(ids, hoje)
+    if citacoes:
+        pend_juris.append(
+            f"Conferência das citações do STJ/STF ({len(citacoes)}): antes de protocolar, passar a "
+            "peça inteira no `verificar_citacoes` do conector (ou a lista `citacoes_stj_stf` do JSON "
+            "do espelho, em lotes de até 4) e repetir as que voltarem com tempo esgotado. O veredito "
+            "vale para a citação, não para o argumento; só campo `diverge` pede correção — "
+            "`nao_conferido` e citação fora do índice não são erro e pedem conferência manual, nunca "
+            "exclusão automática. TJ e TRF ficam fora da cobertura: valem a ementa e o link do "
+            "repertório.")
     pend = [*sem_juris, *consulta["avisos"], *pend_juris,
             *(f"Ressalva do laudo: {r}" for r in payload.get("ressalvas", [])),
             *(f"Premissa não comprovada: {p}" for p in payload.get("premissas", []))]
@@ -485,19 +496,30 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
         w(f"- {p}")
     w("")
     resumo = {"teses": len(achados), "julgados": julgados, "sem_jurisprudencia": sem_juris,
-              "avisos": consulta["avisos"], "pendencias_jurisprudenciais": pend_juris}
+              "avisos": consulta["avisos"], "pendencias_jurisprudenciais": pend_juris,
+              "conferir_no_conector": conferir, "citacoes_stj_stf": citacoes}
     return "\n".join(L), resumo
 
 
-def _pendencias_juris(ids, hoje: str | None) -> list[str]:
+def _anotar_citacao(citacoes: list[str], e: dict) -> None:
+    """Citação de julgado do STJ/STF para o `verificar_citacoes` do conector, sem repetir."""
+    if e.get("tribunal") in SUPERIORES:
+        texto = _citacao(e)
+        if texto not in citacoes:
+            citacoes.append(texto)
+
+
+def _pendencias_juris(ids, hoje: str | None) -> tuple[list[str], list[dict]]:
     """Uma linha por tema pendente do `regras-bancarias.json` que afeta as regras do espelho:
-    status, providência (quando houver) e o alerta de status vencido (validade das pendências)."""
+    status, providência (quando houver), a chamada ao `consultar_precedente` e o alerta de status
+    vencido. Devolve também as conferências estruturadas ({tema, ferramenta, argumentos,
+    situacao_esperada}), para o agente chamar o conector antes de protocolar."""
     from . import regras as motor_regras
     pend = motor_regras.carregar_dados().get("pendencias_jurisprudenciais", {})
     dia = _data(hoje) if hoje else date.today()
     validade = pend.get("validade_dias", 90)
     usados = set(ids)
-    linhas = []
+    linhas, conferir = [], []
     for t in pend.get("temas", []):
         afetadas = sorted(usados & set(t.get("regras_afetadas", [])))
         if not afetadas:
@@ -505,12 +527,20 @@ def _pendencias_juris(ids, hoje: str | None) -> list[str]:
         linha = f"Pendência jurisprudencial — {t['tema']} ({', '.join(afetadas)}): {t['status']}."
         if t.get("providencia"):
             linha += f" Providência: {t['providencia']}"
+        conferencia = motor_regras._conferencia(t)
+        if conferencia:
+            args = conferencia["argumentos"]
+            linha += (f" Antes de protocolar, conferir a situação: `consultar_precedente` "
+                      f"(tribunal {args['tribunal']}, espécie {args['especie']}, número "
+                      f"{args['numero']}); esperada `{conferencia['situacao_esperada']}` — se "
+                      "mudou, não protocolar sem rever a tese.")
+            conferir.append({"tema": t["tema"], **conferencia})
         verificado = _data(t["verificado_em"])
         if verificado and (dia - verificado).days > validade:
             linha += " " + pend.get("alerta_vencido", "").replace("{tema}", t["tema"]).replace(
                 "{verificado_em}", _br(t["verificado_em"]))
         linhas.append(linha)
-    return linhas
+    return linhas, conferir
 
 
 def gerar_espelho(payload: dict, saida: Path, skill_peticao: str | None = None,
@@ -619,8 +649,9 @@ def _testes() -> tuple[int, int]:
         chk("espelho: formato neutro sem skill", "neutro" in md)
         md2, _ = espelho(payload, skill_peticao="peticoes-escritorio", hoje="2026-10-27", caminho=arq)
         chk("espelho: skill canônica nomeada", "`peticoes-escritorio`" in md2)
-        chk("espelho: sem regra com tema pendente, nenhuma pendência jurisprudencial",
-            resumo["pendencias_jurisprudenciais"] == [])
+        chk("espelho: sem regra com tema pendente, nenhuma pendência de tema nem conferência",
+            not any(x.startswith("Pendência jurisprudencial") for x in resumo["pendencias_jurisprudenciais"])
+            and resumo["conferir_no_conector"] == [])
         payload["achados"][0]["regras"] = ["R04", "R26"]
         md3, r3 = espelho(payload, hoje="2026-10-27", caminho=arq)
         chk("espelho: tema pendente da R26 nas pendências, com a providência",
@@ -628,6 +659,14 @@ def _testes() -> tuple[int, int]:
             and "Pendência jurisprudencial — Tema 929/STJ" in md3
             and not any("DESATUALIZADO" in x for x in r3["pendencias_jurisprudenciais"]))
         _, r4 = espelho(payload, hoje="2030-01-01", caminho=arq)
+        chk("espelho: pendência do STJ traz a chamada ao consultar_precedente",
+            any(c["tema"] == "Tema 929/STJ" and c["ferramenta"] == "consultar_precedente"
+                and c["argumentos"]["numero"] == 929 for c in r3["conferir_no_conector"])
+            and "`consultar_precedente`" in md3)
+        chk("espelho: citações do STJ listadas para o verificar_citacoes, sem o TJ",
+            r3["citacoes_stj_stf"] and all(c.startswith("STJ") for c in r3["citacoes_stj_stf"])
+            and len(r3["citacoes_stj_stf"]) == len(set(r3["citacoes_stj_stf"]))
+            and "`verificar_citacoes`" in md3)
         chk("espelho: pendência vencida leva o alerta de status desatualizado",
             r4["pendencias_jurisprudenciais"] and
             all("DESATUALIZADO" in x for x in r4["pendencias_jurisprudenciais"]))

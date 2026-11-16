@@ -140,7 +140,20 @@ visualização de impressão. Só então entregar os arquivos ao usuário.
   payload leva em `regras` os ids que o motor aplicou (`["R04"]`). Com `skill_peticao` gravada
   na L-1, essa é a skill canônica do escritório: chame-a com o espelho como insumo, e ela define
   forma e estilo. Sem skill configurada, entregar o espelho, que já está em formato neutro. Na
-  redação, nenhum julgado fora do espelho: o que faltar vai para a pesquisa antes
+  redação, nenhum julgado fora do espelho: o que faltar vai para a pesquisa antes.
+  **Antes de entregar a peça**, duas conferências no conector, ditas ao usuário com o
+  resultado: (1) uma `consultar_precedente` para cada item de `conferir_no_conector` do JSON do
+  espelho, com a situação devolvida em `<rb> pendencias --situacao` — tema que mudou bloqueia o
+  tópico até rever a tese; (2) `verificar_citacoes` com a peça inteira em `texto` (sem a peça,
+  a lista `citacoes_stj_stf` em lotes de até 4: cada citação busca a íntegra no STJ e a chamada
+  tem tempo-limite), mostrando o veredito de cada citação e, ao lado, a comparação entre o texto
+  oficial e o uso na peça, como análise separada. Leitura do veredito: "não verificável" por
+  tempo esgotado → repetir só as que faltam (o conector guarda o que já consultou); fora do índice
+  ("cobertura incompleta", comum em repetitivo antigo) → vale a conferência do repertório;
+  "confere em parte" só com campos `nao_conferido` (a fonte não traz o dado) não é divergência.
+  Campo `diverge` (relator, órgão, data, UF ou incidente) é erro: a entrada do repertório volta a
+  `CONFERIR` e a citação sai da peça até a correção, por decisão do advogado — nunca em
+  silêncio
 
 ## Erros que esta camada existe para não repetir
 
