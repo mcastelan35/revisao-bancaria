@@ -123,7 +123,8 @@ Para cada tese aprovada pelo usuário:
 
 ## Cálculo de repetição de indébito
 
-Para CADA valor indevido, aplicar a origem do indébito e a modulação temporal:
+Para CADA valor indevido, aplicar a origem do indébito (a data não reparte mais: o Tema 929/STJ,
+REsp 1.963.770/CE, foi fixado sem modulação e afastou o corte de 30/03/2021):
 
 0. **Gate da origem (R26, Tema 929, tese i.c).** Antes de somar, o operador classifica cada
    indébito em `sem_lastro_contratual` (tarifa ou encargo não pactuado, serviço não prestado,
@@ -132,22 +133,22 @@ Para CADA valor indevido, aplicar a origem do indébito e a modulação temporal
    data, e o dobro fica como pedido do advogado contra a excludente — o laudo não o conclui.
    Origens misturadas no mesmo valor: a de menor excesso. Reclamação prévia ao banco recusada ou
    sem resposta é indício do dobro (tese i.a): registrar em `premissas` com o documento.
-1. Determinar as datas de cada pagamento indevido (parcelas mensais a partir da primeira)
-2. Pagamentos com data <= 30/03/2021 → repetição simples (1x)
-3. Pagamentos com data > 30/03/2021 e origem `sem_lastro_contratual` → repetição em dobro (2x);
-   com engano justificável → simples (1x)
+1. Determinar as datas de cada pagamento indevido (parcelas mensais a partir da primeira): elas
+   servem à correção monetária, não à escolha entre simples e dobro
+2. Origem `sem_lastro_contratual` → repetição em dobro (2x), em qualquer data
+3. Engano justificável (`clausula_declarada_nula` ou `divergencia_jurisprudencial`) → simples (1x)
 4. Encargos únicos (TAC, seguro, avaliação): usar a data do pagamento (geralmente embutido na primeira parcela ou financiado)
 
-O corte de 30/03/2021 vem do EAREsp 676.608/RS. O acórdão do Tema 929 (REsp 1.963.770/CE,
-2026) não repete a data: enquanto a pendência do Tema 929 não confirmar no inteiro teor se a
-modulação foi mantida, o corte segue e a metodologia o declara.
+A metodologia declara que não há corte de data e por quê (Tema 929 sem modulação). Antes de
+protocolar, conferir no conector se embargos de declaração mudaram a situação do tema
+(pendência do Tema 929).
 
 A atualização monetária de cada pagamento indevido, da sua data-base até a data do cálculo, vai
 ao conector numa chamada só: `atualizar_debito({ valores: [{ valor, data_inicial, rotulo }],
 segmentos, data_final })`. Cada parcela entra no timeline de correção na sua própria data; a
 resposta traz `resumo_geral` e a memória de cada valor, com hash de auditoria. Não fazer uma
-chamada por parcela — são N vezes a quota do aluno pelo mesmo resultado. A modulação do dobro
-(abaixo) é aplicada sobre os valores já corrigidos.
+chamada por parcela — são N vezes a quota do aluno pelo mesmo resultado. O dobro (acima) é
+aplicado sobre os valores já corrigidos.
 
 **O regime de correção e juros do indébito é escolha jurídica do operador, feita no gate desta
 camada antes da chamada** — o conector não decide regime. Duas formas, ambas descritas em
@@ -157,8 +158,8 @@ quando o operador a adotar. A escolha, com o fundamento que o operador der, vai 
 regime que o conector não parametriza vai para `liquidacao-correcao-debitos`.
 
 Resultado:
-- Subtotal simples (pagamentos até 30/03/2021 e os posteriores com engano justificável)
-- Subtotal dobro (pagamentos posteriores a 30/03/2021 sem lastro contratual)
+- Subtotal simples (indébitos com engano justificável)
+- Subtotal dobro (indébitos de cobrança sem lastro contratual, em qualquer data)
 - Parcela afastada do dobro pelo engano justificável (informada, já contida no subtotal simples)
 - Total de restituição = simples + dobro
 

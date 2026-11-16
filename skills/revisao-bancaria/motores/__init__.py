@@ -4,4 +4,4 @@ regras, operador, tema, relatórios e PDF. Cada módulo de cálculo tem autotest
 `revisao.py autoteste --modulo <modulo>`; `operador`, `tema` e `pdf` são cobertos pela suíte de
 testes (`tests/`)."""
 
-VERSAO = "6.1.0"
+VERSAO = "6.2.0"

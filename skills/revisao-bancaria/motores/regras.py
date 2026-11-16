@@ -180,7 +180,10 @@ def resolver_marcos(data_contrato=None, data_consolidacao=None, dados: dict | No
         md = date.fromisoformat(m["data"])
         item = {"data": m["data"], "base": m["base"], "evento": m["evento"],
                 "contrato": relacao(dc, md) if dc else None}
-        if m["base"] == "contrato_ou_consolidacao":
+        if m.get("superado"):
+            item["superado"] = True
+            item["nota"] = f"marco superado — {m['superado']}"
+        elif m["base"] == "contrato_ou_consolidacao":
             item["consolidacao"] = relacao(dk, md) if dk else None
         elif m["base"] == "pagamento":
             item["nota"] = NOTA_PAGAMENTO
@@ -625,6 +628,7 @@ def validar_dados(dados: dict | None = None) -> list[str]:
     validos = set(ids_tipo) | set(derivados)
 
     por_marco: dict[str, set[str]] = {}
+    superados = {m.get("id"): m["superado"] for m in marcos if m.get("superado")}
     for r in regras:
         rid = r.get("id")
         for tag in r.get("tipo_contrato", []):
@@ -636,6 +640,8 @@ def validar_dados(dados: dict | None = None) -> list[str]:
         if mk:
             if mk not in ids_marco:
                 problemas.append(f"{rid}: corte_temporal.marco {mk} não existe em marcos_temporais")
+            elif mk in superados:
+                problemas.append(f"{rid}: corte_temporal.marco {mk} está superado ({superados[mk]})")
             por_marco.setdefault(mk, set()).add(rid)
         if (mk or posicao is not None) and posicao not in POSICOES:
             problemas.append(f"{rid}: corte_temporal.posicao inválida: {posicao!r} "
@@ -777,7 +783,8 @@ def _testes() -> tuple[int, int]:
     mar = resolver_marcos("2019-05-02", None)
     chk("resolver_marcos: relação, base e notas por base",
         mar["MT04"]["contrato"] == "posterior" and mar["MT02"]["base"] == "contrato"
-        and "reparte a apuração" in mar["MT05"]["nota"] and "operação" in mar["MT06"]["nota"]
+        and mar["MT05"]["nota"].startswith("marco superado") and mar["MT05"]["superado"] is True
+        and "operação" in mar["MT06"]["nota"]
         and mar["MT10"]["consolidacao"] is None and "consolidacao" not in mar["MT01"])
     chk("resolver_marcos sem datas: relações nulas", resolver_marcos()["MT01"]["contrato"] is None)
 
@@ -837,9 +844,15 @@ def _testes() -> tuple[int, int]:
         and onde(avalia("cartao_credito", regime="civil_empresarial"), "R26")[0] == "nao_aplicaveis")
 
     # ── corte por pagamento, operação e consolidação ──────────────
-    chk("corte por pagamento (MT05) não exclui: aplicável com `corte`",
-        onde(caso, "R26")[1]["corte"] == {"marco": "MT05", "data": M["MT05"]["data"],
-                                          "base": "pagamento", "posicao": "posterior"})
+    chk("Tema 929 sem modulação: R26 e R27 sem corte de data; MT05 superado e sem regras",
+        "corte" not in onde(caso, "R26")[1] and "corte" not in onde(caso, "R27")[1]
+        and onde(caso, "R26")[0] == onde(caso, "R27")[0] == "aplicaveis"
+        and M["MT05"].get("superado") and M["MT05"]["regras_afetadas"] == [])
+    preso = copy.deepcopy(dados)
+    next(r for r in preso["regras"] if r["id"] == "R26")["corte_temporal"] = {
+        "aplica_se": "x", "marco": "MT05", "posicao": "posterior"}
+    chk("validar_dados recusa regra que corta por marco superado",
+        any("está superado" in x for x in validar_dados(preso)))
     r23 = onde(avalia("cartao_credito", dc="2020-01-01"), "R23")
     chk("corte por operação (MT06) não exclui pela data do contrato",
         r23[0] == "aplicaveis" and r23[1]["corte"]["base"] == "operacao")
@@ -907,7 +920,7 @@ def _testes() -> tuple[int, int]:
         {i["id"] for k in ("aplicaveis", "confirmar", "nao_aplicaveis") for i in so_tarifas[k]}
         == {r["id"] for r in dados["regras"] if r["categoria"] == "tarifas"}
         and so_tarifas["resumo"]["omitidas_por_categoria"] == len(dados["regras"]) - n_tarifas)
-    resumo = onde(avalia(formato="resumo"), "R26")[1]
+    resumo = onde(avalia("cartao_credito", dc="2020-01-01", formato="resumo"), "R23")[1]
     completo = onde(avalia(formato="completo"), "R15")[1]
     padrao = onde(caso, "R15")[1]
     chk("formato resumo: poucos campos, com `corte` quando há",

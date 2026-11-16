@@ -1,6 +1,6 @@
 {
   "$schema": "regras-bancarias-schema",
-  "versao": "6.1.0",
+  "versao": "6.2.0",
   "atualizado_em": "2026-11-16",
   "descricao": "Motor de regras para análise revisional de contratos bancários. Cada regra codifica uma tese jurídica com teste lógico, corte temporal, fundamentação e consequência. Consumido pelo plugin revisao-bancaria por meio do motor determinístico `motores/regras.py` (`revisao.py regras`) nas camadas L1/L2 e C3 — o agente recebe só as regras aplicáveis ao caso, não este arquivo inteiro.",
   "notas_de_versao": [
@@ -105,6 +105,15 @@
         "Nova pendência: Tema 1396/STJ (prévia tentativa extrajudicial e interesse de agir), regras_afetadas R26 e R27.",
         "Pendências ganham `providencia` (opcional). Tema 1378 sem mudança; todas as pendências do STJ conferidas em 16/11/2026 no catálogo BNP/CNJ (Radar Apogeu, consultar_precedente)."
       ]
+    },
+    {
+      "versao": "6.2.0",
+      "data": "2026-11-16",
+      "alteracoes": [
+        "Tema 929/STJ sem modulação (REsp 1.963.770/CE, inteiro teor lido): R26 e R27 sem corte temporal — a origem do indébito decide dobro × simples, em qualquer data; R13 segue a origem; MT05 marcado `superado`, sem regras.",
+        "Pendência do Tema 929 passa a ser os embargos de declaração até o trânsito; providência: pedir o dobro sobre todo o período.",
+        "Pendências do STJ com `precedente` (argumentos do consultar_precedente do conector) e `situacao_esperada`; alerta de pendência vencida manda conferir no conector."
+      ]
     }
   ],
   "marcos_temporais": {
@@ -161,11 +170,9 @@
         "data": "2021-03-30",
         "base": "pagamento",
         "evento": "Publicação do acórdão do EAREsp 676.608/RS (modulação da repetição em dobro)",
-        "efeito": "Modulação da repetição em dobro: pagamentos posteriores a esta data são restituídos em dobro, salvo engano justificável (Tema 929, i.c — R26); anteriores, simples. A tese do repetitivo (REsp 1.963.770/CE, 2026) não repete a data: corte mantido até a leitura do inteiro teor (pendência do Tema 929)",
-        "regras_afetadas": [
-          "R26",
-          "R27"
-        ]
+        "efeito": "Marco SUPERADO: a modulação do EAREsp 676.608/RS (dobro só para pagamentos posteriores a esta data, em contratos privados) foi afastada no Tema 929/STJ (REsp 1.963.770/CE, j. 15/09/2026, sem modulação). Mantido como registro histórico; nenhuma regra corta por ele",
+        "regras_afetadas": [],
+        "superado": "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026): tese fixada sem modulação; a data deixou de repartir dobro × simples"
       },
       {
         "id": "MT06",
@@ -760,7 +767,7 @@
         ]
       },
       "resultado_se_positivo": "ilicita",
-      "consequencia": "Afastar a cobrança do seguro + repetição do valor pago (simples ou dobro conforme marco MT05)",
+      "consequencia": "Afastar a cobrança do seguro + repetição do valor pago (dobro ou simples conforme a origem do indébito — R26/R27, Tema 929)",
       "tier": "T1",
       "status": "vigente",
       "alerta": "A mera contratação de seguradora indicada NÃO é, por si, venda casada (REsp 2.101.019/SP). O teste é se houve compulsão."
@@ -1245,29 +1252,29 @@
     {
       "id": "R26",
       "categoria": "repeticao_indebito",
-      "nome": "Repetição em dobro — pagamentos pós-30/03/2021 sem engano justificável",
-      "descricao": "A devolução em dobro independe do elemento volitivo da instituição financeira: cabe quando a cobrança indevida contraria a boa-fé objetiva (Tema 929, tese i). A omissão ou a recusa do fornecedor diante de reclamação prévia do consumidor é indício suficiente do dobro (i.a), e cabe ao fornecedor provar que não agiu de forma desleal ou descuidada (i.b). Há engano justificável, que afasta o dobro, quando houver divergência jurisprudencial sobre o objeto da cobrança ou quando a cláusula em que ela se baseia for posteriormente declarada nula (i.c). Aplica-se a pagamentos realizados após 30/03/2021 (modulação do EAREsp 676.608/RS).",
+      "nome": "Repetição em dobro — cobrança sem lastro contratual (Tema 929)",
+      "descricao": "A devolução em dobro independe do elemento volitivo da instituição financeira: cabe quando a cobrança indevida contraria a boa-fé objetiva (Tema 929, tese i), qualquer que seja a data do pagamento — a tese foi fixada sem modulação e afastou o corte de 30/03/2021 do EAREsp 676.608/RS. A omissão ou a recusa do fornecedor diante de reclamação prévia do consumidor é indício suficiente do dobro (i.a), e cabe ao fornecedor provar que não agiu de forma desleal ou descuidada (i.b). Há engano justificável, que afasta o dobro, quando houver divergência jurisprudencial sobre o objeto da cobrança ou quando a cláusula em que ela se baseia for posteriormente declarada nula (i.c).",
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, Rel. Min. Humberto Martins, julgado em 15/09/2026, acórdão publicado em 03/11/2026): teses (i), (i.a), (i.b) e (i.c)",
-          "EAREsp 676.608/RS (Corte Especial, 21/10/2020, publicado em 30/03/2021): modulação — dobro só para cobranças posteriores à publicação"
+          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, Rel. Min. Humberto Martins, julgado em 15/09/2026, acórdão publicado em 03/11/2026): teses (i), (i.a), (i.b) e (i.c), sem modulação de efeitos",
+          "EAREsp 676.608/RS (Corte Especial, 21/10/2020): origem da tese; a modulação para cobranças posteriores a 30/03/2021 foi afastada no Tema 929"
         ],
         "legislacao": [
           "Art. 42, parágrafo único, CDC"
         ]
       },
       "corte_temporal": {
-        "aplica_se": "pagamentos realizados após 30/03/2021",
-        "marco": "MT05",
-        "posicao": "posterior"
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
       },
       "tipo_contrato": [
         "consumo_pf"
       ],
       "teste": {
-        "descricao": "Verificar se houve pagamento indevido após 30/03/2021 e se a cobrança não tinha lastro contratual. Indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c) e vai para a R27",
-        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO > 2021-03-30 AND ORIGEM_INDEBITO = sem_lastro_contratual",
+        "descricao": "Verificar se houve pagamento indevido de cobrança sem lastro contratual, em qualquer data. Indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c) e vai para a R27",
+        "logica": "PAGAMENTO_INDEVIDO AND ORIGEM_INDEBITO = sem_lastro_contratual",
         "campos_necessarios": [
           "datas_pagamento",
           "valores_pagos_indevidos",
@@ -1275,38 +1282,37 @@
         ]
       },
       "resultado_se_positivo": "dobro",
-      "consequencia": "Restituição em dobro dos pagamentos indevidos posteriores a 30/03/2021 cuja cobrança não tinha lastro contratual (tarifa ou encargo não pactuado, serviço não prestado, débito não autorizado). O indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c): o laudo o apura na base simples (R27, critério de menor excesso) e o dobro só se pede afastando a excludente.",
+      "consequencia": "Restituição em dobro dos pagamentos indevidos de cobrança sem lastro contratual (tarifa ou encargo não pactuado, serviço não prestado, débito não autorizado), em todo o período, sem o corte de 30/03/2021 (Tema 929, sem modulação). O indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c): o laudo o apura na base simples (R27, critério de menor excesso) e o dobro só se pede afastando a excludente.",
       "tier": "T1",
       "status": "vigente",
-      "alerta": "TEMA 929/STJ JULGADO (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026, acórdão publicado em 03/11/2026). O item (i.c) qualifica como engano justificável, e afasta o dobro, a cobrança fundada em cláusula depois declarada nula ou em objeto de divergência jurisprudencial: classificar a origem de cada indébito no gate (campo `gate`). A tese do repetitivo não repete a data de 30/03/2021; o corte do EAREsp 676.608/RS segue aplicado até a leitura do inteiro teor do acórdão (pendência do Tema 929).",
-      "gate": "Antes de apurar, o operador classifica a origem de cada indébito em `origem_indebito`: `sem_lastro_contratual` (cobrança sem cláusula que a preveja, serviço não prestado, débito não autorizado — dobro após 30/03/2021) | `clausula_declarada_nula` | `divergencia_jurisprudencial` (Tema 929, i.c — base simples; o dobro só como pedido do advogado contra a excludente, nunca como conclusão do laudo). Origens misturadas num mesmo valor: a de menor excesso. Reclamação prévia ao banco sem resposta ou recusada é indício do dobro (i.a): registrar em `premissas` com o documento."
+      "alerta": "TEMA 929/STJ JULGADO SEM MODULAÇÃO (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026, acórdão publicado em 03/11/2026): o dobro não depende mais da data do pagamento — o corte de 30/03/2021 do EAREsp 676.608/RS foi afastado. O item (i.c) qualifica como engano justificável, e afasta o dobro, a cobrança fundada em cláusula depois declarada nula ou em objeto de divergência jurisprudencial: classificar a origem de cada indébito no gate (campo `gate`). Acompanhar embargos de declaração contra o acórdão (pendência do Tema 929).",
+      "gate": "Antes de apurar, o operador classifica a origem de cada indébito em `origem_indebito`: `sem_lastro_contratual` (cobrança sem cláusula que a preveja, serviço não prestado, débito não autorizado — dobro, em qualquer data) | `clausula_declarada_nula` | `divergencia_jurisprudencial` (Tema 929, i.c — base simples; o dobro só como pedido do advogado contra a excludente, nunca como conclusão do laudo). Origens misturadas num mesmo valor: a de menor excesso. Reclamação prévia ao banco sem resposta ou recusada é indício do dobro (i.a): registrar em `premissas` com o documento."
     },
     {
       "id": "R27",
       "categoria": "repeticao_indebito",
-      "nome": "Repetição simples — pagamentos até 30/03/2021 ou com engano justificável",
-      "descricao": "A repetição do indébito é simples (e não em dobro) para os pagamentos realizados até 30/03/2021 (modulação do EAREsp 676.608/RS) e, depois dessa data, para os indébitos com engano justificável: cobrança fundada em cláusula pactuada depois declarada nula ou em objeto de divergência jurisprudencial (Tema 929, i.c).",
+      "nome": "Repetição simples — engano justificável (Tema 929, i.c)",
+      "descricao": "A repetição do indébito é simples (e não em dobro) quando há engano justificável: cobrança fundada em cláusula pactuada depois declarada nula ou em objeto de divergência jurisprudencial (Tema 929, i.c). A data do pagamento não decide mais: o corte de 30/03/2021 foi afastado no Tema 929.",
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026): tese (i.c), engano justificável",
-          "EAREsp 676.608/RS: modulação temporal (cobranças até 30/03/2021)"
+          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026): tese (i.c), engano justificável"
         ],
         "legislacao": [
           "Art. 42, parágrafo único, CDC"
         ]
       },
       "corte_temporal": {
-        "aplica_se": "pagamentos realizados até 30/03/2021",
-        "marco": "MT05",
-        "posicao": "anterior_ou_igual"
+        "aplica_se": "qualquer data",
+        "marco": null,
+        "posicao": null
       },
       "tipo_contrato": [
         "consumo_pf"
       ],
       "teste": {
-        "descricao": "Pagamento indevido até 30/03/2021, ou posterior com origem `clausula_declarada_nula` ou `divergencia_jurisprudencial` (gate da R26)",
-        "logica": "PAGAMENTO_INDEVIDO AND (DATA_PAGAMENTO <= 2021-03-30 OR ORIGEM_INDEBITO IN (clausula_declarada_nula, divergencia_jurisprudencial))",
+        "descricao": "Pagamento indevido com origem `clausula_declarada_nula` ou `divergencia_jurisprudencial` (gate da R26), em qualquer data",
+        "logica": "PAGAMENTO_INDEVIDO AND ORIGEM_INDEBITO IN (clausula_declarada_nula, divergencia_jurisprudencial)",
         "campos_necessarios": [
           "datas_pagamento",
           "valores_pagos_indevidos",
@@ -1314,10 +1320,10 @@
         ]
       },
       "resultado_se_positivo": "simples",
-      "consequencia": "Restituição simples do valor pago indevidamente: pagamentos até 30/03/2021 e, depois, os indébitos com engano justificável (Tema 929, i.c).",
+      "consequencia": "Restituição simples do valor pago indevidamente quando há engano justificável (Tema 929, i.c); o dobro fica como pedido do advogado contra a excludente.",
       "tier": "T2",
       "status": "vigente",
-      "alerta": "O corte por pagamento (MT05) reparte a apuração pela data; a origem do indébito (gate da R26) reparte de novo os pagamentos posteriores ao corte. Pagamento posterior com engano justificável fica nesta base, não na do dobro."
+      "alerta": "Pagamento anterior a 30/03/2021 sem engano justificável vai em dobro (R26): a modulação do EAREsp 676.608/RS foi afastada no Tema 929. Esta regra só recebe o que o gate da R26 classificar como engano justificável."
     },
     {
       "id": "R28",
@@ -2391,8 +2397,8 @@
       },
       {
         "tema": "Tema 929/STJ",
-        "questao": "Repetição em dobro: teses do repetitivo e modulação temporal (o corte de 30/03/2021 vem do EAREsp 676.608/RS)",
-        "status": "julgado em 15/09/2026 pela Corte Especial (REsp 1.963.770/CE, acórdão publicado em 03/11/2026), teses (i) a (i.c); a tese não repete o corte de 30/03/2021 — conferir no inteiro teor se o acórdão manteve, alterou ou afastou a modulação",
+        "questao": "Repetição em dobro: embargos de declaração contra o acórdão do repetitivo (pedido de modulação ou de ajuste nas teses) até o trânsito em julgado",
+        "status": "julgado em 15/09/2026 pela Corte Especial (REsp 1.963.770/CE, acórdão publicado em 03/11/2026), teses (i) a (i.c) fixadas sem modulação de efeitos — o corte de 30/03/2021 caiu; sem trânsito em julgado conferido",
         "precedente": {
           "tribunal": "STJ",
           "especie": "tema_repetitivo",
@@ -2408,7 +2414,7 @@
           "EAREsp 676.608/RS"
         ],
         "verificado_em": "2026-11-16",
-        "providencia": "Classificar a origem de cada indébito (gate da R26: sem lastro contratual × cláusula declarada nula ou divergência jurisprudencial, Tema 929, i.c) e conferir no inteiro teor do REsp 1.963.770/CE se o corte de 30/03/2021 foi mantido."
+        "providencia": "Pedir o dobro sobre todo o período da cobrança sem lastro contratual, com o Tema 929 (sem modulação); classificar a origem de cada indébito (gate da R26) e, antes de protocolar, conferir no conector se houve embargos que mudaram a situação do tema."
       },
       {
         "tema": "Tema 1414/STJ",

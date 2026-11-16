@@ -173,8 +173,8 @@ def test_resolver_marcos_traz_data_base_evento_e_notas():
     assert marcos["MT04"]["contrato"] == "posterior" and marcos["MT05"]["contrato"] == "anterior"
     assert marcos["MT02"] == {"data": "2008-04-30", "base": "contrato", "evento": marcos["MT02"]["evento"],
                               "contrato": "posterior"}
-    assert marcos["MT05"]["nota"] == ("corte por pagamento: reparte a apuração (cada pagamento antes ou "
-                                      "depois do marco), não exclui a regra")
+    assert marcos["MT05"]["superado"] is True and marcos["MT05"]["nota"].startswith("marco superado — ")
+    assert "Tema 929" in marcos["MT05"]["nota"] and "sem modulação" in marcos["MT05"]["nota"]
     assert marcos["MT06"]["nota"] == "corte pela data da operação de rotativo/parcelamento, não pela data do contrato"
     assert "nota" not in marcos["MT04"] and "consolidacao" not in marcos["MT04"]
 
@@ -361,14 +361,23 @@ def test_tipo_invalido_lista_os_validos():
     assert all(t in str(erro.value) for t in TIPOS)
 
 
-# ── corte por pagamento e por operação ────────────────────────────────
+# ── repetição sem corte de data (Tema 929) e corte por operação ───────
 
 @pytest.mark.parametrize("contrato", [None, "1995-01-01", "2021-03-30", "2025-01-01"])
-def test_corte_por_pagamento_nunca_exclui_pela_data_do_contrato(contrato):
-    for rid, posicao in (("R26", "posterior"), ("R27", "anterior_ou_igual")):
+def test_repeticao_nao_tem_corte_de_data_desde_o_tema_929(contrato):
+    """O Tema 929/STJ (REsp 1.963.770/CE) foi fixado sem modulação: R26 e R27 valem em qualquer data,
+    e quem reparte dobro × simples é a origem do indébito (gate da R26)."""
+    for rid in ("R26", "R27"):
         lista, item = achar(rodar(contrato=contrato), rid)
-        assert lista == "aplicaveis"
-        assert item["corte"] == {"marco": "MT05", "data": "2021-03-30", "base": "pagamento", "posicao": posicao}
+        assert lista == "aplicaveis" and "corte" not in item
+        assert "origem_indebito" in item["teste"]["campos_necessarios"]
+        assert "2021-03-30" not in item["teste"]["logica"]
+
+
+def test_mt05_superado_nao_corta_nenhuma_regra():
+    mt05 = next(m for m in DADOS["marcos_temporais"]["marcos"] if m["id"] == "MT05")
+    assert mt05["superado"] and mt05["regras_afetadas"] == []
+    assert not any((r.get("corte_temporal") or {}).get("marco") == "MT05" for r in DADOS["regras"])
 
 
 @pytest.mark.parametrize("contrato", [None, "2015-01-01", "2024-01-03", "2025-01-01"])
@@ -603,7 +612,9 @@ def test_formato_padrao_carrega_os_blocos_especificos():
 def test_formato_resumo():
     saida = rodar(formato="resumo")
     assert set(achar(saida, "R28")[1]) == {"id", "categoria", "nome", "tier", "status", "conclusiva"}
-    assert set(achar(saida, "R26")[1]) == {"id", "categoria", "nome", "tier", "status", "conclusiva", "corte"}
+    assert set(achar(saida, "R26")[1]) == {"id", "categoria", "nome", "tier", "status", "conclusiva"}
+    cartao = rodar("cartao_credito", contrato="2020-01-01", formato="resumo")
+    assert set(achar(cartao, "R23")[1]) == {"id", "categoria", "nome", "tier", "status", "conclusiva", "corte"}
     confirmar = achar(rodar(contrato=None, formato="resumo"), "R01")[1]
     assert set(confirmar) == {"id", "categoria", "nome", "tier", "status", "conclusiva", "motivo"}
     vencido = achar(rodar(hoje="2030-01-01", formato="resumo"), "R15")[1]
@@ -640,7 +651,7 @@ def test_forma_da_saida():
     saida = rodar("sfh", contrato="2000-01-01", data_consolidacao="2010-01-01")
     assert list(saida) == ["versao_regras", "hoje", "entrada", "tipo", "marcos", "aplicaveis", "confirmar",
                            "nao_aplicaveis", "resumo"]
-    assert saida["versao_regras"] == DADOS["versao"] == "6.1.0"
+    assert saida["versao_regras"] == DADOS["versao"] == "6.2.0"
     assert saida["entrada"] == {"tipo": "sfh", "regime": "consumerista", "data_contrato": "2000-01-01",
                                 "data_consolidacao": "2010-01-01", "categorias": None}
     sfh = _tipo(DADOS, "sfh")

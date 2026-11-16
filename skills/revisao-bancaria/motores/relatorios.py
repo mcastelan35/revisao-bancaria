@@ -435,18 +435,15 @@ def _secao3_conta(p) -> str:
     trinca = (f'<table><thead><tr><th>Cenário</th><th>Condição de aplicabilidade</th>'
               f'<th class="n">Excesso final (R$)</th></tr></thead><tbody>{linhas}</tbody></table>')
 
-    corte_br = esc(_data_br(enc["competencia_corte"]))
     if enc["origem_indebito"] == ORIGEM_COM_DOBRO:
-        rot_simples = f'Base de repetição simples — competências até a de corte ({corte_br}, inclusive)'
-        rot_dobro = ('Base de repetição em dobro — competências posteriores ao corte '
-                     '(só no regime consumerista)')
+        rot_simples = 'Base de repetição simples'
+        rot_dobro = ('Base de repetição em dobro — cobrança sem lastro contratual, em qualquer data '
+                     '(Tema 929; só no regime consumerista)')
         afastado = ''
     else:
-        rot_simples = ('Base de repetição simples — todas as competências (engano justificável, '
-                       'Tema 929, tese i.c)')
+        rot_simples = 'Base de repetição simples — engano justificável (Tema 929, tese i.c)'
         rot_dobro = 'Base de repetição em dobro — afastada pelo engano justificável'
-        afastado = (f' Das competências posteriores ao corte ({_data_br(enc["competencia_corte"])}), '
-                    f'R$ {brl(enc.get("base_dobro_afastada", 0))} estão na base simples e só vão em '
+        afastado = (f' R$ {brl(enc.get("base_dobro_afastada", 0))} estão na base simples e só vão em '
                     'dobro se afastada a excludente.')
     quadro = (f'<table><thead><tr><th>Encontro de contas (cenário líder: {esc(rotulo_cenario(lider))})</th>'
               f'<th class="n">Valor (R$)</th></tr></thead><tbody>'
@@ -909,11 +906,10 @@ def render_planilha(p: dict, destino: Path, tema: dict | None = None) -> Path:
         r = linha_valor(ws, r, "Base de repetição simples (R$)", float(enc["base_repeticao_simples"]), M)
         r = linha_valor(ws, r, "Base de repetição em dobro (R$)", float(enc["base_repeticao_dobro"]), M)
         if enc["origem_indebito"] != ORIGEM_COM_DOBRO:
-            r = linha_valor(ws, r, "Posterior ao corte, afastada do dobro (R$)",
+            r = linha_valor(ws, r, "Afastada do dobro pelo engano justificável (R$)",
                             float(enc.get("base_dobro_afastada", 0)), M)
         r = linha_valor(ws, r, "Excesso final (R$)", float(enc["excesso_final"]), M,
                         RED if lider["favoravel"] else AMB)
-        r = linha_valor(ws, r, "Competência de corte", _data_br(enc["competencia_corte"]))
         for texto, negrito, bg, tam in ((enc["nota"], False, None, 110), (ADVERTENCIA_CONTA, True, GPALE, 110)):
             ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=8)
             ws.cell(r, 2, texto).font = F(8, negrito, INK if negrito else MUT)
@@ -1360,7 +1356,7 @@ def _validar_conta(p: dict, erros: list, avisos: list) -> None:
         erros.append("conta.encontro (esperado dict)")
     elif enc is not None:
         valores = ("excesso_final", "base_repeticao_simples", "base_repeticao_dobro")
-        chaves(enc, "conta.encontro", (*valores, "origem_indebito", "competencia_corte", "nota"))
+        chaves(enc, "conta.encontro", (*valores, "origem_indebito", "nota"))
         invalidos = [n for n in valores if n in enc and not _numero(enc[n])]
         if "base_dobro_afastada" in enc and not _numero(enc["base_dobro_afastada"]):
             invalidos.append("base_dobro_afastada")
@@ -1555,7 +1551,7 @@ def _payload_demo_conta() -> dict:
                  {"lab": "Reconciliação do extrato", "val": "CONFORME", "cor": "grn",
                   "sub": "212 pontos conferidos"},
                  {"lab": "Cenários apurados", "val": "2 de 3", "sub": "C2 omitido, sem taxa contratada"},
-                 {"lab": "Base do dobro", "val": "R$ 16.343,45", "sub": "após o corte de 03/2021"}],
+                 {"lab": "Base do dobro", "val": "R$ 48.213,55", "sub": "cobrança sem lastro, todo o período"}],
         "objeto": ["Payload sintético do ramo CONTA para o autoteste do renderizador: reconciliação "
                    "do extrato, trinca de cenários e encontro de contas."],
         "documentos": [("Extratos de conta corrente (jan/2019 a jun/2024)", "28/06/2024",
@@ -1616,14 +1612,14 @@ def _payload_demo_conta() -> dict:
             "cenario_lider": "C1_TAXA_MEDIA",
             "encontro": {"cenario": "C1_TAXA_MEDIA", "excesso_final": 48213.55,
                          "origem_indebito": "sem_lastro_contratual",
-                         "base_repeticao_simples": 31870.10, "base_repeticao_dobro": 16343.45,
+                         "base_repeticao_simples": 0.0, "base_repeticao_dobro": 48213.55,
                          "base_dobro_afastada": 0.0,
-                         "competencia_corte": "2021-03",
-                         "nota": "valores nominais por competência; incrementos negativos abatem a base "
-                                 "da respectiva fase (simples + dobro = excesso final); a competência "
-                                 "2021-03, que contém o corte de 2021-03-30 (EAREsp 676.608/RS), entra inteira na "
-                                 "base simples — critério de menor excesso; correção monetária e a "
-                                 "aplicação do dobro vão ao conector (atualizar_debito, valores[]) na C6"},
+                         "nota": "valores nominais por competência; incrementos negativos abatem o "
+                                 "indébito (simples + dobro = excesso final); sem corte de data — o Tema "
+                                 "929/STJ (REsp 1.963.770/CE) foi fixado sem modulação; repetição em dobro de "
+                                 "todo o indébito (só no regime consumerista); correção monetária e a "
+                                 "aplicação do dobro vão ao "
+                                 "conector (atualizar_debito, valores[]) na C6"},
             "series": [{"serie": "Taxa média de juros — cheque especial PJ (série fictícia)",
                         "codigo": "000000",
                         "procedencia": "SGS/BACEN, via cache do conector (valor oficial congelado)",
@@ -1899,8 +1895,10 @@ def _autoteste() -> tuple[int, int, int]:
     chk("conta: trinca com rótulos, líder marcado e cenário omitido com o motivo",
         all(r in hc1 for r in ROTULOS_CENARIOS.values()) and hc1.count("cenário líder") >= 1
         and "Omitido." in hc1 and "nenhuma taxa comprovada nos documentos" in hc1)
-    chk("conta: encontro de contas com as duas bases, o corte e a nota do motor",
-        all(t in hc1 for t in ("31.870,10", "16.343,45", "48.213,55", "03/2021", "critério de menor excesso")))
+    chk("conta: encontro de contas com as duas bases, a origem e a nota do motor, sem corte de data",
+        all(t in hc1 for t in ("0,00", "48.213,55", "em qualquer data", "cobrança sem lastro contratual",
+                               "sem corte de data", "Tema 929"))
+        and "competências até a de corte" not in hc1)
     chk("conta: procedência das séries e correção do conector",
         "Série consultada" in hc1 and "000000" in hc1 and "Correção do indébito (conector)" in hc1
         and "9f2c4e1a7b3d5860" in hc1 and "R$ 61.478,22" in hc1 and "28/06/2024" in hc1)
@@ -1936,7 +1934,7 @@ def _autoteste() -> tuple[int, int, int]:
                  lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=16000.0),
                  "base_repeticao_simples + base_repeticao_dobro")
     recusa_conta("diferença de 0,02 entre as bases e o excesso",
-                 lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=16343.47), "excesso_final")
+                 lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=48213.57), "excesso_final")
     recusa_conta("encontro sem a origem do indébito (gate da R26)",
                  lambda q: q["conta"]["encontro"].pop("origem_indebito"), "origem_indebito")
     recusa_conta("origem do indébito fora da lista",
@@ -1958,15 +1956,15 @@ def _autoteste() -> tuple[int, int, int]:
     recusa_conta("ramo conta sem o bloco conta", lambda q: q.pop("conta"), "conta")
     recusa_conta("série sem procedência", lambda q: q["conta"]["series"][0].pop("procedencia"), "procedencia")
     q = clone(pc)
-    q["conta"]["encontro"]["base_repeticao_dobro"] = 16343.46
+    q["conta"]["encontro"]["base_repeticao_dobro"] = 48213.56
     chk("conta: diferença de 0,01 entre as bases e o excesso está na tolerância", validar(q) == [])
     q = clone(pc)
     q["conta"]["encontro"].update(origem_indebito="divergencia_jurisprudencial",
                                   base_repeticao_simples=48213.55, base_repeticao_dobro=0.0,
-                                  base_dobro_afastada=16343.45)
+                                  base_dobro_afastada=48213.55)
     hq = render_premium(q)
     chk("conta: engano justificável (tudo na simples, dobro 0) é aceito e o laudo diz a origem",
-        validar(q) == [] and "afastada pelo engano justificável" in hq and "16.343,45" in hq
+        validar(q) == [] and "afastada pelo engano justificável" in hq and "48.213,55" in hq
         and "objeto é alvo de divergência jurisprudencial" in hq)
     q = clone(pc)
     q["conta"]["cenarios"][2].update(favoravel=False, excesso_final=-10.0)

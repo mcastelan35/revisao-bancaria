@@ -26,9 +26,9 @@ from decimal import Decimal, ROUND_HALF_UP
 # Constantes jurídicas compartilhadas (uma fonte, não quatro)
 # ─────────────────────────────────────────────────────────────────────
 
-CORTE_TEMA_929 = date(2021, 3, 30)      # MT05 — modulação da repetição em dobro (EAREsp 676.608/RS)
-#: Origem do indébito (gate da R26). Só `sem_lastro_contratual` admite o dobro; as outras duas são
-#: engano justificável (Tema 929, tese i.c — REsp 1.963.770/CE) e vão inteiras à base simples.
+#: Origem do indébito (gate da R26). Só `sem_lastro_contratual` admite o dobro, em qualquer data (o
+#: Tema 929/STJ, REsp 1.963.770/CE, foi fixado sem modulação e afastou o corte de 30/03/2021 do
+#: EAREsp 676.608/RS); as outras duas são engano justificável (tese i.c) e vão inteiras à base simples.
 ORIGENS_INDEBITO = {
     "sem_lastro_contratual": "cobrança sem lastro contratual",
     "clausula_declarada_nula": "cobrança fundada em cláusula declarada nula",

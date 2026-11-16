@@ -8,7 +8,7 @@ allowed-tools:
   - Bash(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
   - PowerShell(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
 metadata:
-  version: "6.1.0"
+  version: "6.2.0"
   connector: "Radar Apogeu (BACEN/SGS, via MCP) — pré-requisito ATIVO"
 ---
 
@@ -202,13 +202,13 @@ falha de fonte.
 8. **Encargos lícitos existem e vão em ressalvas.** O que não é atacável (tarifa de cadastro
    inicial, IOF pactuado, seguro voluntário) e todo achado que favorece o banco entram em
    `ressalvas`. Laudo que só acusa é peça de parte.
-9. **Repetição em dobro tem corte, regime e origem.** Dobro só para pagamentos posteriores a
-   30/03/2021 (EAREsp 676.608/RS), só em regime consumerista e só para cobrança **sem lastro
-   contratual**: indébito fundado em cláusula depois declarada nula, ou em objeto de divergência
-   jurisprudencial, é engano justificável (Tema 929, tese i.c — REsp 1.963.770/CE) e vai inteiro
-   para a base simples; o dobro aí é pedido do advogado contra a excludente, nunca conclusão do
-   laudo. A origem é pergunta ao operador no gate (`gate` da R26), nunca presumida; a
-   competência que contém o corte vai inteira na base simples (menor excesso).
+9. **Repetição em dobro tem regime e origem, não data.** O Tema 929/STJ (REsp 1.963.770/CE,
+   Corte Especial, j. 15/09/2026) foi fixado sem modulação e afastou o corte de 30/03/2021 do
+   EAREsp 676.608/RS: o dobro vale para pagamentos de qualquer data, só em regime consumerista e
+   só para cobrança **sem lastro contratual**. Indébito fundado em cláusula depois declarada
+   nula, ou em objeto de divergência jurisprudencial, é engano justificável (tese i.c) e vai
+   inteiro para a base simples; o dobro aí é pedido do advogado contra a excludente, nunca
+   conclusão do laudo. A origem é pergunta ao operador no gate (`gate` da R26), nunca presumida.
 10. **Painel inline antes de arquivo.** Na L2/C2/C4 o resultado é apresentado no chat antes de
     qualquer arquivo — como widget visual quando a sessão tiver ferramenta para isso; senão,
     tabela com semáforo em texto. O HTML/XLSX só sai na L4/C6 após aprovação.

@@ -31,12 +31,13 @@ O que o motor já fez e não se refaz:
   `regras_desligadas` (R15, R18 e, conforme o tipo, R19) saem em `nao_aplicaveis` — não é
   "aplicar e marcar lícita", é não aplicar: o laudo não pode conter badge de razão BACEN nem
   conclusão de "capitalização pactuada válida" nesses contratos.
-- **Corte temporal** com a base certa: data do contrato; cada pagamento no MT05 (dobro × simples);
-  a operação de rotativo no MT06; contrato e consolidação no MT10. O MT05 reparte por data; a
-  **origem do indébito** (`gate` da R26) reparte de novo os pagamentos posteriores: só a cobrança
-  sem lastro contratual vai em dobro — cláusula depois declarada nula ou objeto de divergência
-  jurisprudencial é engano justificável (Tema 929, tese i.c) e vai para a R27. O motor entrega o
-  `gate`; a classificação é do operador, item a item, antes da L3.
+- **Corte temporal** com a base certa: data do contrato; a operação de rotativo no MT06;
+  contrato e consolidação no MT10. O MT05 (30/03/2021) está **superado**: o Tema 929 foi fixado
+  sem modulação, e R26 e R27 valem em qualquer data. Quem reparte dobro × simples é a **origem
+  do indébito** (`gate` da R26): só a cobrança sem lastro contratual vai em dobro — cláusula
+  depois declarada nula ou objeto de divergência jurisprudencial é engano justificável (Tema
+  929, tese i.c) e vai para a R27. O motor entrega o `gate`; a classificação é do operador, item
+  a item, antes da L3.
 - **Regime**: consequência e tier da R15 pelo bloco `regime`; regra consumerista fora do regime
   consumerista; no `empresarial_pj` civil-empresarial, regra fora de `regras_sem_cdc` vai para
   `confirmar`.

@@ -1,6 +1,6 @@
 # Arquitetura do plugin `revisao-bancaria`
 
-> Versão do pacote: **v6.1.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
+> Versão do pacote: **v6.2.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
 > está na `SKILL.md` do orquestrador e nas camadas. Em divergência, a camada prevalece no seu
 > escopo — e a divergência é bug: `python ferramentas/verificar_consistencia.py` e a suíte de
 > testes falham quando versão, contagens, tiers, cores do schema, numeração das regras de
@@ -197,7 +197,7 @@ indexador custa uma chamada dedicada. Chamada é a unidade de quota do aluno.
   o motivo. O Edge pode devolver o controle antes de gravar o arquivo, então o `pdf.py` espera o
   PDF aparecer por inteiro.
 
-## Motor de regras — estatísticas (v6.1.0)
+## Motor de regras — estatísticas (v6.2.0)
 
 40 regras em 14 categorias (19 T1, 13 T2, 8 sem tier); 33 vigentes, 2 suspensas (R15 — Tema
 1378; R24 — Tema 1414, que absorveu o 1328), 5 sem precedente consolidado (R30–R33, R40); 10 marcos temporais
@@ -247,8 +247,8 @@ base simples (menor excesso).
    situação dos temas sai do `consultar_precedente` do conector, sem gastar cota do Jusbrasil:
    `revisao.py pendencias` lista os argumentos e, com `--situacao`, diz o que mudou. Para
    atualizar o JSON, conferir todas e mover `situacao_esperada`, `status` e `verificado_em`.
-   Pendente desde a v6.1.0: ler o inteiro teor do REsp 1.963.770/CE (Tema 929) e conferir se a
-   modulação de 30/03/2021 (MT05) foi mantida.
+   O inteiro teor do REsp 1.963.770/CE (Tema 929) foi lido em 16/11/2026: tese sem modulação, MT05
+   marcado como `superado`. Fica a pendência dos embargos de declaração até o trânsito.
 7. Ramo SFH/SFI: completar relator, órgão e data de julgamento dos 15 precedentes `[CONFERIR]`
    no JSON; validar no TRF4 a recepção do REsp 2.086.650/MG (R35); congelar uma conta gráfica
    real da CEF como fixture de `tabela_sfh` (o autoteste usa fixture calculada à mão).
@@ -266,7 +266,7 @@ base simples (menor excesso).
 | Evento | Impacto | Ação |
 |---|---|---|
 | Julgamento Tema 1378 | Critério de juros abusivos (as duas rotas) | Atualizar R15 e limiares; `verificado_em` |
-| Inteiro teor do Tema 929 (REsp 1.963.770/CE) | Modulação do dobro | Confirmar ou mudar o corte MT05 e a pendência do Tema 929 |
+| Embargos de declaração no Tema 929 (REsp 1.963.770/CE) | Dobro sem corte de data | Se houver modulação nos embargos, voltar a cortar por data (MT05) |
 | Julgamento Tema 1414 | RMC (prazo, validade, consequência e dano moral) | Atualizar R24 |
 | Julgamento Tema 1396 | Interesse de agir sem reclamação prévia | Atualizar a providência e, se exigida, o gate de entrada |
 | Nova resolução CMN (cartão) | Teto de 100% | Atualizar R23 e MT06 |
