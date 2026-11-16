@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Não lançado]
+## v6.2.0 — 16/11/2026 — Tema 929 sem modulação e jurisprudência conferida no conector
 
 ### Tema 929 sem modulação: o dobro deixa de depender da data (16/11/2026)
 

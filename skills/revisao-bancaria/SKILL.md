@@ -8,7 +8,7 @@ allowed-tools:
   - Bash(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
   - PowerShell(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
 metadata:
-  version: "6.1.0"
+  version: "6.2.0"
   connector: "Radar Apogeu (BACEN/SGS, via MCP) — pré-requisito ATIVO"
 ---
 

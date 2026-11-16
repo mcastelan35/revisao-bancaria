@@ -651,7 +651,7 @@ def test_forma_da_saida():
     saida = rodar("sfh", contrato="2000-01-01", data_consolidacao="2010-01-01")
     assert list(saida) == ["versao_regras", "hoje", "entrada", "tipo", "marcos", "aplicaveis", "confirmar",
                            "nao_aplicaveis", "resumo"]
-    assert saida["versao_regras"] == DADOS["versao"] == "6.1.0"
+    assert saida["versao_regras"] == DADOS["versao"] == "6.2.0"
     assert saida["entrada"] == {"tipo": "sfh", "regime": "consumerista", "data_contrato": "2000-01-01",
                                 "data_consolidacao": "2010-01-01", "categorias": None}
     sfh = _tipo(DADOS, "sfh")

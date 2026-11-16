@@ -1,6 +1,6 @@
 # Arquitetura do plugin `revisao-bancaria`
 
-> Versão do pacote: **v6.1.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
+> Versão do pacote: **v6.2.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
 > está na `SKILL.md` do orquestrador e nas camadas. Em divergência, a camada prevalece no seu
 > escopo — e a divergência é bug: `python ferramentas/verificar_consistencia.py` e a suíte de
 > testes falham quando versão, contagens, tiers, cores do schema, numeração das regras de
@@ -197,7 +197,7 @@ indexador custa uma chamada dedicada. Chamada é a unidade de quota do aluno.
   o motivo. O Edge pode devolver o controle antes de gravar o arquivo, então o `pdf.py` espera o
   PDF aparecer por inteiro.
 
-## Motor de regras — estatísticas (v6.1.0)
+## Motor de regras — estatísticas (v6.2.0)
 
 40 regras em 14 categorias (19 T1, 13 T2, 8 sem tier); 33 vigentes, 2 suspensas (R15 — Tema
 1378; R24 — Tema 1414, que absorveu o 1328), 5 sem precedente consolidado (R30–R33, R40); 10 marcos temporais

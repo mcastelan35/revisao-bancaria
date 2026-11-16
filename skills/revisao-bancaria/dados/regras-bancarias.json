@@ -1,6 +1,6 @@
 {
   "$schema": "regras-bancarias-schema",
-  "versao": "6.1.0",
+  "versao": "6.2.0",
   "atualizado_em": "2026-11-16",
   "descricao": "Motor de regras para análise revisional de contratos bancários. Cada regra codifica uma tese jurídica com teste lógico, corte temporal, fundamentação e consequência. Consumido pelo plugin revisao-bancaria por meio do motor determinístico `motores/regras.py` (`revisao.py regras`) nas camadas L1/L2 e C3 — o agente recebe só as regras aplicáveis ao caso, não este arquivo inteiro.",
   "notas_de_versao": [
@@ -104,6 +104,15 @@
         "Tema 1328/STJ cancelado em 02/10/2026 e absorvido pelo Tema 1414 (item III.d): sai das pendências; R24 com a questão, os paradigmas e o alcance da suspensão do Tema 1414.",
         "Nova pendência: Tema 1396/STJ (prévia tentativa extrajudicial e interesse de agir), regras_afetadas R26 e R27.",
         "Pendências ganham `providencia` (opcional). Tema 1378 sem mudança; todas as pendências do STJ conferidas em 16/11/2026 no catálogo BNP/CNJ (Radar Apogeu, consultar_precedente)."
+      ]
+    },
+    {
+      "versao": "6.2.0",
+      "data": "2026-11-16",
+      "alteracoes": [
+        "Tema 929/STJ sem modulação (REsp 1.963.770/CE, inteiro teor lido): R26 e R27 sem corte temporal — a origem do indébito decide dobro × simples, em qualquer data; R13 segue a origem; MT05 marcado `superado`, sem regras.",
+        "Pendência do Tema 929 passa a ser os embargos de declaração até o trânsito; providência: pedir o dobro sobre todo o período.",
+        "Pendências do STJ com `precedente` (argumentos do consultar_precedente do conector) e `situacao_esperada`; alerta de pendência vencida manda conferir no conector."
       ]
     }
   ],
