@@ -1,6 +1,6 @@
 # Arquitetura do plugin `revisao-bancaria`
 
-> Versão do pacote: **v6.0.0** (26/10/2026). Este arquivo é o mapa; o comportamento normativo
+> Versão do pacote: **v6.1.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
 > está na `SKILL.md` do orquestrador e nas camadas. Em divergência, a camada prevalece no seu
 > escopo — e a divergência é bug: `python ferramentas/verificar_consistencia.py` e a suíte de
 > testes falham quando versão, contagens, tiers, cores do schema, numeração das regras de
@@ -197,10 +197,10 @@ indexador custa uma chamada dedicada. Chamada é a unidade de quota do aluno.
   o motivo. O Edge pode devolver o controle antes de gravar o arquivo, então o `pdf.py` espera o
   PDF aparecer por inteiro.
 
-## Motor de regras — estatísticas (v6.0.0)
+## Motor de regras — estatísticas (v6.1.0)
 
 40 regras em 14 categorias (19 T1, 13 T2, 8 sem tier); 33 vigentes, 2 suspensas (R15 — Tema
-1378; R24 — Temas 1328/1414), 5 sem precedente consolidado (R30–R33, R40); 10 marcos temporais
+1378; R24 — Tema 1414, que absorveu o 1328), 5 sem precedente consolidado (R30–R33, R40); 10 marcos temporais
 com `base` declarada (`regras_afetadas` derivado do `corte_temporal` de cada regra); 23 súmulas
 com texto integral; 24 modalidades mapeadas para séries BACEN mensais (faixa 254xx); 12 termos
 de CP disfarçada (dentro da R03); 10 tipos de contrato (três habitacionais: `sfh`, `sfi`,
@@ -241,9 +241,12 @@ base simples (menor excesso).
 4. Cartão como terceira rota explícita (F0–F3) em vez de ramo que atravessa L1–L3.
 5. Regressão com caso real anonimizado: rodar um extrato verdadeiro ponta a ponta e congelar
    como fixture, no molde do `teste-contrato-bacen.md`.
-6. Conferir o status dos temas em `pendencias_jurisprudenciais`: os conferidos em 26/08/2026
-   valem até 24/11/2026 e os de 09/10/2026 até 07/01/2027 (validade de 90 dias); depois disso
-   o motor passa a emitir o alerta vencido em toda análise que os invoque.
+6. Conferir o status dos temas em `pendencias_jurisprudenciais`: os do STJ, conferidos em
+   16/11/2026, valem até 14/02/2027 e os de 09/10/2026 até 07/01/2027 (validade de 90 dias);
+   depois disso o motor passa a emitir o alerta vencido em toda análise que os invoque. A
+   situação dos temas sai do `consultar_precedente` do conector, sem gastar cota do Jusbrasil.
+   Pendente desde a v6.1.0: ler o inteiro teor do REsp 1.963.770/CE (Tema 929) e conferir se a
+   modulação de 30/03/2021 (MT05) foi mantida.
 7. Ramo SFH/SFI: completar relator, órgão e data de julgamento dos 15 precedentes `[CONFERIR]`
    no JSON; validar no TRF4 a recepção do REsp 2.086.650/MG (R35); congelar uma conta gráfica
    real da CEF como fixture de `tabela_sfh` (o autoteste usa fixture calculada à mão).
@@ -261,8 +264,9 @@ base simples (menor excesso).
 | Evento | Impacto | Ação |
 |---|---|---|
 | Julgamento Tema 1378 | Critério de juros abusivos (as duas rotas) | Atualizar R15 e limiares; `verificado_em` |
-| Conclusão Tema 929 | Modulação do dobro | Atualizar R26/R27 e corte MT05 |
-| Julgamento Temas 1328/1414 | RMC | Atualizar R24 |
+| Inteiro teor do Tema 929 (REsp 1.963.770/CE) | Modulação do dobro | Confirmar ou mudar o corte MT05 e a pendência do Tema 929 |
+| Julgamento Tema 1414 | RMC (prazo, validade, consequência e dano moral) | Atualizar R24 |
+| Julgamento Tema 1396 | Interesse de agir sem reclamação prévia | Atualizar a providência e, se exigida, o gate de entrada |
 | Nova resolução CMN (cartão) | Teto de 100% | Atualizar R23 e MT06 |
 | Repertório CONTA validado | Habilita fundamentação plena da C6 | Retirar status ESQUELETO/beta |
 | STJ unifica o critério temporal da purga (Lei 13.465) | R40 | Mudar `status` para vigente e fixar o critério |

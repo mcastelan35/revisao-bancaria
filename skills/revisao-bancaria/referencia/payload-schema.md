@@ -232,7 +232,9 @@ encontro, series, correcao=None)` o monta das saídas de `reconciliar`, `rodar_t
     { "cenario": "C2_CAP_MENSAL", "omitido": true, "motivo": "…" } ],
   "cenario_lider": "C1_TAXA_MEDIA",                 // o escolhido no gate da C4; tem de ter rodado
   "encontro": { "cenario": "C1_TAXA_MEDIA", "excesso_final": 48213.55,
+                "origem_indebito": "sem_lastro_contratual",   // gate da R26 (Tema 929, tese i.c)
                 "base_repeticao_simples": 31870.10, "base_repeticao_dobro": 16343.45,
+                "base_dobro_afastada": 0.0,                   // > 0 só com engano justificável
                 "competencia_corte": "2021-03", "nota": "…" },
   "series": [ { "serie": "Taxa média — cheque especial PF", "codigo": "…", "procedencia": "…",
                 "periodo": "…" } ],
@@ -247,7 +249,9 @@ encontro, series, correcao=None)` o monta das saídas de `reconciliar`, `rodar_t
 - **PREMIUM** — as mesmas seções e a mesma ordem; a seção 3 vira "3 — Reconciliação do extrato e
   recomposição da conta": caixa do veredito da reconciliação (pontos conferidos e janela), tabela
   da trinca (condição de aplicabilidade e excesso final; omitido com o motivo; o líder marcado),
-  quadro do encontro de contas (bases simples e dobro, competência de corte e nota), procedência
+  quadro do encontro de contas (bases simples e dobro, competência de corte, origem do indébito
+  e nota; com engano justificável, a base do dobro aparece afastada e a parcela posterior ao corte
+  é informada no texto), procedência
   das séries e a correção do conector, quando há. Logo depois, em caixa neutra, a advertência
   fixa: *"Os valores apurados na conta corrente formam uma faixa entre cenários de recomposição
   e não um valor fechado. Eles instruem o pedido de prova pericial contábil e dependem de
@@ -266,6 +270,9 @@ encontro, series, correcao=None)` o monta das saídas de `reconciliar`, `rodar_t
 - `cenario_lider` que não consta de `cenarios` ou que foi omitido; `encontro.cenario`, se
   presente, diferente do líder.
 - `base_repeticao_simples + base_repeticao_dobro` diferente de `excesso_final` por mais de 0,01.
+- `encontro.origem_indebito` ausente ou fora de `sem_lastro_contratual` |
+  `clausula_declarada_nula` | `divergencia_jurisprudencial`; base de dobro diferente de zero com
+  as duas últimas (engano justificável, Tema 929, tese i.c).
 - Cenário com `favoravel: false` e `ressalvas` vazio: cenário desfavorável é reportado, não
   escondido (`camadas/C0-C6-rota-conta.md`, C4, item 2).
 - Valor monetário que não é número (texto, booleano, NaN); `ramo` fora de instrumento/conta.

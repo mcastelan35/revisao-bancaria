@@ -317,8 +317,11 @@ def _item(r: dict, regime: str, dc: date | None, hoje: date, dados: dict, marcos
             continue
         verificado = date.fromisoformat(tema["verificado_em"])
         vencida = (hoje - verificado).days > validade
-        pendencias.append({"tema": tema["tema"], "status": tema["status"],
-                           "verificado_em": tema["verificado_em"], "vencida": vencida})
+        pendencia = {"tema": tema["tema"], "status": tema["status"],
+                     "verificado_em": tema["verificado_em"], "vencida": vencida}
+        if tema.get("providencia"):
+            pendencia["providencia"] = tema["providencia"]
+        pendencias.append(pendencia)
         if vencida:
             alertas_vencidos.append(modelo_alerta.replace("{tema}", tema["tema"])
                                     .replace("{verificado_em}", _br(verificado)))
@@ -338,7 +341,7 @@ def _item(r: dict, regime: str, dc: date | None, hoje: date, dados: dict, marcos
     termos = (r.get("padroes_deteccao") or {}).get("termos_suspeitos")
     if termos:
         item["termos_suspeitos"] = termos
-    for chave in ("implementacao", "resultado_se_sem_conta_grafica"):
+    for chave in ("implementacao", "resultado_se_sem_conta_grafica", "gate"):
         if chave in r:
             item[chave] = r[chave]
     item.update(extras)
@@ -780,6 +783,11 @@ def _testes() -> tuple[int, int]:
     chk("regra suspensa não é conclusiva e exige pesquisa; a vigente é conclusiva",
         cons["conclusiva"] is False and cons["exige_pesquisa"] is True and "R15" in caso["resumo"]["nao_conclusivas"]
         and onde(caso, "R28")[1]["conclusiva"] is True and onde(caso, "R28")[1]["exige_pesquisa"] is False)
+    r26 = onde(caso, "R26")[1]
+    chk("R26 leva o gate da origem do indébito (Tema 929, i.c) e a providência das pendências",
+        r26.get("gate") == R["R26"]["gate"] and "origem_indebito" in r26["teste"]["campos_necessarios"]
+        and all(p.get("providencia") for p in r26["pendencias"])
+        and "gate" not in onde(caso, "R28")[1])
 
     # ── categorias e formatos ─────────────────────────────────────
     so_tarifas = avalia(categorias=["tarifas"])

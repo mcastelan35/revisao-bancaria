@@ -29,7 +29,8 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 
 from .comum import (brl_rs, parse_num_ptbr, competencia, fim_do_mes, dias_no_mes,
-                    competencias_entre, guard_taxa, CORTE_TEMA_929, rodar_autoteste, saida_utf8)
+                    competencias_entre, guard_taxa, CORTE_TEMA_929, ORIGENS_INDEBITO,
+                    ORIGEM_COM_DOBRO, rodar_autoteste, saida_utf8)
 
 competencia_de = competencia   # alias para funções cujo parâmetro se chama `competencia`
 
@@ -610,39 +611,59 @@ def nexo_cruzado(lancs: list[Lancamento]) -> dict:
             for ref, g in grupos.items()}
 
 
-def encontro_de_contas(resultado_cenario: dict) -> dict:
+def encontro_de_contas(resultado_cenario: dict, *, origem: str) -> dict:
     """Sumário do cenário para o entregável e para o atualizar_debito do conector.
-    A modulação do dobro (Tema 929, corte em CORTE_TEMA_929 = 30/03/2021) é
+    A modulação do dobro (corte em CORTE_TEMA_929 = 30/03/2021, EAREsp 676.608/RS) é
     aplicada na camada C6 — o motor entrega a série datada e as duas bases.
+
+    origem   decisão do operador no gate da C6 (R26), uma de ORIGENS_INDEBITO. Só
+             `sem_lastro_contratual` admite o dobro; `clausula_declarada_nula` e
+             `divergencia_jurisprudencial` são engano justificável (Tema 929, i.c —
+             REsp 1.963.770/CE) e levam TODAS as competências à base simples, com a
+             parcela posterior ao corte informada em `base_dobro_afastada`. Origens
+             misturadas no mesmo cenário: a de menor excesso. Nada é presumido: sem
+             origem válida, ValueError.
 
     Bases:
       - os incrementos NEGATIVOS entram (abatem a base da fase em que caem), de
         modo que base_simples + base_dobro == excesso_final (2 casas);
       - a competência que CONTÉM o corte (2021-03) vai INTEIRA na base simples —
         critério de menor excesso (o incremento mensal não é datável dentro do
-        mês); competências posteriores vão na base dobro.
+        mês); competências posteriores vão na base dobro, salvo engano justificável.
     """
+    if origem not in ORIGENS_INDEBITO:
+        raise ValueError(f"origem do indébito inválida: {origem!r}. Use uma de "
+                         f"{', '.join(ORIGENS_INDEBITO)} — decisão do operador no gate da C6 "
+                         "(R26; Tema 929, tese i.c)")
     comp_corte = competencia(CORTE_TEMA_929)
-    simples = dobro_base = 0.0
+    antes = depois = 0.0
     for i in resultado_cenario.get("indebito_por_competencia", []):
         comp = competencia(date.fromisoformat(i["data_inicial"]))
         if comp <= comp_corte:
-            simples += i["valor"]
+            antes += i["valor"]
         else:
-            dobro_base += i["valor"]
+            depois += i["valor"]
+    engano = origem != ORIGEM_COM_DOBRO
+    nota = ("valores nominais por competência; incrementos negativos abatem a base "
+            f"da respectiva fase (simples + dobro = excesso final); a competência "
+            f"{comp_corte}, que contém o corte de {CORTE_TEMA_929.isoformat()} (EAREsp 676.608/RS), "
+            "entra inteira na base simples — critério de menor excesso; correção "
+            "monetária e a aplicação do dobro vão ao conector (atualizar_debito, "
+            "valores[]) na C6")
+    if engano:
+        nota += (f"; origem do indébito: {ORIGENS_INDEBITO[origem]} — engano justificável "
+                 "(Tema 929, tese i.c): as competências posteriores ao corte também vão à base "
+                 "simples, e o dobro só se pede afastando a excludente")
     return {
         "cenario": resultado_cenario["cenario"],
         "excesso_final": resultado_cenario["excesso_final"],
         "favoravel": resultado_cenario["favoravel"],
-        "base_repeticao_simples": round(simples, 2),
-        "base_repeticao_dobro": round(dobro_base, 2),
+        "origem_indebito": origem,
+        "base_repeticao_simples": round(antes + depois, 2) if engano else round(antes, 2),
+        "base_repeticao_dobro": 0.0 if engano else round(depois, 2),
+        "base_dobro_afastada": round(depois, 2) if engano else 0.0,
         "competencia_corte": comp_corte,
-        "nota": ("valores nominais por competência; incrementos negativos abatem a base "
-                 f"da respectiva fase (simples + dobro = excesso final); a competência "
-                 f"{comp_corte}, que contém o corte de {CORTE_TEMA_929.isoformat()} (Tema 929), "
-                 "entra inteira na base simples — critério de menor excesso; correção "
-                 "monetária e a aplicação do dobro vão ao conector (atualizar_debito, "
-                 "valores[]) na C6"),
+        "nota": nota,
     }
 
 
@@ -666,7 +687,7 @@ def bloco_payload(reconciliacao: dict, trinca: list[dict], cenario_lider, encont
     trinca          saída de `rodar_trinca` (cenário omitido segue com `omitido` e `motivo`)
     cenario_lider   nome do cenário ("C1_TAXA_MEDIA") ou o dict dele, o mesmo que foi a
                     `encontro_de_contas`
-    encontro        saída de `encontro_de_contas(cenario_lider)`
+    encontro        saída de `encontro_de_contas(cenario_lider, origem=...)`
     series          [{serie, codigo, procedencia, periodo}] da consulta ao conector
     correcao        opcional: {valor_corrigido, data_final, indice, hash} do `atualizar_debito`
 
@@ -689,8 +710,9 @@ def bloco_payload(reconciliacao: dict, trinca: list[dict], cenario_lider, encont
         "reconciliacao": rec,
         "cenarios": cenarios,
         "cenario_lider": cenario_lider["cenario"] if isinstance(cenario_lider, dict) else cenario_lider,
-        "encontro": _copiar(encontro, ("cenario", "excesso_final", "base_repeticao_simples",
-                                       "base_repeticao_dobro", "competencia_corte", "nota"), "encontro"),
+        "encontro": _copiar(encontro, ("cenario", "excesso_final", "origem_indebito",
+                                       "base_repeticao_simples", "base_repeticao_dobro",
+                                       "base_dobro_afastada", "competencia_corte", "nota"), "encontro"),
         "series": [_copiar(s, ("serie", "codigo", "procedencia", "periodo"), f"series[{k}]")
                    for k, s in enumerate(series)],
     }
@@ -902,10 +924,16 @@ def _testes() -> tuple[int, int]:
     nx = nexo_cruzado(carregar_csv(csv_nx))
     chk("nexo cruzado agrupa por contrato", nx["CCB-123"]["total_debitado"] == 1600.0
         and nx["CCB-123"]["lancamentos"] == 2)
-    ec = encontro_de_contas(r)
+    ec = encontro_de_contas(r, origem="sem_lastro_contratual")
     chk("encontro de contas separa base simples/dobro pelo corte 30/03/2021",
         ec["base_repeticao_dobro"] == round(r["excesso_final"], 2)
-        and ec["base_repeticao_simples"] == 0.0)
+        and ec["base_repeticao_simples"] == 0.0 and ec["base_dobro_afastada"] == 0.0
+        and ec["origem_indebito"] == "sem_lastro_contratual")
+    try:
+        encontro_de_contas(r, origem="presumida")
+        chk("encontro de contas recusa origem do indébito fora da lista (gate da R26)", False)
+    except ValueError as e:
+        chk("encontro de contas recusa origem do indébito fora da lista (gate da R26)", "i.c" in str(e))
 
     # ── indébito por competência soma o excesso final ─────────────
     soma = sum(i["valor"] for i in r_t["indebito_por_competencia"])
@@ -1037,13 +1065,19 @@ def _testes() -> tuple[int, int]:
                 {"valor": 20.0, "data_inicial": "2021-03-31", "rotulo": "excesso 2021-03"},
                 {"valor": 30.0, "data_inicial": "2021-04-30", "rotulo": "excesso 2021-04"},
                 {"valor": -26.93, "data_inicial": "2021-05-31", "rotulo": "excesso 2021-05"}]}
-    ec6 = encontro_de_contas(sint)
+    ec6 = encontro_de_contas(sint, origem="sem_lastro_contratual")
     chk("encontro: simples 70,00 (2021-02 + 2021-03 inteira), dobro 3,07 (30 − 26,93)",
         ec6["base_repeticao_simples"] == 70.0 and ec6["base_repeticao_dobro"] == 3.07,
         f"[{ec6['base_repeticao_simples']} / {ec6['base_repeticao_dobro']}]")
     chk("encontro: simples + dobro = excesso_final = 73,07",
         round(ec6["base_repeticao_simples"] + ec6["base_repeticao_dobro"], 2) == 73.07
         == ec6["excesso_final"] and "2021-03" in ec6["nota"] and "menor excesso" in ec6["nota"])
+    for origem in ("clausula_declarada_nula", "divergencia_jurisprudencial"):
+        en = encontro_de_contas(sint, origem=origem)
+        chk(f"encontro com engano justificável ({origem}): tudo na simples, dobro 0, afastada 3,07",
+            en["base_repeticao_simples"] == 73.07 and en["base_repeticao_dobro"] == 0.0
+            and en["base_dobro_afastada"] == 3.07 and "i.c" in en["nota"],
+            f"[{en['base_repeticao_simples']} / {en['base_repeticao_dobro']} / {en['base_dobro_afastada']}]")
 
     # ── (7) guarda de escala: taxa 7.9 (pontos percentuais) ───────────
     tr79 = rodar_trinca(ls_c, 0.0, taxa_contratada=7.9, taxa_media={"2025-04": 0.03})
@@ -1083,17 +1117,20 @@ def _testes() -> tuple[int, int]:
     # ── bloco `conta` do payload: copia das saídas dos motores, sem número digitado ──
     serie_b = [{"serie": "Taxa média — modalidade de teste", "codigo": "000000",
                 "procedencia": "teste", "periodo": "2025-04", "extra": "fora do payload"}]
-    bloco = bloco_payload(reconciliar(ls_c, 0.0), tr, "C1_TAXA_MEDIA", encontro_de_contas(tr[0]), serie_b)
+    bloco = bloco_payload(reconciliar(ls_c, 0.0), tr, "C1_TAXA_MEDIA", encontro_de_contas(tr[0], origem="sem_lastro_contratual"),
+                          serie_b)
     chk("bloco_payload tem só os blocos do payload e o líder pelo nome",
         list(bloco) == ["reconciliacao", "cenarios", "cenario_lider", "encontro", "series"]
         and bloco["cenario_lider"] == "C1_TAXA_MEDIA" and "correcao" not in bloco)
     chk("bloco_payload copia os números da trinca e do encontro sem alterá-los",
         [c["cenario"] for c in bloco["cenarios"]] == [t["cenario"] for t in tr]
         and bloco["cenarios"][0]["excesso_final"] == tr[0]["excesso_final"]
-        and bloco["encontro"]["base_repeticao_dobro"] == encontro_de_contas(tr[0])["base_repeticao_dobro"]
+        and bloco["encontro"]["base_repeticao_dobro"] == encontro_de_contas(tr[0], origem="sem_lastro_contratual")["base_repeticao_dobro"]
+        and bloco["encontro"]["origem_indebito"] == "sem_lastro_contratual"
         and "parametros" not in bloco["cenarios"][0] and "extra" not in bloco["series"][0]
         and set(bloco["reconciliacao"]["janela"]) == {"data_inicial", "data_final"})
-    bloco2 = bloco_payload(reconciliar(ls_c, 0.0), tr2, tr2[0], encontro_de_contas(tr2[0]), [],
+    bloco2 = bloco_payload(reconciliar(ls_c, 0.0), tr2, tr2[0],
+                           encontro_de_contas(tr2[0], origem="clausula_declarada_nula"), [],
                            {"valor_corrigido": 1.0, "data_final": "2025-05-30", "indice": "x", "hash": "h",
                             "memoria": "fora"})
     chk("bloco_payload aceita o dict do líder, preserva o omitido com motivo e a correção",

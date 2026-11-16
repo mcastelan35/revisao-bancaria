@@ -27,6 +27,14 @@ from decimal import Decimal, ROUND_HALF_UP
 # ─────────────────────────────────────────────────────────────────────
 
 CORTE_TEMA_929 = date(2021, 3, 30)      # MT05 — modulação da repetição em dobro (EAREsp 676.608/RS)
+#: Origem do indébito (gate da R26). Só `sem_lastro_contratual` admite o dobro; as outras duas são
+#: engano justificável (Tema 929, tese i.c — REsp 1.963.770/CE) e vão inteiras à base simples.
+ORIGENS_INDEBITO = {
+    "sem_lastro_contratual": "cobrança sem lastro contratual",
+    "clausula_declarada_nula": "cobrança fundada em cláusula declarada nula",
+    "divergencia_jurisprudencial": "cobrança cujo objeto é alvo de divergência jurisprudencial",
+}
+ORIGEM_COM_DOBRO = "sem_lastro_contratual"
 MARCO_TETO_CARTAO = date(2024, 1, 3)    # MT06 — teto de 100% no rotativo (Lei 14.690/2023; Res. CMN 5.112/2023)
 
 # ─────────────────────────────────────────────────────────────────────

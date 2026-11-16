@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Revisão de contratos bancários para advogados e contadores no Claude, com taxas do BACEN pelo conector Radar Apogeu.",
-    "version": "6.0.0"
+    "version": "6.1.0"
   },
   "plugins": [
     {
       "name": "revisao-bancaria",
       "source": "./",
       "description": "Revisão de contratos bancários para advogados e contadores: contratos (Price/SAC, pós-fixados e CET), cartão de crédito (teto da Lei 14.690), financiamento habitacional SFH/SFI e conta corrente, com 40 regras aplicadas por motor determinístico, taxas e índices do BACEN pelo conector Radar Apogeu, gates de aprovação em cada camada e laudo PREMIUM/PANORAMA com planilha. Requer o conector Radar Apogeu.",
-      "version": "6.0.0",
+      "version": "6.1.0",
       "author": {
         "name": "Marcos Vilas Boas",
         "url": "https://www.instagram.com/advvilasboas/"

@@ -475,7 +475,8 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
     w("")
     w("## 7. Pendências antes de protocolar")
     w("")
-    pend = [*sem_juris, *consulta["avisos"],
+    pend_juris = _pendencias_juris(ids, hoje)
+    pend = [*sem_juris, *consulta["avisos"], *pend_juris,
             *(f"Ressalva do laudo: {r}" for r in payload.get("ressalvas", [])),
             *(f"Premissa não comprovada: {p}" for p in payload.get("premissas", []))]
     if not pend:
@@ -484,8 +485,32 @@ def espelho(payload: dict, skill_peticao: str | None = None, hoje: str | None = 
         w(f"- {p}")
     w("")
     resumo = {"teses": len(achados), "julgados": julgados, "sem_jurisprudencia": sem_juris,
-              "avisos": consulta["avisos"]}
+              "avisos": consulta["avisos"], "pendencias_jurisprudenciais": pend_juris}
     return "\n".join(L), resumo
+
+
+def _pendencias_juris(ids, hoje: str | None) -> list[str]:
+    """Uma linha por tema pendente do `regras-bancarias.json` que afeta as regras do espelho:
+    status, providência (quando houver) e o alerta de status vencido (validade das pendências)."""
+    from . import regras as motor_regras
+    pend = motor_regras.carregar_dados().get("pendencias_jurisprudenciais", {})
+    dia = _data(hoje) if hoje else date.today()
+    validade = pend.get("validade_dias", 90)
+    usados = set(ids)
+    linhas = []
+    for t in pend.get("temas", []):
+        afetadas = sorted(usados & set(t.get("regras_afetadas", [])))
+        if not afetadas:
+            continue
+        linha = f"Pendência jurisprudencial — {t['tema']} ({', '.join(afetadas)}): {t['status']}."
+        if t.get("providencia"):
+            linha += f" Providência: {t['providencia']}"
+        verificado = _data(t["verificado_em"])
+        if verificado and (dia - verificado).days > validade:
+            linha += " " + pend.get("alerta_vencido", "").replace("{tema}", t["tema"]).replace(
+                "{verificado_em}", _br(t["verificado_em"]))
+        linhas.append(linha)
+    return linhas
 
 
 def gerar_espelho(payload: dict, saida: Path, skill_peticao: str | None = None,
@@ -594,6 +619,18 @@ def _testes() -> tuple[int, int]:
         chk("espelho: formato neutro sem skill", "neutro" in md)
         md2, _ = espelho(payload, skill_peticao="peticoes-escritorio", hoje="2026-10-27", caminho=arq)
         chk("espelho: skill canônica nomeada", "`peticoes-escritorio`" in md2)
+        chk("espelho: sem regra com tema pendente, nenhuma pendência jurisprudencial",
+            resumo["pendencias_jurisprudenciais"] == [])
+        payload["achados"][0]["regras"] = ["R04", "R26"]
+        md3, r3 = espelho(payload, hoje="2026-10-27", caminho=arq)
+        chk("espelho: tema pendente da R26 nas pendências, com a providência",
+            any("Tema 929/STJ (R26)" in x and "Providência:" in x for x in r3["pendencias_jurisprudenciais"])
+            and "Pendência jurisprudencial — Tema 929/STJ" in md3
+            and not any("DESATUALIZADO" in x for x in r3["pendencias_jurisprudenciais"]))
+        _, r4 = espelho(payload, hoje="2030-01-01", caminho=arq)
+        chk("espelho: pendência vencida leva o alerta de status desatualizado",
+            r4["pendencias_jurisprudenciais"] and
+            all("DESATUALIZADO" in x for x in r4["pendencias_jurisprudenciais"]))
     turma = {"tribunal": "STJ", "orgao": "Terceira Turma", "precedente_qualificado": "não",
              "julgamento": "2026-06-15"}
     secao = {"tribunal": "STJ", "orgao": "Corte Especial", "precedente_qualificado": "não (embargos)",
