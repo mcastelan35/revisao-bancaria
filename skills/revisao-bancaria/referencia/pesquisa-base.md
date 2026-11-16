@@ -85,5 +85,6 @@ Súmula 603 (desconto em conta-corrente) foi CANCELADA — não usar.
 |---|---|---|---|
 | 1378 | Critério de abusividade de juros (taxa média BACEN como fundamento exclusivo) | Afetado 02/09/2025; suspensos só REsp e AREsp | REsp 2.227.276/AL e outros |
 | 1414 | Cartão consignado RMC: decadência × nulidade, validade, consequência do vício e dano moral (absorveu o 1328, cancelado em 02/10/2026) | Afetado 06/03/2026 (Segunda Seção, Rel. Min. Raul Araújo); suspensão nacional, salvo cumprimento de sentença | REsp 2.224.599/PE e outros cinco |
+| 1474 | Capitalização diária: basta a periodicidade pactuada ou é preciso informar a taxa diária | Afetado (2026) | REsps de registro 2025/0506104-2 e 2025/0452561-2 (TJRS) |
 | 1396 | Prova da tentativa prévia de solução extrajudicial como condição do interesse de agir em ação prestacional de consumo | Afetado | REsp de registro 2025/0140700-4 (TJMG) |
 | 929 | Repetição em dobro — embargos de declaração contra o acórdão do repetitivo | Julgado em 15/09/2026 (REsp 1.963.770/CE), sem modulação; trânsito em julgado a conferir | REsp 1.963.770/CE |

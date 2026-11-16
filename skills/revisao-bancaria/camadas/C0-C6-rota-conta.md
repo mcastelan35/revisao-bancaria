@@ -222,13 +222,15 @@ Confirmar a lista de lacunas e o requerimento de exibição.
    a perícia e dependem de confirmação pericial. O briefing para peça inclui requerimento
    expresso de prova pericial contábil.
 
-4. **Fundamentação jurídica** apenas via `referencia/repertorio-jurisprudencial-contas.md`
-   (regra de conduta 3: ementa na íntegra, padrão sanduíche, identificação completa ao
-   final). Entrada `[PENDENTE]`/`[CONFERIR]` não se cita — validar antes via
-   `pesquisa-jurisprudencial-jusia`. **Enquanto o repertório estiver em ESQUELETO, a rota
-   CONTA é beta**: o R0 avisa isso ao escolher a rota, e o entregável declara na metodologia
-   que a fundamentação jurídica se limita ao `regras-bancarias.json`.
+4. **Fundamentação jurídica** só pelo repertório validado: `<rb> jurisprudencia consultar
+   --regras CONTA-CAPDIARIA,CONTA-HAMBURGUES,CONTA-ENCARGOS,CONTA-EXIBICAO,R16,R26` (o mapa das
+   teses da rota está em `referencia/repertorio-jurisprudencial-contas.md`). Regra de conduta 3:
+   ementa na íntegra, padrão sanduíche, identificação completa ao final; entrada `CONFERIR` ou
+   vencida não sai na consulta. Capitalização diária: conferir a pendência do Tema 1474/STJ
+   (`<rb> pendencias --regras R18,R19`).
 
 ### Gate pós-entrega
-Encerrar / analisar contrato vinculado (rota AMBAS) / gerar petição (briefing para a skill de
-peticionamento configurada na L-1) / outro formato.
+Encerrar / analisar contrato vinculado (rota AMBAS) / gerar petição — `<rb> espelho
+payload.json --saida <pasta> --config-dir "${CLAUDE_PLUGIN_DATA}"`, com os achados apontando em
+`regras` para os ids da rota (`["CONTA-CAPDIARIA", "R19"]`), entregue à skill de peticionamento da
+L-1 com o requerimento de perícia contábil e as conferências no conector da L4 / outro formato.

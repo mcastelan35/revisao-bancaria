@@ -334,8 +334,8 @@ consistência falha se divergirem. Quem já instalou só recebe código novo qua
 - A razão contratada/média é aritmética; a tese de juros abusivos depende do Tema 1378/STJ,
   pendente. Regras suspensas ou sem precedente consolidado não concluem: a decisão é do advogado.
 - Jurisprudência só do acervo do plugin, com ementa integral; o que não estiver lá vai para
-  pesquisa (JusIA). A rota CONTA é **beta** enquanto o repertório jurisprudencial dela estiver em
-  esqueleto.
+  pesquisa (JusIA). A rota CONTA tem repertório próprio desde a v6.3 (capitalização diária,
+  método hamburguês, débitos sem contrato, exibição de documentos e Súmula 530).
 - Os valores da rota CONTA são faixa, não ponto, e instruem a perícia contábil.
 - Todo entregável é sujeito a revisão por advogado(a) ou contador(a) responsável.
 

@@ -1,5 +1,47 @@
 # CHANGELOG
 
+## v6.3.0 — 16/11/2026 — Repertório da rota CONTA e das regras T2 (onda 6)
+
+Nenhum cálculo mudou. O repertório validado passa de 112 para 160 julgados citáveis, a rota CONTA
+deixa de ser beta e quatro regras ganham alerta ou fundamentação corrigidos.
+
+### Onda 6 do repertório (16/11/2026)
+
+Pesquisa pelo site do Jusbrasil no navegador (inteiro teor lido, sem a cota do conector) e pelo
+portal do TJPR para as Câmaras Cíveis, em três frentes paralelas, com o mesmo critério das ondas
+anteriores (ementa integral, identificação completa, link, sigilo).
+
+- **Rota CONTA, teses próprias:** `CONTA-CAPDIARIA` (capitalização diária sem pactuação
+  expressa), `CONTA-HAMBURGUES` (saldo devedor diário na perícia), `CONTA-ENCARGOS` (débitos em conta
+  sem lastro contratual) e `CONTA-EXIBICAO` (exibição do contrato e dos extratos; Temas 411, 648 e
+  1000). A comissão de permanência disfarçada fica na R03, a Súmula 530 na R16 e o dobro na R26.
+  `repertorio-jurisprudencial-contas.md` vira o mapa das teses; R0, C6, SKILL.md, README e
+  ARCHITECTURE deixam de tratar a rota como beta.
+- **Regras T2 que não tinham julgado:** R08, R11, R12, R16, R21, R22, R30, R31, R32, R33, R36 e
+  R38. Sem favorável do STJ: R31 (só o limite) e R33 (só um acórdão do TJPR; o STJ admite a comissão
+  de garantia expressamente pactuada). R32 vale nas duas formulações estreitas que o STJ admite.
+- Ligações em julgados que já estavam no repertório: R08 e `CONTA-ENCARGOS` no REsp 1.251.331/RS;
+  R11 e R12 no REsp 1.578.553/SP; R21 no REsp 1.061.530/RS (com o Tema 30/STJ, conferido no
+  catálogo oficial) e no REsp 1.058.114/RS, que também leva a R22; os ids `CONTA-*` nas entradas
+  da R13, R16 e R19 que tratam de conta corrente.
+- As regras passam a aparecer em ordem numérica no repertório. Critérios de entrada: o site do
+  Jusbrasil lido no navegador passa a ser fonte admitida (mesmo acervo do conector).
+
+### Regras
+
+- **Tema 1474/STJ** (afetado: capitalização diária exige ou não a taxa diária expressa) entra como
+  pendência das R18 e R19, com os argumentos do `consultar_precedente` e a providência.
+- R12: a ressalva do Tema 958 é a 2.3.1 (serviço não prestado), não a 2.3.2.
+- R16: alerta da divergência sobre a Súmula 530 no cheque especial (Quarta Turma e Câmaras do TJPR).
+- R21: alerta sobre a Lei 14.905/2024, em vigor desde 30/08/2024 (afastou a Lei de Usura nas
+  obrigações com instituições financeiras): sem julgado ainda; contratos posteriores ficam expostos.
+- R22: o teto de 2% vale para contratos a partir da Lei 9.298/1996, não do CDC de 1991; alerta
+  sobre o crédito empresarial e sobre a ementa do REsp 1.497.574/SC.
+- R32: alerta com a posição do STJ (honorários extrajudiciais pactuados são válidos) e as duas
+  formulações em que a tese se sustenta.
+- R38: a Súmula 454/STJ é limite da parte da TR, não fundamento do CES; o REsp 2.166.103/SP deixa
+  de ser `[CONFERIR]` (está no repertório).
+
 ## v6.2.0 — 16/11/2026 — Tema 929 sem modulação e jurisprudência conferida no conector
 
 ### Tema 929 sem modulação: o dobro deixa de depender da data (16/11/2026)

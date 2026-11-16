@@ -1,6 +1,6 @@
 {
   "$schema": "regras-bancarias-schema",
-  "versao": "6.2.0",
+  "versao": "6.3.0",
   "atualizado_em": "2026-11-16",
   "descricao": "Motor de regras para análise revisional de contratos bancários. Cada regra codifica uma tese jurídica com teste lógico, corte temporal, fundamentação e consequência. Consumido pelo plugin revisao-bancaria por meio do motor determinístico `motores/regras.py` (`revisao.py regras`) nas camadas L1/L2 e C3 — o agente recebe só as regras aplicáveis ao caso, não este arquivo inteiro.",
   "notas_de_versao": [
@@ -113,6 +113,15 @@
         "Tema 929/STJ sem modulação (REsp 1.963.770/CE, inteiro teor lido): R26 e R27 sem corte temporal — a origem do indébito decide dobro × simples, em qualquer data; R13 segue a origem; MT05 marcado `superado`, sem regras.",
         "Pendência do Tema 929 passa a ser os embargos de declaração até o trânsito; providência: pedir o dobro sobre todo o período.",
         "Pendências do STJ com `precedente` (argumentos do consultar_precedente do conector) e `situacao_esperada`; alerta de pendência vencida manda conferir no conector."
+      ]
+    },
+    {
+      "versao": "6.3.0",
+      "data": "2026-11-16",
+      "alteracoes": [
+        "Nova pendência: Tema 1474/STJ (capitalização diária e taxa diária expressa), regras_afetadas R18 e R19.",
+        "R12: ressalva 2.3.1 do Tema 958. R16: alerta da divergência sobre a Súmula 530 no cheque especial. R21: alerta da Lei 14.905/2024. R22: corte pela Lei 9.298/1996 e alerta. R32: alerta com a posição do STJ. R38: Súmula 454 como limite da parte da TR; REsp 2.166.103/SP conferido.",
+        "Nenhuma tese, tier, status, limiar ou consequência mudou."
       ]
     }
   ],
@@ -709,7 +718,7 @@
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 958/STJ — tese 2.3 e 2.3.2"
+          "Tema 958/STJ — tese 2.3, ressalva 2.3.1 (serviço não efetivamente prestado); 2.3.2 (onerosidade excessiva) como reforço"
         ],
         "legislacao": []
       },
@@ -901,7 +910,7 @@
       "consequencia": "Aplicar taxa média BACEN da espécie, salvo se a taxa cobrada for menor",
       "tier": "T2",
       "status": "vigente",
-      "alerta": null
+      "alerta": "Cheque especial e conta garantida: o leading case dos Temas 233/234 (REsp 1.112.879/PR) é um cheque especial sem contrato, e a Terceira Turma aplica a Súmula 530 à conta corrente; a Quarta Turma está dividida (REsp 2.065.222/PR, dez/2025, nega; a mesma Turma aplicou a súmula em 2024 e em março/2026). No TJPR a 14ª Câmara Cível afasta a súmula e a 13ª, a 15ª e a 16ª aplicam. Julgados em `<rb> jurisprudencia consultar --regras R16`."
     },
     {
       "id": "R17",
@@ -1097,7 +1106,7 @@
       "consequencia": "Reduzir juros moratórios a 1% a.m.",
       "tier": "T2",
       "status": "vigente",
-      "alerta": null
+      "alerta": "Lei 14.905/2024 (em vigor desde 30/08/2024): o art. 3º afastou a Lei de Usura (Decreto 22.626/1933) nas obrigações contraídas perante instituições financeiras, e o art. 406 do CC passou a fixar a taxa legal pela Selic menos o IPCA. Em 16/11/2026 não há julgado do STJ nem do TJPR sobre o efeito da lei nos juros moratórios convencionados em contrato bancário: o STJ segue aplicando o teto de 1% ao mês (Súmula 379; Tema 30) com base na redação anterior, e as Câmaras do TJPR o mantiveram em contratos anteriores à lei. Em contrato posterior a 30/08/2024, a tese fica exposta: datar o contrato e dizê-lo no laudo."
     },
     {
       "id": "R22",
@@ -1110,11 +1119,11 @@
         ],
         "temas_repetitivos": [],
         "legislacao": [
-          "Art. 52, §1º, CDC"
+          "Art. 52, §1º, CDC (redação da Lei 9.298/1996)"
         ]
       },
       "corte_temporal": {
-        "aplica_se": "contratos posteriores ao CDC (11/03/1991)",
+        "aplica_se": "contratos celebrados a partir da Lei 9.298/1996 (agosto de 1996), que reduziu de 10% para 2% a multa do art. 52, § 1º, do CDC",
         "marco": null,
         "posicao": null
       },
@@ -1133,7 +1142,7 @@
       "consequencia": "Reduzir a multa a 2% do valor da prestação",
       "tier": "T2",
       "status": "vigente",
-      "alerta": null
+      "alerta": "Contrato anterior à Lei 9.298/1996: o teto era de 10%. O CDC não alcança o crédito tomado pela empresa para a atividade sem vulnerabilidade provada (regra de conduta 18). A ementa do REsp 1.497.574/SC atribui à Súmula 285 um texto que não é o do enunciado: citar o enunciado por `<rb> sumula 285`. A base da multa (valor da prestação, não o saldo devedor) é a R31."
     },
     {
       "id": "R23",
@@ -1512,7 +1521,7 @@
       "consequencia": "Se lançado na memória, decote integral da rubrica extrajudicial. Se não lançado, arguição PREVENTIVA — dimensionar o valor em risco e suscitar antes que seja cobrado.",
       "tier": "T2",
       "status": "sem_precedente_consolidado",
-      "alerta": "Em execuções de valor elevado esta é frequentemente a maior cifra em jogo, e costuma não figurar na memória inicial. Sempre dimensionar o valor em risco mesmo quando não cobrado."
+      "alerta": "Em execuções de valor elevado esta é frequentemente a maior cifra em jogo, e costuma não figurar na memória inicial. Sempre dimensionar o valor em risco mesmo quando não cobrado. Jurisprudência do STJ: os honorários extrajudiciais pactuados são válidos e não se confundem com os de sucumbência (REsp 2.157.400/RS, 2026; na CCB, a Lei 10.931/2004, art. 28, § 1º, IV, permite pactuá-los), e a falta de reciprocidade (CDC, art. 51, XII) foi rejeitada. A tese só se sustenta em duas formulações estreitas: os honorários contratuais que remuneram a própria cobrança judicial duplicam a sucumbência (REsp 2.166.423/DF), e a rubrica extrajudicial lançada na execução exige prova de cobrança extrajudicial efetivamente feita por advogado."
     },
     {
       "id": "R33",
@@ -1768,7 +1777,7 @@
       "descricao": "O Coeficiente de Equiparação Salarial só pode ser cobrado com cláusula expressa — resolução do BNH ou circular do BACEN não a substitui, e o pagamento da primeira parcela não convalida (REsp 2.166.103/SP; REsp 2.168.394/SP). Com cláusula expressa, é válido mesmo antes da Lei 8.692/93 (REsp 2.174.331/SP). TR como índice do saldo é válida (Súmula 454; REsp 969.129/MG, repetitivo) — não atacar. Repetição é SIMPLES salvo má-fé provada (REsp 2.174.331/SP).",
       "fundamentacao": {
         "sumulas": [
-          "Súmula 454/STJ"
+          "Súmula 454/STJ (TR nos contratos do SFH corrigidos pelo índice da poupança — limite da parte da TR, não fundamento do CES)"
         ],
         "temas_repetitivos": [
           "REsp 969.129/MG (repetitivo, TR)"
@@ -1780,7 +1789,7 @@
         "precedentes": [
           {
             "ref": "STJ, REsp 2.166.103/SP, data-base 12/12/2025",
-            "fonte": "Acervo Jusbrasil lido em inteiro teor em 09/10/2026 (ementa); relator, órgão julgador e data de julgamento [CONFERIR] no portal do tribunal antes de citar"
+            "fonte": "Repertório validado (R38): inteiro teor lido no Jusbrasil em 16/11/2026, com ementa e identificação completas — `<rb> jurisprudencia consultar --regras R38`"
           },
           {
             "ref": "STJ, REsp 2.174.331/SP, data-base 16/03/2026",
@@ -2459,6 +2468,27 @@
         ],
         "verificado_em": "2026-11-16",
         "providencia": "Antes de ajuizar, reclamar ao banco (SAC, ouvidoria, consumidor.gov.br ou notificação) e juntar a resposta ou o silêncio: o Tema 1396 pode exigir a tentativa prévia como condição do interesse de agir, e a omissão ou recusa do banco é indício suficiente do dobro (Tema 929, i.a)."
+      },
+      {
+        "tema": "Tema 1474/STJ",
+        "questao": "Se, nos contratos bancários, a capitalização diária exige só a previsão contratual da periodicidade diária ou também a informação expressa da taxa diária de juros",
+        "status": "afetado (catálogo BNP/CNJ, conferido em 16/11/2026), sem julgamento; suspensos os REsp e AREsp sobre a questão [conferir o alcance]",
+        "precedente": {
+          "tribunal": "STJ",
+          "especie": "tema_repetitivo",
+          "numero": 1474
+        },
+        "situacao_esperada": "afetado",
+        "regras_afetadas": [
+          "R18",
+          "R19"
+        ],
+        "paradigmas": [
+          "REsp de registro 2025/0506104-2 (origem TJRS)",
+          "REsp de registro 2025/0452561-2 (origem TJRS)"
+        ],
+        "verificado_em": "2026-11-16",
+        "providencia": "Contrato com capitalização diária (cheque especial, conta garantida, crédito rotativo): conferir se o instrumento informa a taxa diária. Sem ela, sustentar o afastamento com a tese CONTA-CAPDIARIA (`<rb> jurisprudencia consultar --regras CONTA-CAPDIARIA`) e o alerta do tema; com a taxa diária e a metodologia expressas, a Quarta Turma validou a cobrança (EDcl no REsp 2.162.177/PR), o que vai às ressalvas."
       },
       {
         "tema": "Purga da mora — critério temporal da Lei 13.465/2017",
