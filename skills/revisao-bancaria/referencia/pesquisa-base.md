@@ -59,7 +59,7 @@ Ilicitude central: venda casada (art. 39, I, CDC) por restrição da livre escol
 
 ## 6. Repetição de indébito
 
-Tema 929/STJ (EAREsp 676.608/RS, Corte Especial): devolução em dobro independe de má-fé, basta cobrança contrária à boa-fé objetiva. Modulação: dobro só para pagamentos pós-30/03/2021; anteriores, simples. Excludente: engano justificável (ônus do fornecedor).
+Tema 929/STJ, julgado em 15/09/2026 pela Corte Especial (REsp 1.963.770/CE, Rel. Min. Humberto Martins, acórdão publicado em 03/11/2026): (i) o dobro independe do elemento volitivo e cabe quando a cobrança contraria a boa-fé objetiva; (i.a) a omissão ou recusa diante de reclamação prévia do consumidor é indício suficiente do dobro; (i.b) cabe ao fornecedor provar que não agiu de forma desleal ou descuidada; (i.c) divergência jurisprudencial sobre o objeto da cobrança, ou cláusula depois declarada nula, é engano justificável e afasta o dobro. Modulação do EAREsp 676.608/RS (Corte Especial, 21/10/2020): dobro só para cobranças posteriores a 30/03/2021; a tese do repetitivo não repete a data — conferir no inteiro teor (pendência do Tema 929). Na revisão bancária, a tese i.c separa a cobrança sem lastro contratual (dobro) da fundada em cláusula declarada nula (simples): gate da R26.
 
 ## 7. Teses para empresas e produtores rurais
 
@@ -71,7 +71,7 @@ Contratos empresariais: CDC via teoria finalista mitigada se comprovada vulnerab
 
 Teto de 100% vigente desde 03/01/2024 (Resolução CMN 5.112/2023). Total de juros + encargos não pode ultrapassar o valor original da dívida (excluído IOF). Parâmetro objetivo por força de lei.
 
-Temas pendentes: 1328 (dano moral em RMC) e 1414 (abusos em cartão consignado), ambos com suspensão nacional.
+Tema pendente: 1414 (cartão consignado RMC — decadência ou nulidade, parâmetros de validade, consequência do vício e dano moral), com suspensão nacional. O Tema 1328 (dano moral em RMC) foi cancelado em 02/10/2026 e absorvido pelo 1414.
 
 ## 9. Súmulas do STJ aplicáveis
 
@@ -84,6 +84,6 @@ Súmula 603 (desconto em conta-corrente) foi CANCELADA — não usar.
 | Tema | Questão | Status | Paradigmas |
 |---|---|---|---|
 | 1378 | Critério de abusividade de juros (taxa média BACEN como fundamento exclusivo) | Afetado 02/09/2025; suspensos só REsp e AREsp | REsp 2.227.276/AL e outros |
-| 1328 | Dano moral in re ipsa em RMC invalidada | Afetado 11/04/2025, suspensão | REsp 2.145.244/SC |
-| 1414 | Abusos em cartão consignado RMC/RCC | Afetado, suspensão ampliada | REsp 2.224.599/PE e outros |
-| 929 | Repetição em dobro — modulação | Pendente de conclusão na Corte Especial | EAREsp 676.608/RS |
+| 1414 | Cartão consignado RMC: decadência × nulidade, validade, consequência do vício e dano moral (absorveu o 1328, cancelado em 02/10/2026) | Afetado 06/03/2026 (Segunda Seção, Rel. Min. Raul Araújo); suspensão nacional, salvo cumprimento de sentença | REsp 2.224.599/PE e outros cinco |
+| 1396 | Prova da tentativa prévia de solução extrajudicial como condição do interesse de agir em ação prestacional de consumo | Afetado | REsp de registro 2025/0140700-4 (TJMG) |
+| 929 | Repetição em dobro — modulação no acórdão do repetitivo | Julgado em 15/09/2026 (REsp 1.963.770/CE); modulação a conferir no inteiro teor | REsp 1.963.770/CE; EAREsp 676.608/RS |

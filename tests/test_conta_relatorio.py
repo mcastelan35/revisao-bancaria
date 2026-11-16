@@ -31,9 +31,9 @@ def apurar(linhas=LINHAS, taxa_contratada=0.08, media=0.03):
     return reconciliacao, trinca
 
 
-def payload_de(reconciliacao, trinca, lider="C1_TAXA_MEDIA", **extra):
+def payload_de(reconciliacao, trinca, lider="C1_TAXA_MEDIA", origem="sem_lastro_contratual", **extra):
     escolhido = next(c for c in trinca if c["cenario"] == lider)
-    encontro = cc.encontro_de_contas(escolhido) if not escolhido.get("omitido") else {}
+    encontro = cc.encontro_de_contas(escolhido, origem=origem) if not escolhido.get("omitido") else {}
     p = relatorios._payload_demo_conta()
     p["conta"] = cc.bloco_payload(reconciliacao, trinca, lider, encontro, SERIES, **extra)
     return p
@@ -59,6 +59,32 @@ def test_bloco_do_motor_passa_na_validacao_e_o_encontro_fecha(motor):
     assert abs(enc["base_repeticao_simples"] + enc["base_repeticao_dobro"] - enc["excesso_final"]) <= 0.01
     assert enc["base_repeticao_simples"] > 0 and enc["base_repeticao_dobro"] > 0     # o corte de 2021-03 reparte
     assert validar(p) == [] and json.loads(json.dumps(p["conta"])) == p["conta"]
+    assert enc["origem_indebito"] == "sem_lastro_contratual" and enc["base_dobro_afastada"] == 0.0
+
+
+@pytest.mark.parametrize("origem", ["clausula_declarada_nula", "divergencia_jurisprudencial"])
+def test_engano_justificavel_leva_tudo_a_base_simples_e_o_laudo_diz_a_origem(motor, origem):
+    """Tema 929, tese i.c: indébito fundado em cláusula declarada nula ou em objeto de divergência
+    não tem base de dobro; a parcela posterior ao corte sai informada, não somada."""
+    p = payload_de(*motor, origem=origem)
+    enc = p["conta"]["encontro"]
+    dobro_por_data = payload_de(*motor)["conta"]["encontro"]["base_repeticao_dobro"]
+    assert enc["base_repeticao_dobro"] == 0.0 and enc["base_dobro_afastada"] == dobro_por_data > 0
+    assert abs(enc["base_repeticao_simples"] - enc["excesso_final"]) <= 0.01
+    assert validar(p) == []
+    html = relatorios.render_premium(p)
+    assert "afastada pelo engano justificável" in html and "Origem do indébito" in html
+
+
+def test_encontro_sem_origem_e_recusado_no_motor_e_no_renderizador(motor):
+    reconciliacao, trinca = motor
+    with pytest.raises(TypeError):
+        cc.encontro_de_contas(trinca[0])                                 # a origem é decisão do gate, não padrão
+    with pytest.raises(ValueError, match="i.c"):
+        cc.encontro_de_contas(trinca[0], origem="presumida")
+    p = payload_de(*motor)
+    p["conta"]["encontro"].pop("origem_indebito")
+    assert any("origem_indebito" in e for e in validar(p))
 
 
 def test_os_numeros_do_motor_chegam_aos_tres_formatos(motor, tmp_path):
@@ -122,7 +148,7 @@ def test_lider_omitido_pelo_motor_e_recusado_mas_o_bloco_e_montado():
     assert p["conta"]["cenarios"][1] == {"cenario": "C2_CAP_MENSAL", "omitido": True, "motivo": trinca[1]["motivo"]}
     assert any("foi omitido e não pode ser o líder" in e for e in validar(p))
     p["conta"]["cenario_lider"] = "C1_TAXA_MEDIA"
-    p["conta"]["encontro"] = cc.encontro_de_contas(trinca[0])
+    p["conta"]["encontro"] = cc.encontro_de_contas(trinca[0], origem="sem_lastro_contratual")
     assert validar(p) == []                                              # com o líder certo, o cenário omitido segue declarado
     html = relatorios.render_premium(p)
     assert "Omitido." in html and trinca[1]["motivo"].split(": ", 1)[1] in html

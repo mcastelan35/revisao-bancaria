@@ -496,7 +496,8 @@ def test_alerta_vencido_usa_o_modelo_do_json():
         "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do Tema 1378/STJ foi conferida pela última vez em "
         f"{verificado:%d/%m/%Y}. Validar via pesquisa-jurisprudencial-jusia antes de citar ou de emitir conclusão."]
     assert item["pendencias"] == [{"tema": tema["tema"], "status": tema["status"],
-                                   "verificado_em": tema["verificado_em"], "vencida": True}]
+                                   "verificado_em": tema["verificado_em"], "vencida": True,
+                                   "providencia": tema["providencia"]}]
 
 
 def test_hoje_aceita_data_ou_texto_e_aparece_na_saida():
@@ -520,10 +521,11 @@ def test_hoje_padrao_e_o_dia_da_chamada(monkeypatch):
 def test_pendencias_por_regra():
     saida = rodar("cartao_consignado")
     r24 = achar(saida, "R24")[1]
-    assert [p["tema"] for p in r24["pendencias"]] == ["Tema 1328/STJ", "Tema 1414/STJ"]
+    assert [p["tema"] for p in r24["pendencias"]] == ["Tema 1414/STJ"]          # o 1328 foi cancelado
     assert achar(rodar(), "R28")[1]["pendencias"] == []
     r26 = achar(rodar(), "R26")[1]
-    assert [p["tema"] for p in r26["pendencias"]] == ["Tema 929/STJ"]
+    assert [p["tema"] for p in r26["pendencias"]] == ["Tema 929/STJ", "Tema 1396/STJ"]
+    assert all(p["providencia"] for p in r26["pendencias"])
     sfh = achar(rodar("sfh", contrato="2000-01-01", data_consolidacao="2000-01-01"), "R40")[1]
     assert sfh["pendencias"][0]["tema"].startswith("Purga da mora")
 
@@ -533,7 +535,7 @@ def test_alertas_vencidos_so_das_regras_que_entram_no_caso():
     saida = rodar("cartao_consignado", "civil_empresarial", hoje=longe)
     assert destino(saida, "R26") == "nao_aplicaveis"
     assert saida["resumo"]["com_alerta_vencido"] == ["R15", "R24"]
-    assert len(achar(saida, "R24")[1]["alertas_vencidos"]) == 2
+    assert len(achar(saida, "R24")[1]["alertas_vencidos"]) == 1
     # a regra a confirmar também carrega o alerta: o operador decide com a pendência à vista
     assert "R26" in rodar("cartao_consignado", "consumerista", hoje=longe)["resumo"]["com_alerta_vencido"]
 
@@ -630,7 +632,7 @@ def test_forma_da_saida():
     saida = rodar("sfh", contrato="2000-01-01", data_consolidacao="2010-01-01")
     assert list(saida) == ["versao_regras", "hoje", "entrada", "tipo", "marcos", "aplicaveis", "confirmar",
                            "nao_aplicaveis", "resumo"]
-    assert saida["versao_regras"] == DADOS["versao"] == "6.0.0"
+    assert saida["versao_regras"] == DADOS["versao"] == "6.1.0"
     assert saida["entrada"] == {"tipo": "sfh", "regime": "consumerista", "data_contrato": "2000-01-01",
                                 "data_consolidacao": "2010-01-01", "categorias": None}
     sfh = _tipo(DADOS, "sfh")
@@ -792,3 +794,17 @@ def test_caminho_padrao_aponta_para_o_json_da_skill():
     assert regras.CAMINHO_PADRAO.parent.name == "dados" and regras.CAMINHO_PADRAO.is_file()
 
 
+# ── Tema 929 (tese i.c): origem do indébito ──────────────────────────
+
+def test_r26_exige_a_origem_do_indebito_e_traz_o_gate():
+    r26 = achar(rodar(), "R26")[1]
+    assert "origem_indebito" in r26["teste"]["campos_necessarios"]
+    assert "sem_lastro_contratual" in r26["teste"]["logica"] and "i.c" in r26["gate"]
+    r27 = achar(rodar(), "R27")[1]
+    assert "clausula_declarada_nula" in r27["teste"]["logica"]
+    assert "gate" not in r27 and "gate" not in achar(rodar(), "R04")[1]
+
+
+def test_nenhuma_pendencia_cita_tema_cancelado():
+    temas = [t["tema"] for t in DADOS["pendencias_jurisprudenciais"]["temas"]]
+    assert "Tema 1328/STJ" not in temas and "Tema 1414/STJ" in temas and "Tema 1396/STJ" in temas

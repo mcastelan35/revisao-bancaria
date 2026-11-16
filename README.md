@@ -70,7 +70,7 @@ Há ainda a **auditoria rápida**, que entrega só o semáforo (L0 a L2) num tur
 | Tarifas e serviços | R04–R12, R29, R32, R33 | TAC e TEC depois de 2008, cadastro, avaliação, registro, serviços de terceiros, correspondente bancário, comissão flat, honorários extrajudiciais e encargo que o devedor não consegue calcular |
 | Seguro e IOF | R13, R14, R25 | Venda casada do seguro prestamista; o que for lícito entra nas ressalvas |
 | Atraso | R21, R22, R31 | Juros de mora acima de 1% ao mês, multa acima de 2% em relação de consumo e multa sobre base que já inclui juros |
-| Devolução do que foi pago a mais | R26, R27 | Em dobro para pagamentos depois de 30/03/2021 (Tema 929); simples antes disso |
+| Devolução do que foi pago a mais | R26, R27 | Em dobro para pagamentos depois de 30/03/2021 quando a cobrança não tinha lastro no contrato; simples antes disso e quando a cobrança se baseava em cláusula depois declarada nula ou em tema com divergência nos tribunais, o "engano justificável" do Tema 929/STJ |
 | Cartão | R23, R24 | Teto de 100% para os juros do rotativo a partir de 03/01/2024; cartão consignado (RMC/RCC) |
 | Financiamento habitacional | R34–R40 | Capitalização vedada, juros não pagos incorporados ao saldo, ordem de correção e amortização (Súmula 450), CES, PES e TR, notificação por edital e purga da mora |
 | Prova | R28 | Cabe ao banco provar que a assinatura é autêntica |

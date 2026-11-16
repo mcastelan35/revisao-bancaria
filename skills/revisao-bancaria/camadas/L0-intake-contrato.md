@@ -122,7 +122,7 @@ operação ou contrato e consolidação). Não resolver à mão. O que cada marc
 | MT02 | 30/04/2008 | TAC/TEC vedadas? Tarifa de cadastro autorizada? |
 | MT03 | 25/02/2011 | Comissão de correspondente vedada? |
 | MT04 | 01/09/2017 | Comissão de permanência extinta? |
-| MT05 | 30/03/2021 | Repetição em dobro? |
+| MT05 | 30/03/2021 | Repetição em dobro? (por data; a origem do indébito, gate da R26, decide depois) |
 | MT06 | 03/01/2024 | Teto de 100% no rotativo do cartão? |
 | MT07 | 11/03/1991 | CDC incide no contrato habitacional? (só se posterior e sem FCVS) |
 | MT08 | 05/12/1990 | Segundo financiamento com FCVS admite quitação do saldo residual? |

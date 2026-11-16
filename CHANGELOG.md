@@ -1,6 +1,44 @@
 # CHANGELOG
 
-## [Não lançado]
+## v6.1.0 — 16/11/2026 — Temas do STJ, repertório validado e entrega padronizada
+
+Reúne o que estava sem lançamento desde a v6.0.0 (repertório jurisprudencial, espelho da petição,
+ramo CONTA no renderizador, identidade visual e PDF) e a atualização dos temas do STJ abaixo.
+
+### Temas do STJ conferidos na fonte (16/11/2026)
+
+Situação conferida no catálogo oficial de precedentes (BNP/CNJ), pelo `consultar_precedente` do
+conector Radar Apogeu, e na página do tema no STJ.
+
+- **Tema 929 julgado** (Corte Especial, REsp 1.963.770/CE, Rel. Min. Humberto Martins, j.
+  15/09/2026, acórdão publicado em 03/11/2026). Além da tese (i) — o dobro independe do elemento
+  volitivo e cabe na cobrança contrária à boa-fé objetiva —, vieram (i.a) a omissão ou recusa
+  diante de reclamação prévia é indício suficiente do dobro, (i.b) o fornecedor prova que não agiu
+  de forma desleal ou descuidada e (i.c) divergência jurisprudencial sobre o objeto da cobrança, ou
+  cláusula depois declarada nula, é engano justificável e afasta o dobro.
+  - R26 passa a exigir `origem_indebito`: dobro só para cobrança **sem lastro contratual**;
+    `clausula_declarada_nula` e `divergencia_jurisprudencial` vão para a R27 (simples), e o dobro
+    só se pede afastando a excludente. Novo campo `gate` na R26, entregue pelo `<rb> regras`.
+  - O corte de 30/03/2021 (MT05, EAREsp 676.608/RS) **fica**: a tese do repetitivo não repete a
+    data, e a pendência do Tema 929 manda conferir no inteiro teor se o acórdão manteve a
+    modulação.
+  - `conta_corrente.encontro_de_contas(cenario, origem=...)`: a origem é obrigatória (sem ela,
+    `ValueError`). Com engano justificável, todas as competências vão à base simples, a base do
+    dobro é zero e a parcela posterior ao corte sai em `base_dobro_afastada`. O renderizador
+    exige `origem_indebito` no encontro, recusa base de dobro com engano justificável e mostra a
+    origem no laudo e na planilha.
+- **Tema 1328 cancelado** em 02/10/2026 e absorvido pelo Tema 1414 (item III.d, dano moral in re
+  ipsa). Sai das pendências; a R24 o registra como cancelado.
+- **Tema 1414**: questão oficial (decadência do art. 178 do CC × nulidade sem prazo; parâmetros
+  de validade; consequência do vício; dano moral), afetação em 06/03/2026 (Segunda Seção, Rel. Min.
+  Raul Araújo), suspensão nacional referendada em 08/04/2026, salvo cumprimento de sentença, e os
+  seis REsps paradigma.
+- **Tema 1396** (nova pendência, R26 e R27): se a prova da tentativa prévia de solução
+  extrajudicial é condição do interesse de agir nas ações prestacionais de consumo.
+- **Tema 1378**: sem mudança; conferido de novo.
+- Pendências ganham `providencia` (opcional), que o `<rb> regras` entrega e o espelho da petição
+  lista em "Pendências antes de protocolar", com o alerta de status vencido quando for o caso.
+  Todas as pendências do STJ com `verificado_em` 16/11/2026.
 
 ### Reforço do STJ por tese (02/11/2026)
 
@@ -84,7 +122,7 @@
 Entregáveis padronizados: a rota CONTA ganha o renderizador, o laudo ganha a identidade visual do
 escritório e o `gerar` passa a entregar o PDF. **Nenhum cálculo, tese, súmula, tier, limiar ou
 regra mudou**. O HTML sem tema só difere do anterior na contagem inteira da memória, que sai sem
-casas ("1", não "1,00"). A versão do pacote segue 6.0.0.
+casas ("1", não "1,00").
 
 ### Ramo CONTA no renderizador
 

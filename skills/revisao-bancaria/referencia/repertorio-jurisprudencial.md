@@ -1804,7 +1804,7 @@ ementa:
 
 ## R26 — Repetição do indébito em dobro — boa-fé objetiva, sem exigir má-fé
 
-Tese: A repetição em dobro (CDC, art. 42, parágrafo único) independe de má-fé e cabe quando a cobrança indevida contraria a boa-fé objetiva, para os pagamentos posteriores a 30/03/2021 (modulação do EAREsp 676.608/RS).
+Tese: A repetição em dobro (CDC, art. 42, parágrafo único) independe de má-fé e cabe quando a cobrança indevida contraria a boa-fé objetiva, para os pagamentos posteriores a 30/03/2021 (modulação do EAREsp 676.608/RS). Limite fixado no Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026, tese i.c): divergência jurisprudencial sobre o objeto da cobrança, ou cláusula depois declarada nula, é engano justificável e afasta o dobro; por isso a tese vale para a cobrança sem lastro contratual (gate da R26). O acórdão do repetitivo ainda não entrou neste repertório: inteiro teor a conferir.
 
 ### STJ · EAREsp 676.608/RS
 - regras: R26

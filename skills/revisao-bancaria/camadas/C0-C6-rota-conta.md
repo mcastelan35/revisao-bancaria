@@ -189,11 +189,17 @@ Confirmar a lista de lacunas e o requerimento de exibição.
 
 ## C6 — Encontro de contas e saída
 
-1. `encontro_de_contas(cenario_lider)`: excesso final, base de repetição simples
+1. **Gate da origem do indébito** (R26, Tema 929, tese i.c), com botões: o excesso do cenário
+   líder nasce de cobrança **sem lastro contratual** (taxa não comprovada, capitalização ou
+   encargo sem pactuação — admite o dobro) ou de cláusula pactuada **depois declarada nula** ou
+   objeto de **divergência jurisprudencial** (engano justificável — tudo na base simples)?
+   Origens misturadas: a de menor excesso. Então
+   `encontro_de_contas(cenario_lider, origem=...)`: excesso final, base de repetição simples
    (competências até a que contém 30/03/2021, inteira — critério de menor excesso, declarado
-   na `nota`) e base do dobro (posteriores — modulação do Tema 929, condicionada ao regime
-   consumerista qualificado na C0). Incrementos negativos entram nas bases: simples + dobro
-   fecha com o excesso final.
+   na `nota`) e base do dobro (posteriores — corte do EAREsp 676.608/RS, condicionado ao regime
+   consumerista qualificado na C0). Com engano justificável a base do dobro é zero e a parcela
+   posterior ao corte sai em `base_dobro_afastada`. Sem `origem` o motor recusa. Incrementos
+   negativos entram nas bases: simples + dobro fecha com o excesso final.
 
 2. **Correção do indébito → conector, uma chamada.** A série
    `indebito_por_competencia` do cenário vai inteira ao
@@ -205,7 +211,8 @@ Confirmar a lista de lacunas e o requerimento de exibição.
    (`referencia/payload-schema.md`, "Ramo CONTA"), nos mesmos três formatos e com o PDF e o tema
    da L4. O bloco `conta` do payload é montado pelo motor, não à mão:
    `conta_corrente.bloco_payload(reconciliacao, trinca, cenario_lider, encontro, series,
-   correcao)`, com a reconciliação da C1, a trinca da C4, o `encontro_de_contas` do item 1, as
+   correcao)`, com a reconciliação da C1, a trinca da C4, o `encontro_de_contas` do item 1 (com a
+   `origem_indebito`, que o renderizador exige), as
    séries consultadas (`serie`, `codigo`, `procedencia`, `periodo`) e, se houve a correção do
    item 2, o resumo dela (`valor_corrigido`, `data_final`, `indice`, `hash`). O resto do payload
    segue a L4: `metodologia` com as convenções declaradas (hamburguês, base de dias,

@@ -1,7 +1,7 @@
 {
   "$schema": "regras-bancarias-schema",
-  "versao": "6.0.0",
-  "atualizado_em": "2026-10-26",
+  "versao": "6.1.0",
+  "atualizado_em": "2026-11-16",
   "descricao": "Motor de regras para análise revisional de contratos bancários. Cada regra codifica uma tese jurídica com teste lógico, corte temporal, fundamentação e consequência. Consumido pelo plugin revisao-bancaria por meio do motor determinístico `motores/regras.py` (`revisao.py regras`) nas camadas L1/L2 e C3 — o agente recebe só as regras aplicáveis ao caso, não este arquivo inteiro.",
   "notas_de_versao": [
     {
@@ -95,6 +95,16 @@
         "Novo bloco `tipos_contrato.grupos` (todos, todos_sfn, todos_sem_lei_especifica), derivado dos tipos; `credor_sfn: false` em imobiliario_fora_sfi.",
         "Caminhos atualizados para o layout do plugin (motores/cartao.py, motores/calculo.py::tabela_sfh e ::comparar_sfh, camadas/L2b-procedimento-expropriatorio.md, referencia/)."
       ]
+    },
+    {
+      "versao": "6.1.0",
+      "data": "2026-11-16",
+      "alteracoes": [
+        "Tema 929/STJ julgado (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026, acórdão de 03/11/2026): R26 passa a exigir `origem_indebito` — dobro só para cobrança sem lastro contratual; cláusula depois declarada nula ou divergência jurisprudencial é engano justificável (i.c) e vai para a R27 (simples). Novo campo `gate` na R26. MT05 mantido até a leitura do inteiro teor.",
+        "Tema 1328/STJ cancelado em 02/10/2026 e absorvido pelo Tema 1414 (item III.d): sai das pendências; R24 com a questão, os paradigmas e o alcance da suspensão do Tema 1414.",
+        "Nova pendência: Tema 1396/STJ (prévia tentativa extrajudicial e interesse de agir), regras_afetadas R26 e R27.",
+        "Pendências ganham `providencia` (opcional). Tema 1378 sem mudança; todas as pendências do STJ conferidas em 16/11/2026 no catálogo BNP/CNJ (Radar Apogeu, consultar_precedente)."
+      ]
     }
   ],
   "marcos_temporais": {
@@ -150,8 +160,8 @@
         "id": "MT05",
         "data": "2021-03-30",
         "base": "pagamento",
-        "evento": "Publicação do acórdão do EAREsp 676.608/RS (Tema 929/STJ)",
-        "efeito": "Modulação da repetição em dobro: pagamentos posteriores a esta data são restituídos em dobro; anteriores, simples",
+        "evento": "Publicação do acórdão do EAREsp 676.608/RS (modulação da repetição em dobro)",
+        "efeito": "Modulação da repetição em dobro: pagamentos posteriores a esta data são restituídos em dobro, salvo engano justificável (Tema 929, i.c — R26); anteriores, simples. A tese do repetitivo (REsp 1.963.770/CE, 2026) não repete a data: corte mantido até a leitura do inteiro teor (pendência do Tema 929)",
         "regras_afetadas": [
           "R26",
           "R27"
@@ -833,7 +843,7 @@
       "consequencia": "Consumerista: reduzir os juros remuneratórios à taxa média BACEN da espécie (REsp 1.112.879/PR e REsp 1.112.880/PR). Civil-empresarial: a razão contratada/média é sempre apurada e exibida como KPI; a redução à média exige demonstração concreta de abusividade (arts. 421, 422 e 478 do CC/02), sem a inversão do art. 6º, VIII, e sem o art. 51 do CDC — ver campo `regime`.",
       "tier": "T1",
       "status": "suspensa",
-      "alerta": "TEMA 1378/STJ (afetado 02/09/2025; ainda sem julgamento em 28/10/2026): a Segunda Seção vai decidir se a taxa média BACEN basta como fundamento exclusivo para aferir abusividade. A suspensão alcança só os recursos especiais e agravos em recurso especial sobre a questão, no STJ ou ainda na origem (art. 1.037, II, CPC): a ação e a apelação seguem normalmente. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR (instrução concentrada nele), 2.227.287/MG, 2.227.844/RS. RECOMENDAÇÃO: fundamentar com análise fática robusta (contexto econômico, tipo de crédito, garantias, risco), não apenas comparação aritmética com a média.",
+      "alerta": "TEMA 1378/STJ (afetado 02/09/2025; ainda sem julgamento em 16/11/2026): a Segunda Seção vai decidir se a taxa média BACEN basta como fundamento exclusivo para aferir abusividade. A suspensão alcança só os recursos especiais e agravos em recurso especial sobre a questão, no STJ ou ainda na origem (art. 1.037, II, CPC): a ação e a apelação seguem normalmente. Paradigmas: REsp 2.227.276/AL, 2.227.280/PR (instrução concentrada nele), 2.227.287/MG, 2.227.844/RS. RECOMENDAÇÃO: fundamentar com análise fática robusta (contexto econômico, tipo de crédito, garantias, risco), não apenas comparação aritmética com a média.",
       "regime": {
         "descricao": "A regra dispara em qualquer tipo de contrato; o que muda com o regime qualificado na L0/C0 é a consequência e o ônus.",
         "consumerista": {
@@ -1164,12 +1174,12 @@
       "id": "R24",
       "categoria": "cartao_credito",
       "nome": "Cartão consignado RMC/RCC — alto litígio",
-      "descricao": "Contratação de cartão de crédito com Reserva de Margem Consignável (RMC) em benefício previdenciário. Temas pendentes no STJ com suspensão nacional.",
+      "descricao": "Contratação de cartão de crédito com Reserva de Margem Consignável (RMC) em benefício previdenciário. Tema 1414/STJ pendente, com suspensão nacional dos processos sobre a questão.",
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 1328/STJ (REsp 2.145.244/SC)",
-          "Tema 1414/STJ (REsp 2.224.599/PE e outros)"
+          "Tema 1414/STJ (Segunda Seção, Rel. Min. Raul Araújo; REsps 2.224.599/PE, 2.215.851/RJ, 2.224.598/PE e 2.215.853/GO, afetados em 06/03/2026, e 2.145.244/SC e 2.245.437/MG, afetados em 02/10/2026)",
+          "Tema 1328/STJ (dano moral in re ipsa em RMC invalidada): cancelado em 02/10/2026 e absorvido pelo Tema 1414, item III.d"
         ],
         "legislacao": [
           "Lei 14.690/2023"
@@ -1193,10 +1203,10 @@
         ]
       },
       "resultado_se_positivo": "zona_cinzenta",
-      "consequencia": "Nulidade da contratação + restituição dos descontos + possível dano moral (verbas alimentares). MAS: temas pendentes de julgamento.",
+      "consequencia": "Nulidade da contratação + restituição dos descontos + possível dano moral (verbas alimentares). MAS: o Tema 1414 vai definir a própria consequência do vício (retorno ao estado anterior, conversão em empréstimo consignado ou revisão das cláusulas) e o dano moral.",
       "tier": "T1",
       "status": "suspensa",
-      "alerta": "TEMAS 1328 E 1414/STJ PENDENTES COM SUSPENSÃO NACIONAL. Dano moral in re ipsa e contornos da nulidade ainda serão definidos pela Segunda Seção. Ações em curso podem estar sobrestadas."
+      "alerta": "TEMA 1414/STJ AFETADO COM SUSPENSÃO NACIONAL (afetação em 06/03/2026, referendada pela Segunda Seção em 08/04/2026; sem julgamento em 16/11/2026). A Segunda Seção vai definir: (I) se a pretensão se sujeita à decadência do art. 178 do CC, e desde quando, ou se a nulidade não tem prazo (art. 169); (II) parâmetros objetivos de validade e abusividade, à luz do dever de informação (consumidor que queria empréstimo consignado) e do prolongamento indeterminado da dívida; (III) a consequência do vício (retorno ao estado anterior, conversão em empréstimo consignado ou revisão das cláusulas) e se há dano moral in re ipsa (questão do Tema 1328, cancelado em 02/10/2026). A suspensão alcança os processos pendentes sobre a questão, individuais ou coletivos, salvo o cumprimento de sentença: ação nova tende a ser sobrestada."
     },
     {
       "id": "R25",
@@ -1235,12 +1245,13 @@
     {
       "id": "R26",
       "categoria": "repeticao_indebito",
-      "nome": "Repetição em dobro — pagamentos pós-30/03/2021",
-      "descricao": "A devolução em dobro independe de má-fé da instituição financeira, bastando cobrança em desacordo com a boa-fé objetiva. Aplica-se a pagamentos realizados após 30/03/2021.",
+      "nome": "Repetição em dobro — pagamentos pós-30/03/2021 sem engano justificável",
+      "descricao": "A devolução em dobro independe do elemento volitivo da instituição financeira: cabe quando a cobrança indevida contraria a boa-fé objetiva (Tema 929, tese i). A omissão ou a recusa do fornecedor diante de reclamação prévia do consumidor é indício suficiente do dobro (i.a), e cabe ao fornecedor provar que não agiu de forma desleal ou descuidada (i.b). Há engano justificável, que afasta o dobro, quando houver divergência jurisprudencial sobre o objeto da cobrança ou quando a cláusula em que ela se baseia for posteriormente declarada nula (i.c). Aplica-se a pagamentos realizados após 30/03/2021 (modulação do EAREsp 676.608/RS).",
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 929/STJ (EAREsp 676.608/RS, Corte Especial)"
+          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, Rel. Min. Humberto Martins, julgado em 15/09/2026, acórdão publicado em 03/11/2026): teses (i), (i.a), (i.b) e (i.c)",
+          "EAREsp 676.608/RS (Corte Especial, 21/10/2020, publicado em 30/03/2021): modulação — dobro só para cobranças posteriores à publicação"
         ],
         "legislacao": [
           "Art. 42, parágrafo único, CDC"
@@ -1255,28 +1266,31 @@
         "consumo_pf"
       ],
       "teste": {
-        "descricao": "Verificar se houve pagamento indevido após 30/03/2021",
-        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO > 2021-03-30",
+        "descricao": "Verificar se houve pagamento indevido após 30/03/2021 e se a cobrança não tinha lastro contratual. Indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c) e vai para a R27",
+        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO > 2021-03-30 AND ORIGEM_INDEBITO = sem_lastro_contratual",
         "campos_necessarios": [
           "datas_pagamento",
-          "valores_pagos_indevidos"
+          "valores_pagos_indevidos",
+          "origem_indebito"
         ]
       },
       "resultado_se_positivo": "dobro",
-      "consequencia": "Restituição em dobro do valor pago indevidamente",
+      "consequencia": "Restituição em dobro dos pagamentos indevidos posteriores a 30/03/2021 cuja cobrança não tinha lastro contratual (tarifa ou encargo não pactuado, serviço não prestado, débito não autorizado). O indébito fundado em cláusula pactuada depois declarada nula, ou em objeto de divergência jurisprudencial, é engano justificável (Tema 929, i.c): o laudo o apura na base simples (R27, critério de menor excesso) e o dobro só se pede afastando a excludente.",
       "tier": "T1",
       "status": "vigente",
-      "alerta": "O Tema 929 pode ter sua modulação confirmada ou alterada — a Corte Especial pediu vista em set/2025. Excludente única: engano justificável (ônus do fornecedor)."
+      "alerta": "TEMA 929/STJ JULGADO (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026, acórdão publicado em 03/11/2026). O item (i.c) qualifica como engano justificável, e afasta o dobro, a cobrança fundada em cláusula depois declarada nula ou em objeto de divergência jurisprudencial: classificar a origem de cada indébito no gate (campo `gate`). A tese do repetitivo não repete a data de 30/03/2021; o corte do EAREsp 676.608/RS segue aplicado até a leitura do inteiro teor do acórdão (pendência do Tema 929).",
+      "gate": "Antes de apurar, o operador classifica a origem de cada indébito em `origem_indebito`: `sem_lastro_contratual` (cobrança sem cláusula que a preveja, serviço não prestado, débito não autorizado — dobro após 30/03/2021) | `clausula_declarada_nula` | `divergencia_jurisprudencial` (Tema 929, i.c — base simples; o dobro só como pedido do advogado contra a excludente, nunca como conclusão do laudo). Origens misturadas num mesmo valor: a de menor excesso. Reclamação prévia ao banco sem resposta ou recusada é indício do dobro (i.a): registrar em `premissas` com o documento."
     },
     {
       "id": "R27",
       "categoria": "repeticao_indebito",
-      "nome": "Repetição simples — pagamentos pré-30/03/2021",
-      "descricao": "Para pagamentos realizados antes de 30/03/2021, a repetição do indébito é simples (e não em dobro), conforme modulação do Tema 929.",
+      "nome": "Repetição simples — pagamentos até 30/03/2021 ou com engano justificável",
+      "descricao": "A repetição do indébito é simples (e não em dobro) para os pagamentos realizados até 30/03/2021 (modulação do EAREsp 676.608/RS) e, depois dessa data, para os indébitos com engano justificável: cobrança fundada em cláusula pactuada depois declarada nula ou em objeto de divergência jurisprudencial (Tema 929, i.c).",
       "fundamentacao": {
         "sumulas": [],
         "temas_repetitivos": [
-          "Tema 929/STJ — modulação temporal"
+          "Tema 929/STJ (REsp 1.963.770/CE, Corte Especial, j. 15/09/2026): tese (i.c), engano justificável",
+          "EAREsp 676.608/RS: modulação temporal (cobranças até 30/03/2021)"
         ],
         "legislacao": [
           "Art. 42, parágrafo único, CDC"
@@ -1291,18 +1305,19 @@
         "consumo_pf"
       ],
       "teste": {
-        "descricao": "Pagamento indevido anterior a 30/03/2021",
-        "logica": "PAGAMENTO_INDEVIDO AND DATA_PAGAMENTO <= 2021-03-30",
+        "descricao": "Pagamento indevido até 30/03/2021, ou posterior com origem `clausula_declarada_nula` ou `divergencia_jurisprudencial` (gate da R26)",
+        "logica": "PAGAMENTO_INDEVIDO AND (DATA_PAGAMENTO <= 2021-03-30 OR ORIGEM_INDEBITO IN (clausula_declarada_nula, divergencia_jurisprudencial))",
         "campos_necessarios": [
           "datas_pagamento",
-          "valores_pagos_indevidos"
+          "valores_pagos_indevidos",
+          "origem_indebito"
         ]
       },
       "resultado_se_positivo": "simples",
-      "consequencia": "Restituição simples do valor pago indevidamente",
+      "consequencia": "Restituição simples do valor pago indevidamente: pagamentos até 30/03/2021 e, depois, os indébitos com engano justificável (Tema 929, i.c).",
       "tier": "T2",
       "status": "vigente",
-      "alerta": null
+      "alerta": "O corte por pagamento (MT05) reparte a apuração pela data; a origem do indébito (gate da R26) reparte de novo os pagamentos posteriores ao corte. Pagamento posterior com engano justificável fica nesta base, não na do dobro."
     },
     {
       "id": "R28",
@@ -1981,7 +1996,7 @@
       {
         "id": "cartao_consignado",
         "nome": "Cartão de crédito consignado (RMC)",
-        "descricao": "Alto litígio. Temas 1328 e 1414 pendentes no STJ. Descontos em verba alimentar.",
+        "descricao": "Alto litígio. Tema 1414 pendente no STJ, com suspensão nacional (absorveu o Tema 1328). Descontos em verba alimentar.",
         "regras_especificas": [
           "R24"
         ]
@@ -2348,14 +2363,14 @@
     ]
   },
   "pendencias_jurisprudenciais": {
-    "descricao": "Temas pendentes que alteram regras deste motor. `verificado_em` é a última data em que o status foi conferido por quem editou este arquivo — NÃO é a data de hoje. Se (hoje − verificado_em) > validade_dias, toda análise que invoque a regra afetada emite o alerta abaixo, além do alerta da própria regra.",
+    "descricao": "Temas pendentes que alteram regras deste motor. `verificado_em` é a última data em que o status foi conferido por quem editou este arquivo — NÃO é a data de hoje. Se (hoje − verificado_em) > validade_dias, toda análise que invoque a regra afetada emite o alerta abaixo, além do alerta da própria regra. `providencia` (opcional) diz o que fazer no caso enquanto o tema não se resolve; o espelho da petição a lista nas pendências antes de protocolar.",
     "validade_dias": 90,
     "alerta_vencido": "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do {tema} foi conferida pela última vez em {verificado_em}. Validar via pesquisa-jurisprudencial-jusia antes de citar ou de emitir conclusão.",
     "temas": [
       {
         "tema": "Tema 1378/STJ",
         "questao": "Taxa média BACEN como fundamento exclusivo de abusividade dos juros remuneratórios",
-        "status": "afetado em 02/09/2025, sem julgamento; suspensos só REsp e AREsp sobre a questão (no STJ ou na origem)",
+        "status": "afetado em 02/09/2025, sem julgamento em 16/11/2026 (catálogo BNP/CNJ); suspensos só REsp e AREsp sobre a questão (no STJ ou na origem)",
         "regras_afetadas": [
           "R15"
         ],
@@ -2365,44 +2380,55 @@
           "REsp 2.227.287/MG",
           "REsp 2.227.844/RS"
         ],
-        "verificado_em": "2026-10-28"
+        "verificado_em": "2026-11-16",
+        "providencia": "Fundamentar a abusividade com elementos do caso (contexto econômico, tipo de crédito, garantias, risco), não só com a razão sobre a média do BACEN."
       },
       {
         "tema": "Tema 929/STJ",
-        "questao": "Modulação da repetição em dobro (EAREsp 676.608/RS) — conclusão na Corte Especial",
-        "status": "modulação vigente (corte 30/03/2021); conclusão pendente não conferida",
+        "questao": "Repetição em dobro: teses do repetitivo e modulação temporal (o corte de 30/03/2021 vem do EAREsp 676.608/RS)",
+        "status": "julgado em 15/09/2026 pela Corte Especial (REsp 1.963.770/CE, acórdão publicado em 03/11/2026), teses (i) a (i.c); a tese não repete o corte de 30/03/2021 — conferir no inteiro teor se o acórdão manteve, alterou ou afastou a modulação",
         "regras_afetadas": [
           "R26",
           "R27"
         ],
         "paradigmas": [
+          "REsp 1.963.770/CE",
           "EAREsp 676.608/RS"
         ],
-        "verificado_em": "2026-08-26"
-      },
-      {
-        "tema": "Tema 1328/STJ",
-        "questao": "Dano moral in re ipsa em RMC invalidada",
-        "status": "afetado em 11/04/2025 com suspensão — não conferido",
-        "regras_afetadas": [
-          "R24"
-        ],
-        "paradigmas": [
-          "REsp 2.145.244/SC"
-        ],
-        "verificado_em": "2026-08-26"
+        "verificado_em": "2026-11-16",
+        "providencia": "Classificar a origem de cada indébito (gate da R26: sem lastro contratual × cláusula declarada nula ou divergência jurisprudencial, Tema 929, i.c) e conferir no inteiro teor do REsp 1.963.770/CE se o corte de 30/03/2021 foi mantido."
       },
       {
         "tema": "Tema 1414/STJ",
-        "questao": "Abusos em cartão consignado RMC/RCC",
-        "status": "afetado com suspensão ampliada — não conferido",
+        "questao": "Cartão consignado RMC: decadência (art. 178 do CC) ou nulidade sem prazo; parâmetros objetivos de validade e abusividade; consequência do vício (retorno ao estado anterior, conversão em consignado ou revisão) e dano moral in re ipsa",
+        "status": "afetado em 06/03/2026 (Segunda Seção, Rel. Min. Raul Araújo); suspensão nacional referendada em 08/04/2026, salvo cumprimento de sentença; absorveu o Tema 1328 (cancelado em 02/10/2026); sem julgamento em 16/11/2026",
         "regras_afetadas": [
           "R24"
         ],
         "paradigmas": [
-          "REsp 2.224.599/PE"
+          "REsp 2.224.599/PE",
+          "REsp 2.215.851/RJ",
+          "REsp 2.224.598/PE",
+          "REsp 2.215.853/GO",
+          "REsp 2.145.244/SC",
+          "REsp 2.245.437/MG"
         ],
-        "verificado_em": "2026-08-26"
+        "verificado_em": "2026-11-16",
+        "providencia": "Ação sobre cartão consignado RMC/RCC tende a ser sobrestada até o julgamento: decidir com o cliente se ajuíza agora ou aguarda, e registrar a decisão."
+      },
+      {
+        "tema": "Tema 1396/STJ",
+        "questao": "Se a prova da prévia tentativa de solução extrajudicial é necessária para o interesse de agir nas ações de natureza prestacional das relações de consumo",
+        "status": "afetado, sem julgamento em 16/11/2026 (catálogo BNP/CNJ); alcance da suspensão [CONFERIR]",
+        "regras_afetadas": [
+          "R26",
+          "R27"
+        ],
+        "paradigmas": [
+          "REsp de registro 2025/0140700-4 (origem TJMG)"
+        ],
+        "verificado_em": "2026-11-16",
+        "providencia": "Antes de ajuizar, reclamar ao banco (SAC, ouvidoria, consumidor.gov.br ou notificação) e juntar a resposta ou o silêncio: o Tema 1396 pode exigir a tentativa prévia como condição do interesse de agir, e a omissão ou recusa do banco é indício suficiente do dobro (Tema 929, i.a)."
       },
       {
         "tema": "Purga da mora — critério temporal da Lei 13.465/2017",

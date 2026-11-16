@@ -72,7 +72,7 @@ def escrever_payload(caminho, **mudancas):
 
 def test_version(cli):
     r = cli("--version")
-    assert r.codigo == 0 and r.out.strip() == "revisao-bancaria 6.0.0"
+    assert r.codigo == 0 and r.out.strip() == "revisao-bancaria 6.1.0"
 
 
 def test_sem_subcomando_ou_subcomando_desconhecido(cli):
@@ -111,7 +111,7 @@ def test_autoteste_compacto(cli):
         assert "openpyxl ausente — 13 asserções da planilha puladas (HTML testado)" in r.out
         assert linhas[-1].endswith("13 pulados")
     else:
-        assert "  OK      relatorios       110 passaram" in linhas and linhas[-1].endswith("0 pulados")
+        assert "  OK      relatorios       114 passaram" in linhas and linhas[-1].endswith("0 pulados")
 
 
 def test_autoteste_de_um_modulo(cli):
@@ -153,7 +153,7 @@ def test_regras_resumo(cli):
     saida = r.json()
     assert saida["entrada"] == {"tipo": "consumo_pf", "regime": "consumerista", "data_contrato": "2019-05-02",
                                 "data_consolidacao": None, "categorias": None}
-    assert saida["hoje"] == "2026-10-26" and saida["versao_regras"] == "6.0.0"
+    assert saida["hoje"] == "2026-10-26" and saida["versao_regras"] == "6.1.0"
     assert [i["id"] for i in saida["aplicaveis"]][:3] == ["R03", "R04", "R06"]
     assert set(saida["aplicaveis"][0]) == {"id", "categoria", "nome", "tier", "status", "conclusiva"}
     assert saida["resumo"]["nao_conclusivas"] == ["R15", "R30", "R31", "R32", "R33"]

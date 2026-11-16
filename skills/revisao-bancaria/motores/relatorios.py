@@ -46,7 +46,7 @@ from pathlib import Path
 
 from . import tema as tema_mod
 from .comum import (brl as _brl_comum, brl_rs as _brl_rs_comum, pct as _pct_comum,
-                    rodar_autoteste, saida_utf8)
+                    ORIGENS_INDEBITO, ORIGEM_COM_DOBRO, rodar_autoteste, saida_utf8)
 
 # openpyxl é opcional no import e obrigatório só quando a planilha é pedida. `gerar()`
 # confere ANTES de escrever qualquer arquivo, para não deixar HTML pela metade.
@@ -435,16 +435,29 @@ def _secao3_conta(p) -> str:
     trinca = (f'<table><thead><tr><th>Cenário</th><th>Condição de aplicabilidade</th>'
               f'<th class="n">Excesso final (R$)</th></tr></thead><tbody>{linhas}</tbody></table>')
 
+    corte_br = esc(_data_br(enc["competencia_corte"]))
+    if enc["origem_indebito"] == ORIGEM_COM_DOBRO:
+        rot_simples = f'Base de repetição simples — competências até a de corte ({corte_br}, inclusive)'
+        rot_dobro = ('Base de repetição em dobro — competências posteriores ao corte '
+                     '(só no regime consumerista)')
+        afastado = ''
+    else:
+        rot_simples = ('Base de repetição simples — todas as competências (engano justificável, '
+                       'Tema 929, tese i.c)')
+        rot_dobro = 'Base de repetição em dobro — afastada pelo engano justificável'
+        afastado = (f' Das competências posteriores ao corte ({_data_br(enc["competencia_corte"])}), '
+                    f'R$ {brl(enc.get("base_dobro_afastada", 0))} estão na base simples e só vão em '
+                    'dobro se afastada a excludente.')
     quadro = (f'<table><thead><tr><th>Encontro de contas (cenário líder: {esc(rotulo_cenario(lider))})</th>'
               f'<th class="n">Valor (R$)</th></tr></thead><tbody>'
-              f'<tr><td>Base de repetição simples — competências até a de corte '
-              f'({esc(_data_br(enc["competencia_corte"]))}, inclusive)</td>'
+              f'<tr><td>{rot_simples}</td>'
               f'<td class="n">{brl(enc["base_repeticao_simples"])}</td></tr>'
-              f'<tr><td>Base de repetição em dobro — competências posteriores ao corte '
-              f'(só no regime consumerista)</td><td class="n">{brl(enc["base_repeticao_dobro"])}</td></tr>'
+              f'<tr><td>{rot_dobro}</td><td class="n">{brl(enc["base_repeticao_dobro"])}</td></tr>'
               f'</tbody><tfoot><tr><td>Excesso final (soma das bases)</td>'
               f'<td class="n">{brl(enc["excesso_final"])}</td></tr></tfoot></table>'
-              f'<div class="cx nt">{esc(enc["nota"])}</div>')
+              f'<div class="cx nt"><b>Origem do indébito:</b> '
+              f'{esc(ORIGENS_INDEBITO[enc["origem_indebito"]])}.{esc(afastado)} '
+              f'{esc(enc["nota"][:1].upper() + enc["nota"][1:])}</div>')
 
     series = "".join(f'<tr><td>{esc(s["serie"])}</td><td class="c">{esc(s["codigo"])}</td>'
                      f'<td>{esc(s["procedencia"])}</td><td class="c">{esc(s["periodo"])}</td></tr>'
@@ -892,8 +905,12 @@ def render_planilha(p: dict, destino: Path, tema: dict | None = None) -> Path:
 
         r += 1
         r = faixa(ws, r, f"ENCONTRO DE CONTAS (CENÁRIO LÍDER: {rotulo_cenario(lider_nome).upper()})", 8)
+        r = linha_valor(ws, r, "Origem do indébito", ORIGENS_INDEBITO[enc["origem_indebito"]])
         r = linha_valor(ws, r, "Base de repetição simples (R$)", float(enc["base_repeticao_simples"]), M)
         r = linha_valor(ws, r, "Base de repetição em dobro (R$)", float(enc["base_repeticao_dobro"]), M)
+        if enc["origem_indebito"] != ORIGEM_COM_DOBRO:
+            r = linha_valor(ws, r, "Posterior ao corte, afastada do dobro (R$)",
+                            float(enc.get("base_dobro_afastada", 0)), M)
         r = linha_valor(ws, r, "Excesso final (R$)", float(enc["excesso_final"]), M,
                         RED if lider["favoravel"] else AMB)
         r = linha_valor(ws, r, "Competência de corte", _data_br(enc["competencia_corte"]))
@@ -1343,8 +1360,19 @@ def _validar_conta(p: dict, erros: list, avisos: list) -> None:
         erros.append("conta.encontro (esperado dict)")
     elif enc is not None:
         valores = ("excesso_final", "base_repeticao_simples", "base_repeticao_dobro")
-        chaves(enc, "conta.encontro", (*valores, "competencia_corte", "nota"))
+        chaves(enc, "conta.encontro", (*valores, "origem_indebito", "competencia_corte", "nota"))
         invalidos = [n for n in valores if n in enc and not _numero(enc[n])]
+        if "base_dobro_afastada" in enc and not _numero(enc["base_dobro_afastada"]):
+            invalidos.append("base_dobro_afastada")
+        origem = enc.get("origem_indebito")
+        if "origem_indebito" in enc and origem not in ORIGENS_INDEBITO:
+            erros.append(f"conta.encontro.origem_indebito ({origem!r}; use uma de "
+                         f"{', '.join(ORIGENS_INDEBITO)} — gate da R26, Tema 929, tese i.c)")
+        elif origem in ORIGENS_INDEBITO and origem != ORIGEM_COM_DOBRO and \
+                _numero(enc.get("base_repeticao_dobro")) and abs(enc["base_repeticao_dobro"]) > 1e-9:
+            erros.append(f"conta.encontro.base_repeticao_dobro ({brl(enc['base_repeticao_dobro'])}) com "
+                         f"origem {origem!r}: engano justificável (Tema 929, tese i.c) não tem base de "
+                         "dobro — gerar o encontro de novo com encontro_de_contas(..., origem=...)")
         erros.extend(f"conta.encontro.{n} (esperado número)" for n in invalidos)
         if all(n in enc for n in valores) and not invalidos:
             soma = enc["base_repeticao_simples"] + enc["base_repeticao_dobro"]
@@ -1587,11 +1615,13 @@ def _payload_demo_conta() -> dict:
                  "excesso_final": 9120.40, "favoravel": True}],
             "cenario_lider": "C1_TAXA_MEDIA",
             "encontro": {"cenario": "C1_TAXA_MEDIA", "excesso_final": 48213.55,
+                         "origem_indebito": "sem_lastro_contratual",
                          "base_repeticao_simples": 31870.10, "base_repeticao_dobro": 16343.45,
+                         "base_dobro_afastada": 0.0,
                          "competencia_corte": "2021-03",
                          "nota": "valores nominais por competência; incrementos negativos abatem a base "
                                  "da respectiva fase (simples + dobro = excesso final); a competência "
-                                 "2021-03, que contém o corte de 2021-03-30 (Tema 929), entra inteira na "
+                                 "2021-03, que contém o corte de 2021-03-30 (EAREsp 676.608/RS), entra inteira na "
                                  "base simples — critério de menor excesso; correção monetária e a "
                                  "aplicação do dobro vão ao conector (atualizar_debito, valores[]) na C6"},
             "series": [{"serie": "Taxa média de juros — cheque especial PJ (série fictícia)",
@@ -1907,6 +1937,13 @@ def _autoteste() -> tuple[int, int, int]:
                  "base_repeticao_simples + base_repeticao_dobro")
     recusa_conta("diferença de 0,02 entre as bases e o excesso",
                  lambda q: q["conta"]["encontro"].update(base_repeticao_dobro=16343.47), "excesso_final")
+    recusa_conta("encontro sem a origem do indébito (gate da R26)",
+                 lambda q: q["conta"]["encontro"].pop("origem_indebito"), "origem_indebito")
+    recusa_conta("origem do indébito fora da lista",
+                 lambda q: q["conta"]["encontro"].update(origem_indebito="presumida"), "origem_indebito")
+    recusa_conta("engano justificável com base de dobro",
+                 lambda q: q["conta"]["encontro"].update(origem_indebito="clausula_declarada_nula"),
+                 "base_repeticao_dobro")
     recusa_conta("líder omitido", lambda q: q["conta"].update(cenario_lider="C2_CAP_MENSAL"), "omitido")
     recusa_conta("líder que não consta dos cenários",
                  lambda q: q["conta"].update(cenario_lider="C9"), "cenario_lider")
@@ -1923,6 +1960,14 @@ def _autoteste() -> tuple[int, int, int]:
     q = clone(pc)
     q["conta"]["encontro"]["base_repeticao_dobro"] = 16343.46
     chk("conta: diferença de 0,01 entre as bases e o excesso está na tolerância", validar(q) == [])
+    q = clone(pc)
+    q["conta"]["encontro"].update(origem_indebito="divergencia_jurisprudencial",
+                                  base_repeticao_simples=48213.55, base_repeticao_dobro=0.0,
+                                  base_dobro_afastada=16343.45)
+    hq = render_premium(q)
+    chk("conta: engano justificável (tudo na simples, dobro 0) é aceito e o laudo diz a origem",
+        validar(q) == [] and "afastada pelo engano justificável" in hq and "16.343,45" in hq
+        and "objeto é alvo de divergência jurisprudencial" in hq)
     q = clone(pc)
     q["conta"]["cenarios"][2].update(favoravel=False, excesso_final=-10.0)
     chk("conta: cenário desfavorável COM ressalva é aceito (reportado, não escondido)", validar(q) == [])
