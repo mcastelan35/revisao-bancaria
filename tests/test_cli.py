@@ -72,7 +72,7 @@ def escrever_payload(caminho, **mudancas):
 
 def test_version(cli):
     r = cli("--version")
-    assert r.codigo == 0 and r.out.strip() == "revisao-bancaria 6.2.0"
+    assert r.codigo == 0 and r.out.strip() == "revisao-bancaria 6.3.0"
 
 
 def test_sem_subcomando_ou_subcomando_desconhecido(cli):
@@ -153,7 +153,7 @@ def test_regras_resumo(cli):
     saida = r.json()
     assert saida["entrada"] == {"tipo": "consumo_pf", "regime": "consumerista", "data_contrato": "2019-05-02",
                                 "data_consolidacao": None, "categorias": None}
-    assert saida["hoje"] == "2026-10-26" and saida["versao_regras"] == "6.2.0"
+    assert saida["hoje"] == "2026-10-26" and saida["versao_regras"] == "6.3.0"
     assert [i["id"] for i in saida["aplicaveis"]][:3] == ["R03", "R04", "R06"]
     assert set(saida["aplicaveis"][0]) == {"id", "categoria", "nome", "tier", "status", "conclusiva"}
     assert saida["resumo"]["nao_conclusivas"] == ["R15", "R30", "R31", "R32", "R33"]

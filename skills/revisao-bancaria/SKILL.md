@@ -8,7 +8,7 @@ allowed-tools:
   - Bash(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
   - PowerShell(uv run --no-project --python 3.12 --with openpyxl python "${CLAUDE_PLUGIN_ROOT}/skills/revisao-bancaria/revisao.py" *)
 metadata:
-  version: "6.2.0"
+  version: "6.3.0"
   connector: "Radar Apogeu (BACEN/SGS, via MCP) — pré-requisito ATIVO"
 ---
 
@@ -94,7 +94,7 @@ memória do credor): numa sessão Python, `sys.path.insert(0, "<pasta da skill>"
 | Contrato indexado ou com CET | `motores/cet.py` |
 | Ramo SFH/SFI com consolidação, leilão ou execução extrajudicial | `camadas/L2b-procedimento-expropriatorio.md` (checklist documental R39/R40) |
 | Cartão | `camadas/analise-faturas-cartao.md` + `motores/cartao.py` |
-| Rota CONTA, antes de fundamentar | `referencia/repertorio-jurisprudencial-contas.md` — **ESQUELETO**: entrada `[PENDENTE]`/`[CONFERIR]` não se cita |
+| Rota CONTA, antes de fundamentar | `<rb> jurisprudencia consultar --regras CONTA-CAPDIARIA,CONTA-HAMBURGUES,CONTA-ENCARGOS,CONTA-EXIBICAO,R16,R26` (mapa das teses em `referencia/repertorio-jurisprudencial-contas.md`) |
 | L4 / C6 | `referencia/payload-schema.md` → `<rb> gerar` |
 | Estratégia e petição (INSTRUMENTO) | `referencia/repertorio-jurisprudencial.md` — pelo `<rb> jurisprudencia consultar`, nunca lido inteiro |
 | Pesquisa consolidada (INSTRUMENTO) | `referencia/pesquisa-base.md` |
@@ -175,11 +175,11 @@ falha de fonte.
    reaproveitam esse resultado — não reconsultar. Razão abaixo de 1,5x se diz no próprio gate.
 3. **Jurisprudência só do acervo.** Súmulas, temas e precedentes do `regras-bancarias.json`
    (lidos por `<rb> regra` e `<rb> sumula`), do repertório validado (`<rb> jurisprudencia
-   consultar`, que só devolve entrada conferida no Jusbrasil ou no portal do TJPR e dentro da validade) e do
-   repertório da rota CONTA, nada além. Toda
+   consultar`, que só devolve entrada conferida no Jusbrasil ou no portal do TJPR e dentro da
+   validade, inclusive as teses da rota CONTA), nada além. Toda
    ementa citada vai **na íntegra**, padrão sanduíche (tese → ementa integral → identificação
-   completa: tribunal, número, relator, órgão, datas → aplicação). Entrada `[PENDENTE]`/
-   `[CONFERIR]` não se cita; completar identificação por memória é falta absoluta. Fora do
+   completa: tribunal, número, relator, órgão, datas → aplicação). Entrada `CONFERIR` ou
+   vencida não se cita; completar identificação por memória é falta absoluta. Fora do
    acervo: dizer que não está coberto e remeter a `pesquisa-jurisprudencial-jusia`. Antes de
    protocolar, as citações do STJ e do STF da peça passam pelo `verificar_citacoes` do conector
    (a peça inteira em `texto`, ou a lista `citacoes_stj_stf` do JSON do espelho em lotes de até
@@ -283,8 +283,8 @@ falha de fonte.
 ## Interação com outras skills
 
 `triagem` (pergunta pontual de taxa, sem documento) e `configurar` (operador e ambiente), do
-próprio plugin. `pesquisa-jurisprudencial-jusia` (validar precedentes e preencher o repertório
-CONTA — a única via para tirar uma entrada de `[PENDENTE]`); skill de peticionamento gravada
+próprio plugin. `pesquisa-jurisprudencial-jusia` (validar precedentes e revalidar o repertório, inclusive o
+da rota CONTA); skill de peticionamento gravada
 na L-1 (`skill_peticao`, a skill canônica do escritório: recebe o espelho da inicial da L4 e o
 briefing da C6; sem ela, o espelho sai em formato neutro); `briefing-estrategico` (risco para o
 cliente antes de ajuizar); `proposta-comercial` (prospecção); `liquidacao-correcao-debitos`

@@ -16,7 +16,8 @@ url canônica de acesso.
 
 ## Critérios de entrada
 
-1. **Fonte:** o conector Jusbrasil (busca e inteiro teor) ou, para acórdão do TJPR, o portal de
+1. **Fonte:** o conector Jusbrasil (busca e inteiro teor), a página do julgado no site do Jusbrasil
+   lida em inteiro teor no navegador (mesmo acervo, sem cota; desde a onda 6) ou, para acórdão do TJPR, o portal de
    jurisprudência do próprio tribunal, com o link permanente do acórdão (o inteiro teor das
    Câmaras Cíveis no Jusbrasil vem sem ementa). Julgado que não foi aberto no inteiro teor não
    entra. A ementa é copiada palavra por palavra, sem resumo nem grifo; só se corrigem erro de
@@ -65,7 +66,7 @@ Um julgado que sirva a mais de uma regra aparece uma vez, sob a primeira, com to
 Tese: A comissão de permanência, quando validamente pactuada, só pode incidir de forma isolada no período de inadimplência: sua cobrança exclui a exigibilidade dos juros remuneratórios, dos juros moratórios, da multa contratual e da correção monetária, e o excesso cobrado em cumulação é decotado e restituído.
 
 ### STJ · REsp 1.058.114/RS
-- regras: R01, R02
+- regras: R01, R02, R21, R22
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 1.058.114/RS
@@ -471,7 +472,7 @@ ementa:
 Tese: A tarifa de abertura de crédito (TAC), ou qualquer outra denominação para o mesmo fato gerador, não tem respaldo legal em contrato bancário de pessoa física celebrado a partir de 30/04/2008 (Res. CMN 3.518/2007 e Súmula 565/STJ), sendo indevida a cobrança e devida a restituição.
 
 ### STJ · REsp 1.251.331/RS
-- regras: R04, R06
+- regras: R04, R06, R08, CONTA-ENCARGOS
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 1.251.331/RS
@@ -716,12 +717,116 @@ ementa:
 > COBRANÇA DE SERVIÇO DE TERCEIRO NÃO ESPECIFICADO. SERVIÇO NÃO COMPROVADO E NEM INFORMADO AO CONSUMIDOR. ABUSIVIDADE CONFIGURADA. AFASTAMENTO DA TAXA. RESP REPETITIVO Nº 1.578.553/SP (TEMA 958). (II) TEC (TARIFA DE EMISSÃO DE CARNÊ) DENOMINADA SERVIÇO DE RECEBIMENTO POR PARCELA. CONTRATAÇÃO POSTERIOR A 30.04.2008. ABUSIVIDADE DA COBRANÇA RECONHECIDA. RESP REPETITIVO 1.251.331/RS (TEMAS 618 E 619).
 > (III) TRIBUTO SOBRE A OPERAÇÃO (IOF) FINANCIADO. PACTUAÇÃO EXPRESSA. ADMISSIBILIDADE. APLICAÇÃO DO ENTENDIMENTO FIRMADO NOS RECURSOS ESPECIAIS REPRESENTATIVOS DA CONTROVÉRSIA Nº 1.251.331/RS E Nº 1.255.573/RS (TEMA 621). SENTENÇA PONTUALMENTE REFORMADA. RECURSO PROVIDO EM PARTE.
 
+## R08 — Tarifa de cadastro — duplicada ou em renovação
+
+Tese: A tarifa de cadastro remunera a pesquisa cadastral do início do relacionamento e só pode ser cobrada uma vez, no início do relacionamento entre o consumidor e a instituição financeira (Súmula 566/STJ; Tema 620/STJ, 2ª tese do REsp 1.251.331/RS); cobrada de novo em contrato posterior, renovação ou refinanciamento com a mesma instituição, quando o relacionamento já existia, é indevida e deve ser restituída — e cabe à instituição, que guarda os próprios registros, provar que a cobrança se deu no início do relacionamento.
+
+Nota: o leading case é o REsp 1.251.331/RS (Segunda Seção, Temas 618 a 620), cuja 2ª tese diz que a tarifa de cadastro "somente pode ser cobrada no início do relacionamento"; ele está listado sob a R04.
+
+### STJ · AgInt no REsp 2.007.638/MS
+- regras: R08
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: AgInt no REsp 2.007.638/MS
+- orgao: Quarta Turma
+- relator: Min. João Otávio de Noronha
+- julgamento: 2023-05-29
+- publicacao: 2023-06-01
+- precedente_qualificado: não (aplica o Tema 620/STJ e a Súmula 566/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/1908224031
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva: a Quarta Turma reafirma que a tarifa de cadastro pactuada é válida e só pode ser cobrada no início do relacionamento (Tema 620), mas manteve a cobrança porque o tribunal de origem não viu elementos de relacionamento anterior, e só admite revisão do valor com demonstração cabal de abuso; a petição deve juntar a prova do vínculo anterior (contrato antigo, extrato, ficha de conta) ou pedir a exibição dos registros do banco, e não pode basear-se apenas na comparação com a tarifa média.
+- observacao: Busca e apreensão com reconvenção revisional; agravo da consumidora desprovido (Súmula 83/STJ). O voto transcreve o TJMS: "não merece prosperar a assertiva de que a cobrança não teria ocorrido no início do relacionamento, pois, além de não haver elementos nesse sentido, referida taxa foi expressamente contratada". Sessão virtual de 23 a 29/05/2023. Publicação pela data do Jusbrasil (01/06/2023, data da lista de resultados; o inteiro teor não traz o DJe; o JSON-LD da página marca 24/07/2023, data de indexação). Ementa copiada da seção Ementa da página, igual à do inteiro teor salvo duas quebras de linha que o PDF inseriu no meio de frases.
+
+ementa:
+> AGRAVO INTERNO EM RECURSO ESPECIAL. AÇÃO DE BUSCA E APREENSÃO. RECONVENÇÃO. REVISÃO DO CONTRATO. JUROS REMUNERATÓRIOS. LIMITAÇÃO. ABUSIVIDADE DA TAXA CONTRATADA. DEMONSTRAÇÃO CABAL. NÃO OCORRÊNCIA. REVISÃO. IMPOSSIBILIDADE. SÚMULAS N. 5 E 7 DO STJ. TARIFA DE CADASTRO. SÚMULA N. 83 DO STJ. AGRAVO INTERNO DESPROVIDO.
+> 1. Admite-se a revisão da taxa de juros remuneratórios excepcionalmente, quando ficar caracterizada a relação de consumo e a abusividade for devidamente demonstrada diante das peculiaridades do caso concreto.
+> 2. O fato de a taxa contratada de juros remuneratórios estar acima da taxa média de mercado, por si só, não configura abusividade, devendo ser observados, para a limitação dos referidos juros, fatores como o custo de captação dos recursos, o spread da operação, a análise de risco de crédito do contratante, ponderando-se a caracterização da relação de consumo e eventual desvantagem exagerada do consumidor.
+> 3. É inviável limitar a taxa de juros remuneratórios pactuada em contrato quando a corte de origem não tenha considerado cabalmente demonstrada sua abusividade com base nas peculiaridades do caso concreto. Incidência das Súmulas n. 5 e 7 do STJ.
+> 4. A tarifa de cadastro pactuada é válida, podendo ser cobrada apenas no início do relacionamento contratual, conforme o Tema n. 620 do STJ.
+> 5. Afasta-se eventual abuso na pactuação da tarifa de cadastro apenas na hipótese em que é cabalmente demonstrada abusividade no caso concreto, como ocorre na avaliação dos juros remuneratórios, isto é, mediante a análise das circunstâncias do caso, comparando-se os preços cobrados no mercado, o tipo de operação e o canal de contratação.
+> 6. Para o reconhecimento da abusividade das tarifas administrativas, não se admitem a referência a conceitos jurídicos abstratos nem a convicção subjetiva do magistrado.
+> 7. Agravo interno desprovido.
+
+### TJPR · Apelação Cível 0010776-21.2022.8.16.0017
+- regras: R08
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0010776-21.2022.8.16.0017
+- orgao: 5ª Câmara Cível
+- relator: Juiz Subst. 2º Grau Anderson Ricardo Fogaça
+- julgamento: 2026-02-18
+- publicacao: 2026-08-13
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000025593041/Ac%C3%B3rd%C3%A3o-0010776-21.2022.8.16.0017
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Caso-modelo da regra: dois financiamentos de veículo com a mesma instituição (2011 e 2019); a tarifa de cadastro do primeiro foi mantida e a do segundo declarada ilegal (Súmula 566 e Tema 620/STJ), com restituição; o banco admitira na contestação o relacionamento anterior.
+- observacao: Recurso do consumidor parcialmente provido. O mesmo acórdão afasta a tarifa de avaliação (documento só com fotos externas e descrição genérica, e valor acima do praticado) — serve também à R11, mas não foi listado em `regras` para não passar de dois julgados locais por regra (a R11 tem dois acórdãos fundados só na falta de prova do serviço). Restituição simples porque a Câmara exigiu má-fé para o dobro — orientação superada pelo Tema 929/STJ; não citar este acórdão para a forma da restituição. A tarifa de registro foi mantida (serviço comprovado). Datas do portal: julgamento 18/02/2026 e publicação 13/08/2026. Correções na ementa: separados os títulos e itens que a extração emendou (ex.: "PROVIDOS.I. CASO EM EXAME1.1"), sem alterar o texto. Fonte: portal de jurisprudência do TJPR (comarca de Maringá).
+
+ementa:
+> DIREITO CIVIL. APELAÇÕES CÍVEIS. AÇÃO REVISIONAL CUMULADA COM REPETIÇÃO DE INDÉBITO. CONTRATOS DE FINANCIAMENTO DE VEÍCULO. COBRANÇA DE TARIFA DE CADASTRO EM CONTRATO POSTERIOR AO INÍCIO DO RELACIONAMENTO. ILEGALIDADE. TEMA 620/STJ E SÚMULA 566/STJ. TARIFA DE REGISTRO DE CONTRATO. LEGALIDADE. TEMA 958/STJ. TARIFA DE AVALIAÇÃO DO BEM. AUSÊNCIA DE COMPROVAÇÃO DA EFETIVA PRESTAÇÃO DO SERVIÇO. ILEGALIDADE. SEGURO DE PROTEÇÃO FINANCEIRA. VENDA CASADA. TEMA 972/STJ. RESTITUIÇÃO SIMPLES A PARTIR DA CITAÇÃO. RECURSOS CONHECIDOS E PARCIALMENTE PROVIDOS.
+> I. CASO EM EXAME
+> 1.1 Ação revisional cumulada com repetição de indébito proposta por consumidor em face de instituição financeira, em razão de dois contratos de financiamento de veículo firmados em 2011 e 2019.
+> 1.2 No primeiro contrato, cobrada tarifa de cadastro; no segundo, novas cobranças de tarifa de cadastro, tarifa de avaliação do bem, tarifa de registro do contrato e seguro de proteção financeira.
+> 1.3 Sentença de parcial procedência para declarar a abusividade do seguro de proteção financeira e condenar à restituição simples do valor pago; improcedência dos demais pedidos.
+> 1.4 Apelação do autor pleiteando a declaração de abusividade de todas as tarifas e devolução em dobro dos valores pagos; recurso da instituição financeira requerendo o afastamento da condenação relativa ao seguro de proteção financeira.
+> II. QUESTÕES EM DISCUSSÃO
+> 2.1 Há quatro questões em discussão: (i) se é válida a cobrança da tarifa de cadastro em contrato celebrado posteriormente ao início do relacionamento contratual; (ii) se é legítima a cobrança da tarifa de registro do contrato; (iii) se a tarifa de avaliação do bem, diante de laudo genérico, é devida; (iv) se a contratação do seguro de proteção financeira com seguradora indicada pelo banco configura venda casada.
+> III. RAZÕES DE DECIDIR
+> 3.1 A cobrança da tarifa de cadastro somente é válida no início do relacionamento entre consumidor e instituição financeira, nos termos da Súmula 566 e do Tema 620 do STJ, sendo ilegal sua repetição em contrato posterior, impondo-se a restituição simples do valor pago.
+> 3.2 A tarifa de registro do contrato é considerada legítima quando prevista contratualmente, de valor razoável e efetivamente prestado o serviço, requisitos preenchidos no caso, nos termos do Tema 958/STJ.
+> 3.3 A tarifa de avaliação do bem exige demonstração da efetiva prestação do serviço. Laudo genérico e superficial, sem descrição técnica do estado do veículo, configura cobrança indevida, devendo haver restituição simples do valor pago.
+> 3.4 A contratação de seguro de proteção financeira com seguradora indicada pela instituição financeira, sem possibilidade de escolha pelo consumidor, caracteriza venda casada, prática vedada pelo art. 39, I, do CDC e pelo Tema 972 do STJ, impondo-se a restituição dos valores pagos a partir da citação.
+> 3.5 A repetição do indébito em dobro exige demonstração de má-fé, o que não restou evidenciado, motivo pelo qual a devolução será simples.
+> 3.6 Diante do provimento parcial dos recursos, impõe-se a redistribuição dos ônus sucumbenciais, observando-se os ganhos e perdas das partes.
+> IV. DISPOSITIVO E TESE
+> 4.1 Recurso do autor CONHECIDO E PARCIALMENTE PROVIDO para declarar a ilegalidade da cobrança da tarifa de cadastro no contrato de 2019 e da tarifa de avaliação do bem, com restituição simples dos valores pagos, corrigidos pelo IPCA-E desde a cobrança e acrescidos de juros de mora de 1% ao mês a partir da citação.
+> 4.2 Recurso da instituição financeira CONHECIDO E PARCIALMENTE PROVIDO exclusivamente para limitar a restituição dos valores pagos a título de seguro de proteção financeira às parcelas quitadas a partir da citação, mantido o reconhecimento da abusividade da cobrança.
+> 4.3 Tese de julgamento: “É indevida a cobrança da tarifa de cadastro em contrato bancário celebrado após o início do relacionamento entre as partes, conforme Tema 620 e Súmula 566 do STJ. É legítima a tarifa de registro de contrato quando prevista e efetivamente prestado o serviço (Tema 958/STJ). É abusiva a tarifa de avaliação do bem diante da ausência de demonstração da efetiva prestação do serviço ou da onerosidade excessiva. A imposição de seguro de proteção financeira com seguradora indicada pelo banco configura venda casada (Tema 972/STJ), sendo devida a restituição simples dos valores pagos a partir da citação, diante do princípio da boa-fé e da vedação ao enriquecimento ilícito.”
+> Dispositivos relevantes citados: Constituição Federal: art. 5º, XXXII; Código de Defesa do Consumidor: art. 39, I; art. 42, parágrafo único; Código Civil: arts. 490 e 1.361; Código de Processo Civil: arts. 1.010, II e III; 85, §11; Resolução CMN nº 3.518/2007: art. 5º, V; Súmula 566/STJ; e Temas Repetitivos do STJ: 620, 958 e 972.
+> Jurisprudência relevante citada: STJ, REsp 1.251.331/RS (Tema 620), Rel. Min. Maria Isabel Gallotti, DJe 24.10.2013; STJ, REsp 1.578.553/SP (Tema 958), Rel. Min. Paulo de Tarso Sanseverino, DJe 6.12.2018; STJ, REsp 1.639.320/SP e 1.639.259/SP (Tema 972), Rel. Min. Paulo de Tarso Sanseverino; STJ, AgInt no REsp 2.100.638/MS, Rel. Min. Ricardo Villas Bôas Cueva, DJe 26.6.2025.
+
+### TJPR · Apelação Cível 0024266-66.2025.8.16.0030
+- regras: R08, R11, R12
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0024266-66.2025.8.16.0030
+- orgao: 6ª Câmara Cível
+- relator: Des. Cláudio Smirne Diniz
+- julgamento: 2026-10-26
+- publicacao: 2026-10-26
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000039298171/Ac%C3%B3rd%C3%A3o-0024266-66.2025.8.16.0030
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Põe na instituição o ônus de provar que a tarifa de cadastro foi cobrada no início do relacionamento (o dado está nos registros do próprio banco; a mera previsão contratual não basta) e exige prova concreta da efetiva prestação dos serviços para as tarifas de avaliação do bem e de registro do contrato; mantém a restituição em dobro.
+- observacao: Reconvenção revisional em busca e apreensão; apelo do banco desprovido. Na tarifa de cadastro não havia prova de contrato anterior: o ponto decidido é o ônus da prova do pressuposto (início do relacionamento), que fica com a instituição — útil quando o consumidor não tem a prova do vínculo anterior e em contraponto ao AgInt no REsp 2.007.638/MS. Na avaliação e no registro, o banco não indicou documento que provasse os serviços. A íntegra do portal não repete o CNJ no corpo, mas descreve o mesmo caso (mesmas questões e mesma distribuição de sucumbência). Correções na ementa: separados os títulos e itens que a extração emendou, sem alterar o texto. Fonte: portal de jurisprudência do TJPR (comarca de Foz do Iguaçu).
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. APELAÇÃO CÍVEL. AÇÃO DE BUSCA E APREENSÃO EM ALIENAÇÃO FIDUCIÁRIA. SENTENÇA DE PROCEDÊNCIA DA AÇÃO PRINCIPAL E PARCIAL PROCEDÊNCIA DA RECONVENÇÃO. TARIFA DE CADASTRO. AUSÊNCIA DE DEMONSTRAÇÃO DO INÍCIO DO RELACIONAMENTO. TARIFAS DE AVALIAÇÃO DO BEM E DE REGISTRO DO CONTRATO. AUSÊNCIA DE COMPROVAÇÃO DA EFETIVA PRESTAÇÃO DOS SERVIÇOS. SEGURO DE PROTEÇÃO FINANCEIRA. AUSÊNCIA DE DEMONSTRAÇÃO DA LIBERDADE DE ESCOLHA DA SEGURADORA. REPETIÇÃO DO INDÉBITO EM DOBRO. INEXISTÊNCIA DE ENGANO JUSTIFICÁVEL DEMONSTRADO. SUCUMBÊNCIA RECÍPROCA MANTIDA. RECURSO CONHECIDO E NÃO PROVIDO.
+> I. Caso em exame
+> 1. Apelação cível interposta pela instituição financeira contra sentença que julgou procedente a ação de busca e apreensão e parcialmente procedente a reconvenção, para excluir cobranças relativas à tarifa de cadastro, avaliação de garantia, registro do contrato, seguro e outros serviços, declarar a nulidade das cláusulas correspondentes, determinar a restituição em dobro e autorizar a compensação com o saldo devedor recomposto.
+> II. Questões em discussão
+> 2. As questões em discussão consistem em saber: (i) se é válida a tarifa de cadastro; (ii) se houve comprovação da efetiva prestação dos serviços de avaliação do bem e registro do contrato; (iii) se a contratação do seguro de proteção financeira assegurou efetiva liberdade de escolha da seguradora; (iv) se deve ser mantida a declaração de nulidade das cláusulas correspondentes; (v) se a restituição dos valores deve ocorrer em dobro; e (vi) se a distribuição dos ônus sucumbenciais deve ser modificada.
+> III. Razões de decidir
+> 3. A tarifa de cadastro somente é admitida no início do relacionamento entre o consumidor e a instituição financeira. Impugnada a cobrança e não demonstrado, no caso, o pressuposto que autoriza sua incidência, mantém-se a exclusão do encargo.
+> 4. A validade abstrata das tarifas de avaliação do bem e de registro do contrato não dispensa a comprovação da efetiva prestação dos serviços. Ausente indicação concreta de prova apta a infirmar a conclusão da sentença, preserva-se o reconhecimento da abusividade.
+> 5. A contratação de seguro de proteção financeira não é, por si, vedada, mas o consumidor não pode ser compelido a contratar com a instituição financeira ou com seguradora por ela indicada. A mera previsão de facultatividade não substitui a demonstração da efetiva liberdade de escolha da seguradora.
+> 6. A sentença promoveu revisão pontual dos encargos reputados abusivos, sem invalidar integralmente o negócio jurídico, mantendo, inclusive, a procedência da ação de busca e apreensão.
+> 7. A repetição em dobro do indébito independe da demonstração de má-fé, salvo engano justificável. Não demonstrada circunstância concreta apta a justificar as cobranças indevidas, mantém-se a dobra.
+> 8. O acolhimento de parcela relevante dos pedidos reconvencionais afasta a alegação de sucumbência mínima da instituição financeira. Mantém-se a distribuição fixada na origem.
+> IV. Dispositivo e tese
+> 9. Recurso conhecido e não provido.
+> Tese de julgamento: “1. A tarifa de cadastro somente pode ser cobrada no início do relacionamento entre consumidor e instituição financeira. 2. A cobrança das tarifas de avaliação do bem e de registro do contrato exige prova da efetiva prestação dos serviços correspondentes. 3. A validade do seguro de proteção financeira pressupõe demonstração de que o consumidor teve efetiva liberdade de contratar e de escolher a seguradora. 4. A repetição em dobro prevista no art. 42, parágrafo único, do CDC é cabível quando a cobrança indevida não decorre de engano justificável.”
+
 ## R09 — Cláusula de ressarcimento de "serviços de terceiros" sem especificação do serviço
 
 Tese: É abusiva a cláusula que transfere ao consumidor o ressarcimento de "serviços de terceiros" sem especificar o serviço efetivamente prestado, por violar o direito à informação adequada e impor desvantagem exagerada (CDC, arts. 6º, III, e 51, IV).
 
 ### STJ · REsp 1.578.553/SP
-- regras: R09, R10, R29
+- regras: R09, R10, R29, R11, R12
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 1.578.553/SP
@@ -1015,12 +1120,87 @@ ementa:
 > APELAÇÃO CÍVEL. AÇÃO REVISIONAL. CRÉDITO DIRETO AO CONSUMIDOR COM ALIENAÇÃO FIDUCIÁRIA EM GARANTIA. VÁRIOS AUTORES. SENTENÇA DE PARCIAL PROCEDÊNCIA. APELAÇÃO DA INSTITUIÇÃO FINANCEIRA. NÃO CONHECIMENTO DA ALEGAÇÃO DE VALIDADE DA COMISSÃO DE PERMANÊNCIA DEVIDO AO PRINCÍPIO DA IRRETROATIVIDADE DAS NORMAS JURÍDICAS. INOVAÇÃO RECURSAL. DECLARAÇÃO, DE OFÍCIO, DE NULIDADE DA SENTENÇA QUANTO À ABUSIVIDADE DA COBRANÇA DE TARIFA DE REGISTRO. SENTENÇA EXTRA PETITA NO PONTO. AUSÊNCIA DE PEDIDO. VIOLAÇÃO À SÚMULA Nº 381 DO SUPERIOR TRIBUNAL DE JUSTIÇA. AINDA, RECONHECIMENTO, DE OFÍCIO, DE NULIDADE DA SENTENÇA A RESPEITO DA ABUSIVIDADE DA COBRANÇA DE TARIFA DE CADASTRO E COMISSÃO DE PERMANÊNCIA POR AUSÊNCIA DE FUNDAMENTAÇÃO. APLICAÇÃO DO ART. 1.013, § 3º, IV, DO CÓDIGO DE PROCESSO CIVIL. TARIFA DE CADASTRO. POSSIBILIDADE DE EXIGÊNCIA UMA ÚNICA VEZ. SÚMULA Nº 566 DO SUPERIOR TRIBUNAL DE JUSTIÇA. EXISTÊNCIA DE PROVA QUANTO AO RELACIONAMENTO ANTERIOR ENTRE CLIENTE E O BANCO. COMISSÃO DE PERMANÊNCIA. IMPOSSIBILIDADE DE CUMULAÇÃO COM JUROS MORATÓRIOS, REMUNERATÓRIOS E MULTA. SÚMULA Nº 472 DA CORTE SUPERIOR. SERVIÇOS DE TERCEIROS. TEMA Nº 958/STJ. NECESSIDADE DE ESPECIFICAÇÃO DO SERVIÇO. MERA IDENTIFICAÇÃO DO LOJISTA INTERMEDIÁRIO QUE NÃO É SUFICIENTE PARA ESSE FIM. COMISSÃO DO CORRESPONDENTE BANCÁRIO INDEVIDA A PARTIR DE 25.2.2011. TARIFA DE AVALIAÇÃO. TEMA Nº 958/STJ. VALIDADE EM RELAÇÃO AOS CONTRATOS EM QUE FICOU DEMONSTRADA A EFETIVA PRESTAÇÃO DO SERVIÇO. AFASTAMENTO QUANTO AOS DEMAIS. SEGURO PRESTAMISTA E TÍTULO DE CAPITALIZAÇÃO. TEMA Nº 972/STJ. PROIBIÇÃO DE CONTRATAÇÃO COMPULSÓRIA. REQUERENTES QUE OPTARAM LIVREMENTE PELA CONTRATAÇÃO DOS SEGUROS. INEXISTÊNCIA DE ARBITRARIEDADE OU ABUSIVIDADE NOS NEGÓCIOS FIRMADOS. RECURSO PARCIALMENTE CONHECIDO E, NESSA EXTENSÃO, PARCIALMENTE PROVIDO. a. Não se conhece de alegação não submetida ao Juízo de origem por caracterizar inovação recursal. b. A sentença é extra petita quando concede pedido não formulado pelas partes. Ainda, nos termos da Súmula nº 381 do Superior Tribunal de Justiça, “nos contratos bancários, é vedado ao julgador conhecer, de ofício, da abusividade das cláusulas”.c. É nula por falta de fundamentação a sentença que defere pedidos sem explicitar as razões para tanto. d. O art. 1.013, § 3º, IV, do Código de Processo Civil autoriza a análise do mérito pelo tribunal quando decretar a nulidade da sentença por falta de fundamentação. e. De acordo com a Súmula nº 566 do Superior Tribunal de Justiça, “nos contratos bancários posteriores ao início da vigência da Resolução-CMN n. 3.518/2007, em 30/4/2008, pode ser cobrada a tarifa de cadastro no início do relacionamento entre o consumidor e a instituição financeira”, de modo que, quando demonstrada a existência de relacionamento anterior entre cliente e banco, a cobrança da referida tarifa deve ser afastada.
 > f. Conforme prevê a Súmula nº 472 do Superior Tribunal de Justiça, “a cobrança de comissão de permanência – cujo valor não pode ultrapassar a soma dos encargos remuneratórios e moratórios previstos no contrato – exclui a exigibilidade dos juros remuneratórios, moratórios e da multa contratual”. g. A mera identificação do lojista intermediário não é suficiente para afirmar que os “serviços de terceiros” estão especificados. Ademais, nos contratos celebrados após 25.2.2011, a comissão de correspondente bancário é indevida por expressa vedação legal. h. A cobrança de tarifa de avaliação é válida somente quando demonstrada a efetiva prestação do serviço. i. “Nos contratos bancários em geral, o consumidor não pode ser compelido a contratar seguro com a instituição financeira ou com seguradora por ela indicada” (STJ. REsp 1639259/SP, Rel. Ministro PAULO DE TARSO SANSEVERINO, SEGUNDA SEÇÃO, julgado em 12/12/2018, DJe 17/12/2018). No entanto, comprovado que os autores optaram livremente pela contratação do seguro e do título de capitalização, não há falar em abusividade ou arbitrariedade nos negócios firmados.
 
+## R11 — Tarifa de avaliação — sem comprovação do serviço
+
+Tese: A tarifa de avaliação do bem dado em garantia só é exigível se a instituição financeira comprovar que a avaliação foi efetivamente realizada (Tema 958/STJ, tese 2.3, ressalva 2.3.1); sem laudo, ou com documento unilateral e genérico que não demonstra avaliação técnica do bem, a cobrança é abusiva e o valor pago — com os juros que incidiram sobre ele — deve ser restituído.
+
+Nota: o leading case é o REsp 1.578.553/SP (Segunda Seção, Tema 958), tese 2.3 com a ressalva 2.3.1 (cobrança por serviço não efetivamente prestado), listado sob a R09. Mais um favorável do TJPR (6ª Câmara Cível) está sob a R08.
+
+### STJ · AREsp 3.162.498/RJ
+- regras: R11, R12
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: AREsp 3.162.498/RJ
+- orgao: Terceira Turma
+- relator: Min. Moura Ribeiro
+- julgamento: 2026-08-31
+- publicacao: 2026-09-10
+- precedente_qualificado: não (aplica o Tema 958/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/7307680933
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva: a Terceira Turma reafirma que são válidas a tarifa de avaliação do bem e o ressarcimento do registro do contrato (Tema 958), ressalvados o controle de onerosidade e a vedação de cobrança por serviço não prestado, e deixa a verificação da prestação do serviço às instâncias ordinárias (Súmulas 5 e 7); a prova (ou a falta de prova pelo banco) tem de ser enfrentada no primeiro e no segundo grau, porque o STJ não a revê.
+- observacao: Recurso do consumidor não conhecido; financiamento de veículo com tarifa de avaliação de R$ 550,00. O TJRJ manteve as tarifas "com base no contrato e em elementos fáticos". Sessão virtual de 25 a 31/08/2026. Publicação pela data do Jusbrasil (10/09/2026, data da lista de resultados; o inteiro teor não traz o DJEN). Ementa da seção Ementa da página, igual à do inteiro teor salvo uma quebra de linha do PDF no item 4 e o espaço em "7/ STJ".
+
+ementa:
+> PROCESSUAL CIVIL E DIREITO DO CONSUMIDOR. AGRAVO EM RECURSO ESPECIAL. AUSÊNCIA DE PREQUESTIONAMENTO QUANTO AOS ARTS. 371 E 479 DO CPC. SÚMULA 211/STJ. TARIFA DE AVALIAÇÃO DO BEM E DESPESA DE REGISTRO DO CONTRATO. TEMA 958/STJ. CONTROLE DE ABUSIVIDADE NO CASO CONCRETO. IMPOSSIBILIDADE DE REEXAME DE PROVAS E DE CLÁUSULAS CONTRATUAIS. SÚMULAS 5 E 7/STJ. AGRAVO CONHECIDO. RECURSO ESPECIAL NÃO CONHECIDO.
+> 1. Agravo em recurso especial contra acórdão que manteve a validade da tarifa de avaliação do bem e da despesa de registro do contrato em financiamento de veículo, além da taxa de juros contratada.
+> 2. A questão recursal consiste em examinar se (i) houve violação dos arts. 371 e 479 do CPC por ausência de apreciação da prova pericial; e (ii) houve abusividade na cobrança de tarifa de avaliação do bem e do registro do contrato, com repetição do indébito em dobro, à luz dos arts. 42, parágrafo único, e 51, IV e XII, do CDC.
+> 3. A alegada violação dos arts. 371 e 479 do CPC não pode ser apreciada, por ausência de prequestionamento no acórdão do Tribunal estadual, aplicando-se a Súmula 211/STJ.
+> 4. É válida a cobrança de tarifa de avaliação do bem dado em garantia e o ressarcimento de despesas com registro do contrato, conforme o Tema 958/STJ, ressalvados o controle de onerosidade e a vedação de cobrança por serviço não prestado. No caso, o acórdão afastou a abusividade com base no contrato e em elementos fáticos, sendo inviável, em recurso especial, o revolvimento de provas e a interpretação de cláusulas contratuais, nos termos das Súmulas 5 e 7/STJ.
+> 5. Agravo conhecido. Recurso especial não conhecido.
+
+### TJPR · Apelação Cível 0000286-02.2023.8.16.0082
+- regras: R11, R12
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0000286-02.2023.8.16.0082
+- orgao: 7ª Câmara Cível
+- relator: Juiz Subst. 2º Grau Eduardo Lino Bueno Fagundes Junior
+- julgamento: 2026-04-22
+- publicacao: 2026-04-22
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000036043251/Ac%C3%B3rd%C3%A3o-0000286-02.2023.8.16.0082
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Declara abusivas, em financiamento de veículo, a tarifa de avaliação (só um "termo de avaliação" unilateral com conferência genérica, sem avaliação técnica do bem) e a tarifa de registro (nenhum documento do gravame nem do custo desembolsado), com restituição em dobro dos valores e dos juros remuneratórios que incidiram sobre essas tarifas.
+- observacao: Recurso do consumidor provido nesses pontos. O voto registra que o termo de avaliação não verificou motor, câmbio e acessórios e que o banco não trouxe outro documento; no registro, que "a mera previsão em abstrato desse custo não significa dizer que o serviço foi, de fato, prestado". O acórdão também reconheceu onerosidade excessiva da tarifa de cadastro (valor muito acima da média), que não é a hipótese da R08. O seguro foi validado (instrumento apartado). Dobro fundado no EREsp 1.413.542/RS, sem exame da modulação (hoje afastada pelo Tema 929/STJ). Correções na ementa: separados os títulos e itens que a extração emendou e juntadas as quebras de linha do portal no bloco de dispositivos citados, sem alterar o texto. Fonte: portal de jurisprudência do TJPR (comarca de Formosa do Oeste).
+
+ementa:
+> APELAÇÕES CÍVEIS. DIREITO CIVIL E DO CONSUMIDOR. AÇÃO REVISIONAL DE CONTRATO DE FINANCIAMENTO DE VEÍCULO COM ALIENAÇÃO FIDUCIÁRIA. CONTRATO DE ADESÃO. CONTROLE DE ABUSIVIDADE DE TARIFAS BANCÁRIAS. TARIFA DE AVALIAÇÃO DO BEM. AUSÊNCIA DE COMPROVAÇÃO DA EFETIVA PRESTAÇÃO DO SERVIÇO. ILEGALIDADE. TARIFA DE REGISTRO DE CONTRATO. AUSÊNCIA DE PROVA DO REGISTRO E DOS CUSTOS DO SERVIÇO. COBRANÇA ABUSIVA. TARIFA DE CADASTRO. POSSIBILIDADE DE COBRANÇA APENAS NO INÍCIO DO RELACIONAMENTO. ONEROSIDADE EXCESSIVA DO VALOR COBRADO. RESTITUIÇÃO DO EXCEDENTE. SEGURO DE PROTEÇÃO FINANCEIRA. CONTRATAÇÃO EM DOCUMENTO APARTADO. AUSÊNCIA DE VENDA CASADA. VALIDADE. DEVOLUÇÃO DE ENCARGOS REFLEXOS. JUROS INCIDENTES SOBRE TARIFAS ILEGAIS. REPETIÇÃO DO INDÉBITO EM DOBRO. RECURSOS CONHECIDOS E PROVIDOS.
+> I. CASO EM EXAME
+> 1.1 Ação revisional de contrato de financiamento de veículo, ajuizada pelo consumidor em face de instituição financeira, com alegação de cobrança de tarifas e encargos abusivos inseridos no contrato.
+> 1.2 Sentença proferida pelo Juízo da Vara Cível julgou parcialmente procedentes os pedidos para reconhecer a abusividade da cobrança de seguro prestamista por ausência de comprovação da contratação voluntária, determinando a restituição em dobro dos valores pagos, bem como dos juros incidentes, e rejeitando o pedido de indenização por danos morais.
+> 1.3 A parte autora interpôs apelação, sustentando a abusividade das tarifas de registro do contrato, avaliação do bem e cadastro, com pedido de exclusão dos valores do montante financiado, recálculo das parcelas e restituição em dobro dos valores pagos indevidamente.
+> 1.4 A instituição financeira também interpôs apelação, defendendo a validade da contratação do seguro prestamista mediante assinatura de proposta em documento apartado e requerendo, subsidiariamente, que eventual restituição ocorra de forma simples.
+> II. QUESTÕES EM DISCUSSÃO
+> 2.1 Há quatro questões em discussão: (i) analisar se é válida a cobrança da tarifa de avaliação do bem diante da ausência de prova da efetiva prestação do serviço; (ii) verificar se é legítima a cobrança da tarifa de registro do contrato sem comprovação do registro e dos custos correspondentes; (iii) analisar se a tarifa de cadastro cobrada no contrato apresenta onerosidade excessiva; e (iv) verificar se é válida a cobrança do seguro de proteção financeira diante da alegação de venda casada.
+> III. RAZÕES DE DECIDIR
+> 3.1 A revisão de cláusulas contratuais em contratos bancários submetidos ao Código de Defesa do Consumidor é admitida quando constatada abusividade ou violação aos princípios da boa-fé objetiva, função social dos contratos e equilíbrio contratual, mitigando-se o princípio do pacta sunt servanda.
+> 3.2 A cobrança da tarifa de avaliação do bem somente é válida quando demonstrada a efetiva prestação do serviço, conforme tese fixada pelo Superior Tribunal de Justiça no Tema 958. Ausente prova de avaliação técnica pormenorizada do veículo, sendo apresentado apenas documento unilateral contendo conferência genérica de dados, caracteriza-se cobrança indevida.
+> 3.3 A tarifa de registro do contrato pode ser repassada ao consumidor como ressarcimento de serviço prestado por terceiro, desde que comprovado o efetivo registro e o valor desembolsado pela instituição financeira. Inexistindo nos autos comprovação da realização do registro ou do custo correspondente, impõe-se o reconhecimento da abusividade da cobrança.
+> 3.4 A tarifa de cadastro é admitida pela regulamentação do Conselho Monetário Nacional e pela jurisprudência do Superior Tribunal de Justiça, desde que cobrada uma única vez no início do relacionamento entre consumidor e instituição financeira. Todavia, quando o valor exigido supera de forma significativa a média de mercado, caracteriza-se vantagem manifestamente excessiva, ensejando a restituição do valor excedente.
+> 3.5 O seguro de proteção financeira é válido quando contratado mediante manifestação livre e informada do consumidor, especialmente quando formalizado em documento apartado do contrato principal, circunstância que afasta a configuração de venda casada, nos termos da tese fixada pelo STJ no Tema 972.
+> 3.6 Reconhecida a ilegalidade de determinadas tarifas contratuais, impõe-se também a restituição dos juros remuneratórios incidentes sobre tais encargos, por aplicação do princípio segundo o qual o acessório segue a sorte do principal, evitando enriquecimento sem causa da instituição financeira.
+> 3.7 Nas relações de consumo, a repetição do indébito deve ocorrer em dobro quando inexistente engano justificável por parte do fornecedor, conforme entendimento firmado pelo STJ no julgamento dos Embargos de Divergência no REsp nº 1.413.542/RS.
+> IV. DISPOSITIVO
+> 4.1. Apelação do autor conhecida e provida para reconhecer a abusividade das tarifas de avaliação do bem e de registro do contrato, bem como a onerosidade excessiva da tarifa de cadastro, determinando a restituição dos valores indevidamente cobrados, com inclusão dos encargos reflexos.
+> 4.2 Apelação da instituição financeira conhecida e provida para reconhecer a validade da contratação do seguro de proteção financeira, afastando a nulidade declarada na sentença.
+> Dispositivos relevantes citados: CF, art. 5º, XXXII. CC, arts. 92, 427, 428, I, 884 e 1.361. CDC, arts. 6º, III; 30; 39, I e V; 42, parágrafo único; 47; 51, I e IV; 52, III; 54. CPC, arts. 373, II; 872. LINDB, art. 4º. CTN, art. 109. Resolução CMN nº 3.518/2007. Resolução CMN nº 3.919/2010. Resolução CONTRAN nº 320/2009.
+> Jurisprudência relevante citada: STJ, AgInt no AREsp 1.638.853/RS. STJ, REsp 1.578.553/SP (Tema 958). STJ, REsp 1.578.526/SP. STJ, REsp 1.639.259/SP e REsp 1.639.320/SP (Tema 972). STJ, REsp 1.255.573/RS (Temas 618 a 621). STJ, EAREsp 1.413.542/RS. TJPR, Apelação Cível nº 0081859-72.2023.8.16.0014. TJPR, Apelação Cível nº 0015366-58.2023.8.16.0194. TJPR, Apelação Cível nº 0006095-17.2024.8.16.0056. TJPR, Apelação Cível nº 0015887-54.2020.8.16.0017. TJPR, Apelação Cível nº 0002007-50.2023.8.16.0094. TJPR, Apelação Cível nº 0067799-94.2023.8.16.0014. TJPR, Apelação Cível nº 0058218-21.2024.8.16.0014. TJPR, Mandado de Segurança nº 0045695-58.2020.8.16.0000. TJPR, Apelação Cível nº 0008984-86.2019.8.16.0130. TJPR, Agravo de Instrumento nº 0037481-15.2019.8.16.0000.
+
+## R12 — Tarifa de registro — sem comprovação do registro
+
+Tese: O ressarcimento da despesa de registro do contrato só é devido se a instituição financeira comprovar que o registro foi efetivamente feito (gravame no órgão de trânsito ou registro em cartório) e quanto desembolsou por ele (Tema 958/STJ, tese 2.3 e suas ressalvas); sem essa prova, a cobrança é abusiva e o valor pago, com os juros que incidiram sobre ele, deve ser restituído.
+
+Nota: os julgados desta regra servem também à R08 ou à R11 e estão listados sob elas: dois favoráveis do TJPR (6ª e 7ª Câmaras Cíveis) e o adverso do STJ (AREsp 3.162.498/RJ). O leading case é o REsp 1.578.553/SP (Tema 958, tese 2.3 com a ressalva 2.3.1), listado sob a R09.
+
 ## R13 — Seguro prestamista — venda casada
 
 Tese: A contratação de seguro prestamista (ou de proteção financeira) imposta pela instituição financeira, sem opção real de contratar ou de escolher outra seguradora, é venda casada (CDC, art. 39, I) e o valor cobrado deve ser restituído.
 
 ### STJ · REsp 1.639.259/SP
-- regras: R13
+- regras: R13, CONTA-ENCARGOS
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 1.639.259/SP
@@ -1208,7 +1388,7 @@ ementa:
 Tese: Em contrato de consumo, os juros remuneratórios são abusivos (CDC, art. 51, § 1º) quando a taxa contratada supera expressivamente a taxa média de mercado do BACEN para a mesma espécie de operação e o banco não justifica a diferença com circunstâncias concretas; a taxa deve ser revista para a média.
 
 ### STJ · REsp 1.061.530/RS
-- regras: R15
+- regras: R15, R21
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 1.061.530/RS
@@ -1216,7 +1396,7 @@ Tese: Em contrato de consumo, os juros remuneratórios são abusivos (CDC, art. 
 - relator: Min. Nancy Andrighi
 - julgamento: 2008-10-22
 - publicacao: 2009-03-10
-- precedente_qualificado: Temas 24, 25, 26, 27 e 28/STJ (repetitivo)
+- precedente_qualificado: Temas 24, 25, 26, 27, 28 e 30/STJ (repetitivo)
 - url: https://www.jusbrasil.com.br/jurisprudencia/stj/2106329912
 - verificado_em: 2026-10-29
 - status: VERIFICADO
@@ -1301,6 +1481,119 @@ ementa:
 
 ementa:
 > DIREITO CIVIL E BANCÁRIO. APELAÇÃO CÍVEL. AÇÃO REVISIONAL DE CONTRATO DE EMPRÉSTIMO PESSOAL. JUROS REMUNERATÓRIOS. TAXA SUPERIOR À MÉDIA DE MERCADO. REPETIÇÃO DO INDÉBITO. RECURSO DESPROVIDO.I. CASO EM EXAME1. Apelação cível interposta contra sentença que julgou procedente ação revisional de contrato de empréstimo pessoal, reconhecendo a abusividade da taxa de juros remuneratórios pactuada, determinando sua limitação à taxa média de mercado divulgada pelo Banco Central do Brasil, bem como a restituição dos valores pagos a maior, afastando-se, ainda, os encargos moratórios.II. QUESTÃO EM DISCUSSÃO2. A questão em discussão consiste em: (i) saber se a simples estipulação de juros remuneratórios superiores à taxa média de mercado autoriza, no caso concreto, a revisão judicial das cláusulas contratuais; (ii) saber se é cabível a restituição dos valores pagos a maior, inclusive em dobro, diante do reconhecimento da abusividade; e (iii) saber se o reconhecimento da abusividade no período de normalidade contratual afasta a caracterização da mora do devedor.III. RAZÕES DE DECIDIR3. Embora as instituições financeiras não se submetam à limitação da Lei de Usura, admite-se a revisão dos juros remuneratórios em situações excepcionais, quando demonstrada abusividade capaz de colocar o consumidor em desvantagem exagerada, considerada a taxa média de mercado como relevante vetor de aferição, sem que se trate de critério absoluto.4. Constatada, no caso concreto, a discrepância significativa entre a taxa pactuada e a média de mercado para operações da mesma espécie e período, impõe-se a limitação dos juros remuneratórios aos parâmetros divulgados pelo Banco Central do Brasil.5. Reconhecida a abusividade no período de normalidade contratual, é devida a restituição dos valores pagos indevidamente, observada a modulação dos efeitos fixada pelo Superior Tribunal de Justiça quanto à aplicação da repetição em dobro, bem como o afastamento dos encargos moratórios.IV. DISPOSITIVO E TESE6. Recurso desprovido.Tese de julgamento:“1. A taxa média de mercado divulgada pelo Banco Central do Brasil constitui importante parâmetro para a aferição da abusividade dos juros remuneratórios, devendo ser analisadas as peculiaridades do caso concreto.”“2. Reconhecida a abusividade dos juros no período de normalidade contratual, é cabível a restituição dos valores pagos a maior, bem como o afastamento da mora do devedor.”Dispositivos relevantes citados:Código de Defesa do Consumidor, art. 42, parágrafo único.Código de Processo Civil, art. 487, I; art. 85, § 11.Jurisprudência relevante citada:STJ, Recurso Especial nº 1.061.530/RS, Rel. Ministra Nancy Andrighi, Segunda Seção, j. 22.10.2008.STJ, Agravo Interno no AREsp nº 2.150.980/RS, Rel. Ministra Nancy Andrighi, Terceira Turma, j. 09.11.2022.STJ, EAREsp nº 676.608/RS, Rel. Ministro Og Fernandes, Corte Especial, j. 21.10.2020.
+
+## R16 — Juros remuneratórios — taxa não comprovada (Súmula 530/STJ)
+
+Tese: Nos contratos bancários, inclusive cheque especial e conta garantida, quando a taxa de juros efetivamente contratada não pode ser comprovada — por ausência de pactuação ou porque o banco não juntou o instrumento —, os juros remuneratórios são limitados à taxa média de mercado divulgada pelo BACEN para a mesma modalidade, salvo se a taxa cobrada for mais vantajosa para o devedor (Súmula 530/STJ; Temas 233 e 234/STJ).
+
+### STJ · REsp 1.112.879/PR
+- regras: R16, R19, CONTA-CAPDIARIA
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.112.879/PR
+- orgao: Segunda Seção
+- relator: Min. Nancy Andrighi
+- julgamento: 2010-05-12
+- publicacao: 2010-05-19
+- precedente_qualificado: Temas 233 e 234/STJ (repetitivo); Súmula 530/STJ
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2106318712
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Leading case dos Temas 233 e 234, julgado em ação revisional de cheque especial cujo contrato não foi juntado: a Segunda Seção mandou aplicar a taxa média de mercado da espécie aos juros remuneratórios e afastou a capitalização por falta de prova da pactuação expressa.
+- observacao: A tese 1 fala em 'mútuo em que a disponibilização do capital é imediata'. No caso concreto (cheque especial de pessoa jurídica, origem TJPR), o recurso era do banco: a origem, sem contrato nos autos, limitara os juros a 6% e depois 12% ao ano; a Seção trocou esse limite pela taxa média da espécie (tese 2) e manteve o afastamento da capitalização. É dessa redação que a Quarta Turma extrai a distinção do REsp 2.065.222/PR (ADV, abaixo); a Súmula 530/STJ (2015) generalizou a regra para os 'contratos bancários'. Unânime. Ementa do inteiro teor; correção: junção de linha partida na extração ('taxa de / juros').
+
+ementa:
+> BANCÁRIO. RECURSO ESPECIAL. AÇÃO REVISIONAL DE CLÁUSULAS DE CONTRATO BANCÁRIO. INCIDENTE DE PROCESSO REPETITIVO. JUROS REMUNERATÓRIOS. CONTRATO QUE NÃO PREVÊ O PERCENTUAL DE JUROS REMUNERATÓRIOS A SER OBSERVADO.
+> I - JULGAMENTO DAS QUESTÕES IDÊNTICAS QUE CARACTERIZAM A MULTIPLICIDADE. ORIENTAÇÃO - JUROS REMUNERATÓRIOS
+> 1 - Nos contratos de mútuo em que a disponibilização do capital é imediata, o montante dos juros remuneratórios praticados deve ser consignado no respectivo instrumento. Ausente a fixação da taxa no contrato, o juiz deve limitar os juros à média de mercado nas operações da espécie, divulgada pelo Bacen, salvo se a taxa cobrada for mais vantajosa para o cliente.
+> 2 - Em qualquer hipótese, é possível a correção para a taxa média se for verificada abusividade nos juros remuneratórios praticados.
+> II - JULGAMENTO DO RECURSO REPRESENTATIVO - Consignada, no acórdão recorrido, a abusividade na cobrança da taxa de juros, impõe-se a adoção da taxa média de mercado, nos termos do entendimento consolidado neste julgamento.
+> - Nos contratos de mútuo bancário, celebrados após a edição da MP nº 1.963-17/00 (reeditada sob o nº 2.170-36/01), admite-se a capitalização mensal de juros, desde que expressamente pactuada.
+> Recurso especial parcialmente conhecido e, nessa parte, provido. Ônus sucumbenciais redistribuídos.
+
+### STJ · REsp 2.190.399/PR
+- regras: R16
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 2.190.399/PR
+- orgao: Terceira Turma
+- relator: Min. Nancy Andrighi
+- julgamento: 2025-05-26
+- publicacao: 2025-05-29
+- precedente_qualificado: não (aplica os Temas 233 e 234/STJ e a Súmula 530/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6302151863
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em revisão de conta corrente sem o contrato nos autos, a Terceira Turma reformou o TJPR, que só limitava os juros acima do dobro da média, e limitou os juros remuneratórios à taxa média de mercado 'independentemente da análise de sua abusividade' (Temas 233/234 e Súmula 530).
+- observacao: Recurso do correntista (espólio) parcialmente conhecido e provido por unanimidade (sessão virtual de 20 a 26/05/2025); o ponto das tarifas não foi conhecido (Súmula 283/STF). Diverge da Quarta Turma no REsp 2.065.222/PR (ADV, abaixo). No mesmo sentido, na própria Quarta Turma: AgInt nos EDcl no REsp 2.048.901/PR (12/03/2024, em CONTA-ENCARGOS) e REsp 2.041.009/PR (30/03/2026, conta corrente com contrato de 1992 não juntado; lido no inteiro teor e não listado). O item 4 da ementa traz aspas de fechamento sem abertura, como no original.
+
+ementa:
+> DIREITO CIVIL, PROCESSUAL CIVIL E DO CONSUMIDOR. RECURSO ESPECIAL. AÇÃO REVISIONAL DE CONTRATO BANCÁRIO. VIOLAÇÃO DO ART. 489 DO CPC. INOCORRÊNCIA. FUNDAMENTO DO ACÓRDÃO NÃO IMPUGNADO. SÚMULA 283/STF. JUROS REMUNERATÓRIOS. AUSENTE A JUNTADA DO CONTRATO. MÉDIA DE MERCADO. TEMAS 233 E 234/STJ. REPETITIVOS.
+> 1. Ação revisional de contrato bancário.
+> 2. Devidamente analisadas e discutidas as questões de mérito, e fundamentado corretamente o acórdão recorrido, de modo a esgotar a prestação jurisdicional, não há que se falar em violação ao art. 489 do CPC.
+> 3. A existência de fundamento do acórdão recorrido não impugnado - quando suficiente para a manutenção de suas conclusões - impede a apreciação do recurso especial.
+> 4. Nos contratos de mútuo em que a disponibilização do capital é imediata, o montante dos juros remuneratórios praticados deve ser consignado no respectivo instrumento. Ausente a fixação da taxa no contrato o juiz deve limitar os juros à média de mercado nas operações da espécie, divulgada pelo Bacen, salvo se a taxa cobrada for mais vantajosa para o cliente." (REsp 1112879/PR, 2ª Seção, DJe 19/05/2010, Temas 233 e 234). Aplicação da Súmula 530/STJ.
+> 5. Recurso especial parcialmente conhecido e, nesta extensão, parcialmente provido.
+
+### STJ · REsp 2.065.222/PR
+- regras: R16
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 2.065.222/PR
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2025-12-16
+- publicacao: 2025-12-19
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6265811751
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: LIMITE a antecipar: para a Quarta Turma, no contrato de abertura de crédito em conta corrente (cheque especial), em que não há disponibilização imediata do crédito, a falta do instrumento não leva por si à taxa média; exige-se prova de discrepância significativa entre a taxa praticada e a média (no caso, o TJPR limitou só os meses acima do dobro da média, apurados em perícia).
+- observacao: Recurso do correntista desprovido por unanimidade (sessão virtual de 09 a 16/12/2025); cita o AgInt no REsp 2.051.810/SC (Quarta Turma, 2023) e foi reafirmado no AgInt no REsp 2.015.710/PR (Quarta Turma, 18/05/2026). DIVERGÊNCIA: a Terceira Turma (REsp 2.190.399/PR) e a própria Quarta Turma em outros acórdãos (AgInt nos EDcl no REsp 2.048.901/PR, 2024; REsp 2.041.009/PR, março de 2026) aplicaram a Súmula 530 a conta corrente sem contrato. No TJPR, a 14ª Câmara Cível também afasta a Súmula 530 para os juros flutuantes da conta (distinguishing), e a 13ª e a 15ª aplicam. Na peça: pedir a taxa média pela Súmula 530 e, subsidiariamente, provar a discrepância pela perícia sobre os extratos (série BACEN da modalidade). O Tema 1378/STJ (critérios de abusividade dos juros; afetado e pendente) pode alterar a análise subsidiária.
+
+ementa:
+> DIREITO CIVIL. RECURSO ESPECIAL. REVISÃO DE CONTRATO BANCÁRIO. JUROS REMUNERATÓRIOS. ABUSIVIDADE. LIMITAÇÃO À MÉDIA DE MERCADO. RECURSO NÃO PROVIDO.
+> 1. Nos contratos de abertura de crédito em conta corrente (cheque-especial), para os quais inexiste disponibilização imediata do crédito, a ausência do instrumento respectivo nos autos não enseja por si o reconhecimento da abusividade das taxas praticadas no período. Para tanto, deve ser comprovada a ocorrência de significativa discrepância entre a taxa média de mercado e aquela praticada pela instituição financeira.
+> 2. Não foram opostos embargos de declaração para sanar a alegada omissão na apreciação da tese de se tratar de responsabilidade extracontratual a impor a incidência de juros de mora desde o evento danoso e também da tese de existência de lastro na prova pericial para fixação do valor do proveito econômico para o fim de arbitramento dos honorários advocatícios. Dessa forma, à falta do indispensável prequestionamento, incide, por analogia, o óbice das Súmulas 282 e 356 do STF.
+> 3. Resultado do Julgamento: Recurso especial não provido.
+
+### TJPR · Apelação Cível 0009951-67.2017.8.16.0174
+- regras: R16, R19, CONTA-ENCARGOS, CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0009951-67.2017.8.16.0174
+- orgao: 13ª Câmara Cível
+- relator: Des. Fernando Ferreira de Moraes
+- julgamento: 2026-09-04
+- publicacao: 2026-09-04
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000038829411/Ac%C3%B3rd%C3%A3o-0009951-67.2017.8.16.0174
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Conta corrente com cheque especial de pessoa jurídica, sem o contrato juntado pelo banco: juros limitados mês a mês à média da modalidade (série BACEN 20727, cheque especial PJ) pela Súmula 530, rejeitada a tese de 'uma vez e meia a média'; capitalização expurgada com recálculo em juros simples; 228 lançamentos de tarifas sem previsão restituídos; mora descaracterizada.
+- observacao: Recurso do banco desprovido. Repetição simples (o correntista não recorreu). Fonte: portal de jurisprudência do TJPR (comarca de União da Vitória).
+
+ementa:
+> APELAÇÃO CÍVEL. AÇÃO REVISIONAL DE CONTRATO BANCÁRIO. CONTA CORRENTE COM UTILIZAÇÃO DE CHEQUE ESPECIAL — PESSOA JURÍDICA. PACTA SUNT SERVANDA. MITIGAÇÃO. POSSIBILIDADE DE REVISÃO DE CLÁUSULAS ABUSIVAS. JUROS REMUNERATÓRIOS. INSTRUMENTO CONTRATUAL. NÃO JUNTADO. ÔNUS PROBATÓRIO DO FORNECEDOR (ART. 373, INCISO II DO CPC E ART. 6º, INCISO VIII DO CDC). TAXA PACTUADA. NÃO VERIFICADA. LIMITAÇÃO À MÉDIA DE MERCADO. DEVIDA. SÚMULA 530 DO STJ. INCIDENTE. TESE ALTERNATIVA DE LIMITAÇÃO EM UMA VEZ E MEIA A MÉDIA. AFASTADA. CAPITALIZAÇÃO DE JUROS. PACTUAÇÃO EXPRESSA. AUSENTE. SÚMULA 539 DO STJ E RESP Nº 973.827/RS. RECÁLCULO EM JUROS SIMPLES. MANTIDO. CAPITALIZAÇÃO ANUAL (ART. 591 DO CC). INAPLICABILIDADE AOS CONTRATOS BANCÁRIOS. TARIFAS BANCÁRIAS. 228 LANÇAMENTOS SEM PREVISÃO CONTRATUAL OU AUTORIZAÇÃO ESPECÍFICA. RESTITUIÇÃO. DEVIDA. SÚMULA 44 DO TJPR. MORA. DESCARACTERIZADA. REPETIÇÃO SIMPLES. DEFINIDA. SÚMULA 322 DO STJ. SENTENÇA MANTIDA. HONORÁRIOS RECURSAIS ARBITRADOS. RECURSO NÃO PROVIDO.
+
+### TJPR · Apelação Cível 0003555-14.2023.8.16.0126
+- regras: R16, R19, CONTA-ENCARGOS
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0003555-14.2023.8.16.0126
+- orgao: 15ª Câmara Cível
+- relator: Des.ª Denise Kruger Pereira
+- julgamento: 2026-10-24
+- publicacao: 2026-10-26
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000039041001/Ac%C3%B3rd%C3%A3o-0003555-14.2023.8.16.0126
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Cheque especial em conta corrente sem o instrumento juntado pelo banco: aplica-se a taxa média de mercado (Súmula 530), afasta-se a capitalização por falta de pactuação expressa e são ilegais as tarifas sem prova de previsão contratual ou autorização (Súmula 44/TJPR).
+- observacao: Apelação do banco desprovida e recurso adesivo do correntista provido. ATENÇÃO à repetição: o acórdão aplica a modulação do EAREsp 676.608/RS (simples até 29/03/2021, dobro depois); o Tema 929/STJ (REsp 1.963.770/CE, em R26) foi fixado sem modulação — não citar este julgado para o dobro. A íntegra do portal não repete o número do processo, mas descreve o mesmo caso (comarca, partes e dispositivo conferidos). Fonte: portal de jurisprudência do TJPR (comarca de Palotina). Correção: retirado o rótulo 'EMENTA:' que abre o texto do portal.
+
+ementa:
+> DIREITO CIVIL, DIREITO DO CONSUMIDOR E DIREITO BANCÁRIO. AÇÃO DE REVISÃO CONTRATUAL. CONTRATO DE CHEQUE ESPECIAL EM CONTA CORRENTE. SENTENÇA DE PARCIAL PROCEDÊNCIA. RECURSO DE APELAÇÃO DA INSTITUIÇÃO FINANCEIRA. AUSÊNCIA DE JUNTADA DO INSTRUMENTO CONTRATUAL PELO BANCO. JUROS REMUNERATÓRIOS LIMITADOS À TAXA MÉDIA DE MERCADO. SÚMULA 530 DO STJ. CAPITALIZAÇÃO DE JUROS AFASTADA POR AUSÊNCIA DE PACTUAÇÃO EXPRESSA. REPETIÇÃO DO INDÉBITO. FORMA SIMPLES ATÉ 29.03.2021 E EM DOBRO A PARTIR DE 30.03.2021. MODULAÇÃO DO EAREsp 676.608/RS. IMPUGNAÇÃO AOS CÁLCULOS E AO LAUDO PERICIAL QUE NÃO ALTERA O DESFECHO. COMPENSAÇÃO DE VALORES COMO CONSECTÁRIO LEGAL. CORREÇÃO MONETÁRIA DESDE CADA DESEMBOLSO E JUROS DE MORA A PARTIR DA CITAÇÃO. RECURSO CONHECIDO E DESPROVIDO.RECURSO ADESIVO DO AUTOR. TARIFAS BANCÁRIAS. AUSÊNCIA DE COMPROVAÇÃO DE PREVISÃO CONTRATUAL OU AUTORIZAÇÃO. ILEGALIDADE. SÚMULA 44 DO TJPR. RESTITUIÇÃO NA FORMA SIMPLES ATÉ 29.03.2021 E EM DOBRO A PARTIR DE 30.03.2021. REDISTRIBUIÇÃO DOS ÔNUS SUCUMBENCIAIS EM DESFAVOR DA INSTITUIÇÃO FINANCEIRA. RECURSO CONHECIDO E PROVIDO.I. CASO EM EXAME1. Recursos de Apelação interpostos contra sentença que julgou parcialmente procedentes os pedidos formulados em Ação de Revisão Contratual referente a contrato de cheque especial, determinando a aplicação da taxa média de mercado divulgada pelo Banco Central aos juros remuneratórios e o afastamento da capitalização de juros, ambos por ausência de pactuação expressa, com repetição do indébito na forma simples até 29.03.2021 e em dobro a partir de 30.03.2021, mantida a legitimidade da cobrança das tarifas bancárias.II. QUESTÕES EM DISCUSSÃO2. As questões em discussão consistem em saber: (i) se, ausente a juntada do instrumento contratual, subsistem a limitação dos juros remuneratórios à taxa média de mercado e o afastamento da capitalização; (ii) se é devida a repetição do indébito em dobro sem demonstração de má-fé; (iii) se são legítimas as tarifas bancárias cobradas, ante a ausência de comprovação de previsão contratual ou autorização; (iv) se deve ser redistribuída a sucumbência.III. RAZÕES DE DECIDIR3. Não juntado o contrato pela instituição financeira, à qual incumbia o ônus, aplica-se a taxa média de mercado divulgada pelo Banco Central, nos termos da Súmula 530 do STJ.4. A capitalização de juros exige pactuação expressa, cuja demonstração não verificou ante a ausência do contrato, impondo-se o seu afastamento.5. As tarifas bancárias somente podem ser cobradas quando previstas no contrato ou expressa e previamente autorizadas pelo correntista, ainda que de forma genérica (Súmula 44 do TJPR); não comprovada a contratação, ante a não juntada do contrato, é ilegal a cobrança, impondo-se a restituição.6. A repetição do indébito, na esteira da modulação fixada no EAREsp 676.608/RS, opera-se de forma simples quanto às cobranças anteriores a 30.03.2021 e em dobro quanto às posteriores, independentemente de má-fé.7. Reconhecida a procedência integral dos pedidos, impõe-se a redistribuição dos ônus sucumbenciais em desfavor da instituição financeira.IV. DISPOSITIVO E TESE8. Apelação da instituição financeira conhecida e desprovida. Recurso adesivo do autor conhecido e provido.Teses de julgamento: “1. Ausente a juntada do instrumento contratual pela instituição financeira, aplica-se a taxa média de mercado aos juros remuneratórios (Súmula 530/STJ) e afasta-se a capitalização por falta de pactuação expressa. 2. A cobrança de tarifas bancárias sem comprovação de previsão contratual ou autorização é ilegal (Súmula 44/TJPR), impondo-se a restituição. 3. A repetição do indébito segue a modulação do EAREsp 676.608/RS: simples até 29.03.2021 e em dobro a partir de 30.03.2021.”___________Dispositivos relevantes citados: CC, art. 368; CPC, arts. 85, §§ 2º e 11, 86, 373, incisos I e II, e 997, § 2º.Jurisprudência relevante citada: STJ, REsp 1.061.530/RS, Rel. Min. Nancy Andrighi, Segunda Seção, j. 22.10.2008, DJe 10.03.2009; STJ, REsp 973.827/RS, Rel. p/ Acórdão Min. Maria Isabel Gallotti, Segunda Seção; STJ, EAREsp 676.608/RS, Rel. Min. Og Fernandes, Corte Especial; TJPR - 15ª Câmara Cível - 0022775-38.2026.8.16.0014 - Londrina - Rel.: DESEMBARGADORA DENISE KRUGER PEREIRA - J. 20.06.2026; TJPR - 15ª Câmara Cível - 0003155-19.2025.8.16.0194 - Curitiba - Rel.: DESEMBARGADOR JUCIMAR NOVOCHADLO - J. 22.08.2026; TJPR - 15ª Câmara Cível - 0000820-07.2025.8.16.0039 - Andirá - Rel.: DESEMBARGADORA LUCIANE BORTOLETO - J. 01.08.2026; Súmula 530/STJ; Súmula 297/STJ; Súmula 44/TJPR.
 
 ## R17 — Cédulas comercial e industrial (e rural): juros limitados a 12% a.a. sem taxa fixada pelo CMN
 
@@ -1531,7 +1824,7 @@ ementa:
 > AGRAVO REGIMENTAL NO AGRAVO (ART. 544 DO CPC)- AÇÃO DE PRESTAÇÃO DE CONTAS - SEGUNDA FASE - REVISIONAL DE CONTRATO BANCÁRIO NÃO EXIBIDO - TRIBUNAL A QUO QUE AFIRMA SER NECESSÁRIA A EXPRESSA PACTUAÇÃO PARA A COBRANÇA DO ENCARGO CAPITALIZAÇÃO DE JUROS - IRRESIGNAÇÃO DA CASA BANCÁRIA - DECISÃO MONOCRÁTICA QUE NEGOU PROVIMENTO AO RECLAMO - ÓRGÃO COLEGIADO DA QUARTA TURMA AFETANDO O JULGAMENTO DO RECURSO DE AGRAVO REGIMENTAL À SEGUNDA SEÇÃO. Hipótese: Possibilidade de cobrança de capitalização anual de juros independentemente de expressa pactuação entre as partes 1. A despeito de a demanda ter se iniciado como ação de prestação de contas, o feito já está em sua segunda fase procedimental, na qual prepondera verdadeira pretensão revisional do contrato. Não tendo qualquer das partes promovido irresignação sobre esse ponto, inviável é a extinção da demanda, sob pena de violação ao princípio da non reformatio in pejus . 2. A capitalização de juros consiste na incorporação dos juros ao capital ao final de cada período de contagem. 3. O retrospecto histórico do ordenamento jurídico pátrio acerca da regência legal da capitalização de juros denota que desde tempos remotos é proibido contar juros sobre juros, permitida a acumulação de juros vencidos aos saldos líquidos em conta corrente de ano a ano. 4. Com a evolução, passou-se a admitir a cobrança de juros sobre juros em contratos outros, desde que houvesse lei especial regulatória, bem ainda, prévio ajuste do encargo. 5. Tendo em vista que nos contratos bancários é aplicável o Código de Defesa do Consumidor (súmula 297/STJ), a incidência da capitalização anual de juros não é automática, devendo ser expressamente pactuada, visto que, ante o princípio da boa-fé contratual e a hipossuficiência do consumidor, esse não pode ser cobrado por encargo sequer previsto contratualmente. 6. A jurisprudência consolidada nesta Corte Superior é no sentido de que a cobrança de juros capitalizados em periodicidade anual nos contratos de mútuo firmado com instituições financeiras é permitida quando houver expressa pactuação. Precedentes. 7. Na hipótese, não colacionado aos autos o contrato firmado entre as partes, inviável presumir o ajuste do encargo. 8. Agravo regimental desprovido.
 
 ### STJ · REsp 2.256.586/RS
-- regras: R19
+- regras: R19, CONTA-CAPDIARIA
 - posicao: FAV
 - tribunal: STJ
 - classe_numero: REsp 2.256.586/RS
@@ -1550,7 +1843,7 @@ ementa:
 > RECURSO ESPECIAL. AÇÃO REVISIONAL DE CONTRATO BANCÁRIO. RECURSO ESPECIAL PROVIDO. I. CASO EM EXAME 1. Recurso especial interposto contra acórdão proferido em apelação nos autos de ação revisional de contrato bancário. 2. A controvérsia decorre de ação revisional de contrato bancário em que foi reconhecida a validade da capitalização de juros. O Tribunal a quo concluiu que a indicação contratual das taxas mensal e anual, sendo a anual superior ao duodécuplo da mensal, é suficiente para admitir capitalização inferior à anual, inclusive diária, não havendo abusividade e permanecendo hígida a mora. No recurso especial, alegou-se que a capitalização diária exige previsão expressa da periodicidade e indicação da taxa diária, não bastando as taxas mensal e anual. II. QUESTÃO EM DISCUSSÃO 3. A questão em discussão consiste em definir sobre a validade da capitalização diária. III. RAZÕES DE DECIDIR 4. Conforme a orientação do STJ, para que seja admitida a cobrança da capitalização diária, é necessária a previsão expressa de sua periodicidade e da taxa diária, não sendo suficiente a menção às taxas efetivas anual e mensal no contrato. O acórdão recorrido contrariou esse entendimento ao admitir a capitalização diária sem previsão contratual expressa. 5. Evidenciada a abusividade das cláusulas contratuais do período da normalidade, resta descaracterizada a mora do devedor, o que impede a busca e apreensão. IV. DISPOSITIVO E TESE 6. Recurso especial conhecido e provido. Tese de julgamento: "1. A capitalização diária de juros exige previsão expressa da periodicidade e indicação da taxa diária. 2. A abusividade dos encargos no período da normalidade contratual descaracteriza a mora". Dispositivos relevantes citados: CDC, arts. 6º, 46, 52. Jurisprudência relevante citada: STJ, REsp n. 973.827/RS, Relatora para o Acórdão Ministra Maria Isabel Gallotti, Segunda Seção, julgado em 8/8/2012, DJe 24/9/2012; REsp n. 1.826.463/SC, relator Ministro Paulo de Tarso Sanseverino, Segunda Seção, julgado em 14/10/2020; STJ, AgRg no AREsp n. 429.029/PR, relator Ministro Marco Buzzi, Segunda Seção, julgado em 9/3/2016; STJ, REsp n. 1.061.530/RS, relatora Ministra Nancy Andrighi, Segunda Seção, julgado em 22/10/2008.
 
 ### STJ · REsp 2.227.062/RS
-- regras: R19
+- regras: R19, CONTA-CAPDIARIA
 - posicao: ADV
 - tribunal: STJ
 - classe_numero: REsp 2.227.062/RS
@@ -1588,7 +1881,7 @@ ementa:
 > APELAÇÃO CÍVEL. AÇÃO REVISIONAL. CONTRATOS BANCÁRIOS. SENTENÇA DE IMPROCEDÊNCIA. INSURGÊNCIA DA AUTORA. CONSTATADA NULIDADE PARCIAL. SENTENÇA CITRA PETITA. PLEITO DE EXIBIÇÃO DE CONTRATOS. PROVA PERICIAL QUE NÃO PODE SER REALIZADA PELA AUSÊNCIA DA JUNTADA DE VÁRIOS CONTRATOS INICIALMENTE REQUERIDOS. ALERTA EFETIVADO QUANTO À INCIDÊNCIA DO ARTIGO 400 DO CPC, NO CASO DE NÃO CUMPRIMENTO DA ORDEM PELO BANCO. MAGISTRADO, ENTRETANTO, QUE NÃO ADMITE COMO VERDADEIROS OS FATOS ALEGADOS, INOBSTANTE A INVERSÃO DO ÔNUS DA PROVA, E ANALISA, TÃO-SOMENTE, A AVENÇA COLACIONADA INICIALMENTE PELA DEMANDANTE. VÍCIO CONSTATADO. JUÍZO QUE VIOLOU OS PRINCÍPIOS DA CONGRUÊNCIA E DA INAFASTABILIDADE DA JURISDIÇÃO (CF, ART. 5º, INCISO XXXV). NULIDADE PARCIAL DA SENTENÇA RECONHECIDA. APLICABILIDADE DO ART. 1.013, §3º, III, DO CPC. EXAME DO MÉRITO DA AÇÃO: 1) JUROS REMUNERATÓRIOS. LIMITAÇÃO À MÉDIA DE MERCADO DIVULGADA PELO BACEN. CONTRATOS FIRMADOS ENTRE AS PARTES NÃO JUNTADOS AOS AUTOS. INCIDÊNCIA DA SÚMULA 530 DO SUPERIOR TRIBUNAL DE JUSTIÇA. 2) CAPITALIZAÇÃO DE JUROS. EXPRESSA PACTUAÇÃO NÃO DEMONSTRADA. ILEGALIDADE. 3) AFASTADAS AS TARIFAS COBRADAS DIANTE DA AUSÊNCIA PACTUAÇÃO EXPRESSA. 4) DESCARACTERIZAÇÃO DA MORA. NECESSIDADE. ABUSIVIDADE NOS ENCARGOS EXIGIDOS NO PERÍODO DA NORMALIDADE CONTRATUAL. 5) REPETIÇÃO DO INDÉBITO NA MODALIDADE SIMPLES, COM CORREÇÃO MONETÁRIA PELA MÉDIA DO INPC/IGP-DI DESDE CADA DESCONTO INDEVIDO ATÉ A CITAÇÃO, MOMENTO EM QUE A CORREÇÃO E OS JUROS DE MORA SERÃO ABARCADOS PELA TAXA SELIC. 6) DANOS MORAIS QUE NÃO SE APERFEIÇOAM NA FORMA IN RE IPSA. 7) PROCEDÊNCIA PARCIAL DOS PEDIDOS AUTORAIS. 8) REDISTRIBUIÇÃO DO ÔNUS DE SUCUMBÊNCIA.RECURSO PROVIDO, para decretar a nulidade parcial da sentença citra petita, e exame, desde logo, do mérito da ação.
 
 ### TJPR · Apelação Cível 0012097-79.2022.8.16.0021
-- regras: R19
+- regras: R19, CONTA-CAPDIARIA
 - posicao: FAV
 - tribunal: TJPR
 - classe_numero: Apelação Cível 0012097-79.2022.8.16.0021
@@ -1605,6 +1898,163 @@ ementa:
 
 ementa:
 > APELAÇÃO CÍVEL. AÇÃO REVISIONAL. CONTRATO DE ABERTURA DE CONTA CORRENTE - CHEQUE ESPECIAL. SENTENÇA DE PROCEDÊNCIA.RECURSO DA INSTITUIÇÃO FINANCEIRA RÉ. ALEGADA PREVISÃO EXPRESSA DE CAPITALIZAÇÃO DE JUROS. NÃO CONHECIMENTO NESTE ASPECTO. INOVAÇÃO RECURSAL. RELATIVIZAÇÃO DO PRINCÍPIO DA PACTA SUNT SERVANDA EM RAZÃO DA FUNÇÃO SOCIAL DO CONTRATO DE ADESÃO E ONEROSIDADE EXCESSIVA. POSSIBILIDADE DE REVISÃO DO CONTRATO EM DISCUSSÃO. ALEGAÇÃO DE INOCORRÊNCIA DE CAPITALIZAÇÃO DE JUROS. NÃO VERIFICAÇÃO. AUSÊNCIA DE PACTUAÇÃO EXPRESSA. IMPOSSIBILIDADE DE COBRANÇA. ENTENDIMENTO CONSOLIDADO DO STJ. EXCLUSÃO DEVIDA. TARIFAS BANCÁRIAS. AUSÊNCIA DE PREVISÃO CONTRATUAL QUANTO À POSSIBILIDADE DE COBRANÇA, AINDA QUE GENÉRICA. CIRCUNSTÂNCIA QUE IMPEDE A COBRANÇA DE QUALQUER VALOR A ESTE TÍTULO, ANTE A AUSÊNCIA DE AUTORIZAÇÃO EXPRESSA DO CLIENTE. SENTENÇA MANTIDA. HONORÁRIOS RECURSAIS FIXADOS. RECURSO DA PARTE RÉ PARCIALMENTE CONHECIDO E, NA EXTENSÃO CONHECIDA, NÃO PROVIDO.
+
+## R21 — Juros moratórios — acima de 1% a.m.
+
+Tese: Nos contratos bancários não regidos por legislação específica que fixe outro teto para a mora — inclusive a cédula de crédito bancário, cuja Lei 10.931/2004 apenas autoriza pactuar encargos de mora, sem fixar percentual —, os juros moratórios não podem exceder 1% ao mês (Súmula 379/STJ; REsp 1.061.530/RS, Tema 30/STJ); a cláusula que os fixa acima desse limite é abusiva e deve ser reduzida a 1% ao mês, com restituição do que foi pago a mais.
+
+Nota: os leading cases são o REsp 1.061.530/RS (Segunda Seção, Orientação 3 — juros moratórios até 1% ao mês, Tema 30/STJ), listado sob a R15, e o REsp 1.058.114/RS (Tema 52, item 3.b), listado sob a R01.
+
+### STJ · AgInt no AREsp 2.483.893/PR
+- regras: R21
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: AgInt no AREsp 2.483.893/PR
+- orgao: Quarta Turma
+- relator: Min. Antonio Carlos Ferreira
+- julgamento: 2026-09-22
+- publicacao: 2026-09-24
+- precedente_qualificado: Súmula 379/STJ
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/7643276456
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Acórdão recente (set/2026), vindo do TJPR, que mantém os juros moratórios limitados a 1% ao mês em cédula de crédito bancário: a Lei 10.931/2004 não é a "legislação específica" da Súmula 379, porque não fixa teto próprio para a mora (diferentemente dos DL 167/1967 e 413/1969), e afastar o limite exige autorização legislativa expressa.
+- observacao: Agravo da cooperativa de crédito desprovido; tomadora pessoa jurídica — o limite da Súmula 379 não depende de relação de consumo. Sessão virtual de 15 a 22/09/2026. O fundamento do teto no item 2 (art. 406 do CC com o art. 161, § 1º, do CTN) é o da redação anterior à Lei 14.905/2024; o acórdão não trata da lei nova (ver o relatório). Publicação pela data do Jusbrasil (24/09/2026, data da lista de resultados; o inteiro teor não traz o DJEN; o JSON-LD da página marca 16/10/2026, data de indexação). Ementa com a divisão de linhas do inteiro teor (na página, "I. Razões de decidir" e "II. Dispositivo" vêm emendados aos itens).
+
+ementa:
+> DIREITO PROCESSUAL CIVIL. AGRAVO INTERNO NO AGRAVO EM RECURSO ESPECIAL. CONTRATOS BANCÁRIOS. NEGATIVA DE PRESTAÇÃO JURISDICIONAL. NÃO OCORRÊNCIA. CÉDULA DE CRÉDITO BANCÁRIO. JUROS MORATÓRIOS. LEI N. 10.931/2004. SÚMULA N. 379/STJ. PRECEDENTES. DECISÃO MANTIDA.
+> I. Razões de decidir
+> 1. Inexiste afronta ao art. 1.022 do CPC quando o acórdão recorrido pronuncia-se, de forma clara e suficiente, acerca das questões suscitadas nos autos, manifestando-se sobre todos os argumentos que, em tese, poderiam infirmar a conclusão adotada pelo Juízo.
+> 2. Na ausência de norma específica de mora na lei de regência contratual, aplica-se o limite legal de 1% ao mês, conforme a regra geral decorrente do art. 406 do CC combinado com o art. 161, § 1º, do CTN e a orientação da Súmula n. 379/STJ.
+> 3. Não há violação do art. 927, IV, do CPC, pois o acórdão recorrido observou a ratio decidendi dos precedentes do STJ que exigem autorização legislativa expressa para afastar o limite de 1% ao mês em juros moratórios.
+> II. Dispositivo
+> 4. Agravo interno desprovido.
+
+### STJ · REsp 2.224.194/BA
+- regras: R21, R22
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 2.224.194/BA
+- orgao: Terceira Turma
+- relator: Min. Daniela Teixeira
+- julgamento: 2026-03-09
+- publicacao: 2026-03-12
+- precedente_qualificado: Súmula 379/STJ
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6629966408
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Mantém, contra recurso do banco, a limitação dos juros de mora a 1% ao mês e da multa contratual a 2% em contrato bancário, "em consonância com o art. 52, § 1º, do CDC, o art. 406 do Código Civil e a Súmula 379 do STJ"; serve às duas regras.
+- observacao: Recurso do banco provido só para admitir a capitalização mensal (taxa anual superior ao duodécuplo da mensal). O voto fala em "limitação da multa moratória a 2% em contratos de consumo". Sessão virtual de 03 a 09/03/2026. Publicação pela data do Jusbrasil (12/03/2026, data da lista de resultados; o inteiro teor não traz o DJEN; o JSON-LD marca 10/07/2026, data de indexação). Ementa do inteiro teor; juntada a palavra "encontra-se", que o PDF partiu entre linhas no item 3.
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. RECURSO ESPECIAL. JUROS REMUNERATÓRIOS. LIMITAÇÃO À TAXA MÉDIA DE MERCADO. SÚMULAS 5, 7 E 83 DO STJ. CAPITALIZAÇÃO MENSAL DE JUROS. POSSIBILIDADE. TAXA ANUAL SUPERIOR AO DUODÉCUPLO DA TAXA MENSAL. ENCARGOS MORATÓRIOS. LIMITAÇÃO A 1% AO MÊS E MULTA DE 2%. RECURSO ESPECIAL PARCIALMENTE CONHECIDO E, NESTA EXTENSÃO, PARCIALMENTE PROVIDO.
+> I. Caso em exame
+> 1. Recurso especial interposto, com fundamento no art. 105, inciso III, alíneas a e c, da Constituição Federal, contra acórdão que reconheceu a abusividade dos juros remuneratórios pactuados em contrato bancário, determinando sua limitação à taxa média de mercado divulgada pelo Banco Central, afastou a capitalização mensal de juros e limitou os encargos moratórios a juros de mora de 1% ao mês e multa contratual de 2%.
+> II. Questão em discussão
+> 2. Discute-se a possibilidade de revisão da taxa de juros remuneratórios acima da média de mercado, a validade da capitalização mensal de juros e a legalidade da limitação dos encargos moratórios.
+> III. Razões de decidir
+> 3. A conclusão do Tribunal de origem quanto à abusividade dos juros remuneratórios decorreu da análise fático-probatória do caso e da interpretação das cláusulas contratuais, sendo incabível sua revisão em recurso especial, nos termos das Súmulas 5 e 7 do STJ. O acórdão recorrido, ademais, encontra-se alinhado à jurisprudência consolidada desta Corte, incidindo a Súmula 83 do STJ.
+> 4. No tocante à capitalização mensal, a taxa anual contratada (33,96%) supera o duodécuplo da taxa mensal (2,47%), circunstância que evidencia a pactuação expressa, de modo que se admite a cobrança em periodicidade inferior à anual, conforme entendimento consolidado nas Súmulas 539 e 541 do STJ.
+> 5. Quanto aos encargos moratórios, correta a decisão do Tribunal de origem ao limitar os juros de mora a 1% ao mês e a multa contratual a 2%, em consonância com o art. 52, § 1º, do CDC, o art. 406 do Código Civil e a Súmula 379 do STJ.
+> IV. Dispositivo
+> 6. Recurso especial parcialmente conhecido e, nessa extensão, parcialmente provido, apenas para reconhecer a validade da capitalização mensal de juros.
+
+### TJPR · Apelação Cível 0015525-89.2025.8.16.0045
+- regras: R21
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0015525-89.2025.8.16.0045
+- orgao: 4ª Câmara Cível
+- relator: Des.ª Astrid Maranhão de Carvalho Ruthes
+- julgamento: 2026-10-07
+- publicacao: 2026-10-07
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000039200141/Ac%C3%B3rd%C3%A3o-0015525-89.2025.8.16.0045
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em financiamento de veículo por cédula de crédito bancário, declara abusivos juros moratórios de 6% ao mês e os limita a 1% ao mês (Súmula 379/STJ), porque a Lei 10.931/2004 não estabelece limite específico para a mora; mantida a restituição do excesso.
+- observacao: Apelo do banco conhecido em parte e desprovido. O banco invocou também a Lei 14.905/2024 para defender a taxa convencionada; o acórdão manteve o limite sem examinar esse argumento (contrato de 27/03/2022, anterior à lei). Correções na ementa: retirado o rótulo inicial "Ementa:" e juntadas as quebras de linha que o portal inseriu no meio das frases, sem alterar o texto. Fonte: portal de jurisprudência do TJPR (comarca de Arapongas).
+
+ementa:
+> DIREITO CIVIL E DIREITO DO CONSUMIDOR. AÇÃO REVISIONAL CUMULADA COM REPETIÇÃO DE INDÉBITO. ABUSIVIDADE DE JUROS MORATÓRIOS. APLICAÇÃO DA SÚMULA 379 DO STJ. COMPENSAÇÃO DE VALORES E APLICAÇÃO DA TAXA SELIC. AUSÊNCIA DE INTERESSE RECURSAL. TÓPICOS JÁ CONSTAM NA SENTENÇA. RECURSO DE APELAÇÃO PARCIALMENTE CONHECIDO E, NA PARTE CONHECIDA, NÃO PROVIDO.
+> I. Caso em exame
+> 1. Apelação cível interposta por instituição financeira em face da sentença que julga parcialmente procedentes os pedidos em ação revisional cumulada com repetição de indébito, em que o consumidor questiona a abusividade da taxa de juros moratórios de 6% ao mês pactuada em contrato de financiamento de veículo, requerendo a limitação dos juros à taxa média de mercado, a restituição dos valores pagos a maior e a aplicação da justiça gratuita, além da condenação do banco nas verbas de sucumbência.
+> II. Questão em discussão
+> 2. As questões em discussão consistem na averiguação caso os juros moratórios pactuados em contrato de financiamento por meio de cédula de crédito bancário podem ser limitados a 1% ao mês, conforme a Súmula 379 do STJ, e se a instituição financeira deve restituir os valores pagos a maior decorrentes da abusividade da taxa de 6% ao mês.
+> III. Razões de decidir
+> 3. A Lei nº 10.931/2004 não estabelece limite específico para os juros moratórios nas cédulas de crédito bancário, mantendo-se aplicável a Súmula 379 do STJ, que limita tais juros a 1% ao mês.
+> 4. A cláusula contratual que estipula juros moratórios de 6% ao mês é abusiva por exceder significativamente o limite de 1% ao mês previsto na jurisprudência consolidada.
+> 5. A compensação de valores entre as partes já foi acolhida na sentença, não existindo interesse recursal sobre esse ponto.
+> 6. A aplicação da Taxa Selic como índice único para atualização monetária e juros moratórios foi determinada na sentença, vedando-se a cumulação com outros índices, não existindo interesse recursal quanto a isso.
+> IV. Dispositivo e tese
+> 7. Recurso de apelação cível parcialmente conhecido e, na parte conhecida, negado provimento.
+> Tese de julgamento: Nos contratos regidos por cédula de crédito bancário, os juros moratórios devem ser limitados a 1% ao mês conforme a Súmula 379 do STJ, sendo cabível a aplicação exclusiva da Taxa Selic para atualização monetária e juros moratórios, vedada a cumulação com outros índices, e a abusividade dos juros remuneratórios somente se reconhece quando ultrapassam substancialmente o dobro da taxa média de mercado para financiamentos de veículos antigos.
+> Dispositivos relevantes citados: CPC, arts. 85, § 2º, 85, § 11º, e 86, parágrafo único; CC, art. 368; Lei nº 10.931/2004, art. 28, § 1º, incs. I e III; Lei nº 14.905/2024, art. 1º.
+
+### TJPR · Apelação Cível 0001265-53.2022.8.16.0096
+- regras: R21, R22, R31
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0001265-53.2022.8.16.0096
+- orgao: 16ª Câmara Cível
+- relator: Juíza Subst. 2º Grau Vania Maria da Silva Kramer
+- julgamento: 2025-09-22
+- publicacao: 2025-09-26
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000033743411/Ac%C3%B3rd%C3%A3o-0001265-53.2022.8.16.0096
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Confirma, contra apelo da cooperativa de crédito, que a cédula de crédito bancário segue a Súmula 379/STJ (juros de mora até 1% ao mês, porque a Lei 10.931/2004 não tem regime próprio para a mora) e que a multa de 2% incide sobre o valor da prestação, não sobre o saldo devedor total (CDC, art. 52, § 1º).
+- observacao: Ação monitória com embargos; a aplicação do CDC estava preclusa. A cooperativa obteve só a redistribuição da sucumbência. Nos juros, o cálculo da cooperativa já usava 1%, de modo que o acórdão afirmou o limite sem alterar a conta; na multa, a cláusula fazia os 2% incidirem sobre o débito total e o acórdão manteve a incidência sobre a prestação. Na multa, o voto reproduz precedente da 13ª Câmara Cível no mesmo sentido; a íntegra do portal cita o próprio CNJ. Correções na ementa: retirado o rótulo inicial "Ementa:" e separados os títulos e itens que a extração emendou, sem alterar o texto. Fonte: portal de jurisprudência do TJPR (comarca de Iretama).
+
+ementa:
+> Direito civil e processual civil. Apelações cíveis. Cédula de Crédito bancário. Limitação dos juros moratórios. Multa moratória sobre o valor da prestação. Cerceamento de defesa. Ônus de sucumbência. Recurso da Cooperativa parcialmente provido. Recurso da ré/Embargante desprovido.
+> I. Caso em exame
+> 1. Apelações interpostas por ambas as partes contra sentença que julgou parcialmente procedente o pedido inicial para constituir de pleno direito o crédito postulado pela instituição financeira, com limitação da multa moratória a 2% e dos juros moratórios a 1% ao mês, fixando a sucumbência recíproca em 70% para a parte ré (embargante) e 30% para a autora (instituição financeira). A instituição financeira recorreu defendendo a legalidade dos encargos moratórios aplicados e a redistribuição da sucumbência. A parte requerida, por sua vez, alegou cerceamento de defesa pela ausência de decisão de saneamento e indeferimento de perícia contábil, requerendo a nulidade da sentença.
+> II. Questão em discussão
+> 2. Há quatro questões em discussão: (i) determinar se houve cerceamento de defesa em virtude da não realização de prova pericial contábil; (ii) definir se a limitação dos juros moratórios a 1% ao mês é aplicável à cédula de crédito bancário; (iii) estabelecer a legalidade da cobrança da multa moratória sobre o valor total do débito; e (iv) decidir sobre a correta distribuição dos ônus de sucumbência.
+> III. Razões de decidir
+> 3. O indeferimento da prova pericial contábil não configura cerceamento de defesa, pois as questões controvertidas podiam ser resolvidas com base nos documentos apresentados pelas partes, sendo legítima a opção do julgador pelo julgamento antecipado da lide (CPC, art. 370 e art. 139, II).
+> 4. A ausência de decisão de saneamento processual não enseja nulidade se não houver demonstração de prejuízo à parte, inexistente no caso concreto.
+> 5. A cédula de crédito bancário é regida pela Lei nº 10.931/2004, que, entretanto, não prevê regime jurídico próprio para os juros moratórios. Assim, aplica-se a regra geral fixada na Súmula 379 do STJ, que limita os juros moratórios a 1% ao mês, não havendo ilegalidade na limitação imposta na sentença.
+> 6. A cobrança de multa moratória de 2% sobre o valor total do saldo devedor não encontra respaldo; ela deve incidir sobre o valor da prestação, nos termos do art. 52, §1º, do CDC.
+> 7. Verificada a sucumbência mínima da cooperativa, impõe-se a aplicação do art. 86, parágrafo único, do CPC, para que a parte adversa suporte integralmente as custas processuais e os honorários advocatícios. Em razão do desprovimento do recurso da parte embargante, procede-se à majoração dos honorários advocatícios em 2%, totalizando 12% sobre o valor atualizado da causa.
+> IV. Dispositivo
+> 8. Sentença reformada em parte. Recurso da Cooperativa parcialmente provido, para condenar a autora ao adimplemento da integralidade dos ônus sucumbenciais. Recurso da ré-embargante desprovido.
+> _________
+> Dispositivos relevantes citados: CPC, arts. 86, parágrafo único; 139, II; 370; CDC, art. 52, §1º.
+> Jurisprudência relevante citada: STJ, Súmula 379.
+
+## R22 — Multa contratual — acima de 2% em relação de consumo
+
+Tese: Em contrato bancário de consumo, a multa de mora não pode exceder 2% do valor da prestação (CDC, art. 52, § 1º, na redação da Lei 9.298/1996; Súmula 285/STJ); a cláusula que prevê percentual maior, ou que faz a multa incidir sobre o saldo devedor total, deve ser reduzida a esse limite, com restituição do que foi pago a mais.
+
+Nota: o leading case é o REsp 1.058.114/RS (Segunda Seção, Tema 52, item 3.c — "multa contratual limitada a 2% do valor da prestação, nos termos do art. 52, § 1º, do CDC"), listado sob a R01. Os favoráveis que servem também à R21 (REsp 2.224.194/BA e um acórdão da 16ª Câmara Cível do TJPR) estão sob a R21.
+
+### STJ · REsp 1.497.574/SC
+- regras: R22
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 1.497.574/SC
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2023-10-24
+- publicacao: 2023-11-03
+- precedente_qualificado: Súmula 285/STJ
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2108125058
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva com dois limites: a redução da multa para 2% só vale para contratos celebrados a partir da Lei 9.298/1996 (01/08/1996) — antes, o teto do CDC era 10% —, e a revisão pelo CDC alcança apenas a relação de consumo, não o empréstimo tomado por empresa para implementar ou incrementar a atividade (relação de insumo).
+- observacao: Ação civil pública do MP/SC contra banco; recurso do banco parcialmente provido justamente para limitar a redução da multa aos contratos posteriores à Lei 9.298/1996 e a revisão aos contratos de consumo. Atenção: o item 3 da ementa põe entre aspas, como se fosse a Súmula 285/STJ, a frase do AgRg no AgRg no REsp 513.847/RS; o enunciado da Súmula 285, transcrito no voto, é "Nos contratos bancários posteriores ao Código de Defesa do Consumidor incide a multa moratória nele prevista" — citar a súmula pelo enunciado. O corte temporal da regra no motor ("contratos posteriores ao CDC, 11/03/1991") não coincide com o do STJ (Lei 9.298/1996). Publicação pela data do Jusbrasil (03/11/2023, data da lista de resultados; o JSON-LD marca 20/12/2023, data de indexação). Ementa copiada da seção Ementa da página, igual à do inteiro teor.
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. RECURSO ESPECIAL. CONTRATOS BANCÁRIOS. CLÁUSULAS ABUSIVAS. AÇÃO CIVIL PÚBLICA. INCIDÊNCIA DO CDC. LIMITAÇÃO. RELAÇÃO DE CONSUMO. CAPITALIZAÇÃO MENSAL DE JUROS. PACTUAÇÃO EXPRESSA. REDUÇÃO DA MULTA MORATÓRIA. CONTRATOS CELEBRADOS A PARTIR DA LEI 9.298/96. TAXA SELIC. CUMULAÇÃO COM CORREÇÃO MONETÁRIA. IMPOSSIBILIDADE. MULTA DIÁRIA. INTIMAÇÃO PESSOAL. IMPRESCINDIBILIDADE. RECURSO ESPECIAL PARCIALMENTE PROVIDO.
+> 1. Nos termos da jurisprudência do STJ, em regra, com base na Teoria Finalista, não se aplica o CDC aos contratos de empréstimo tomados por sociedade empresária para implementar ou incrementar suas atividades negociais, uma vez que a contratante não é considerada destinatária final do serviço e não pode ser considerada consumidora, limitando-se a revisão automática das cláusulas contratuais aos casos em que constatada a existência de relação de consumo, afastada a revisão em contratos relativos a relações de insumo.
+> 2. "É permitida a capitalização de juros com periodicidade inferior à anual em contratos celebrados com instituições integrantes do Sistema Financeiro Nacional a partir de 31/3/2000 (MP 1.963-17/00, reeditada como MP 2.170-36/01), desde que expressamente pactuada".
+> 3. Nos termos da Súmula 285/STJ, "A redução da multa para 2%, tal como definida na Lei nº 9.298, de 01.08.1996, somente é possível nos contratos celebrados após sua vigência".
+> 4. Conforme entendimento pacificado no STJ, é vedada a incidência cumulativa da taxa SELIC com outro índice de atualização monetária, devendo ser afastada a correção monetária pelo índice do INPC no que tange aos valores a serem devolvidos pela instituição bancária.
+> 5. "É necessária a prévia intimação pessoal do devedor para a cobrança de multa pelo descumprimento de obrigação de fazer ou não fazer antes e após a edição das Leis n. 11.232/2005 e 11.382/2006, nos termos da Súmula 410 do STJ, cujo teor permanece hígido também após a entrada em vigor do novo Código de Processo Civil" (EREsp 1.360.577/MG, Relator para o acórdão Ministro LUIS FELIPE SALOMÃO, CORTE ESPECIAL, julgado em 19/12/2018, DJe de 07/03/2019).
+> 6. Recurso especial a que se dá parcial provimento.
 
 ## R23 — Rotativo e parcelamento da fatura — teto de 100% de juros e encargos (Lei 14.690/2023, art. 28; Res. CMN 5.112/2023)
 
@@ -2087,6 +2537,261 @@ ementa:
 > CPC/2015, art. 487, I; CC/2002, arts. 51, IV, e 39, V; Lei nº 10.931/2004, art. 28, § 2º, incisos I e II. Jurisprudência relevante citada:
 > TJPR, AREsp 2.824.398/RS, Rel. Min. Ricardo Villas Bôas Cueva, Terceira Turma, j. 12.08.2025; TJPR, AgInt no AREsp 2.566.896/PR, Rel. Min. Raul Araújo, Quarta Turma, j. 19.08.2024; TJPR, AREsp 2.864.234/RS, Rel. Min. Moura Ribeiro, Terceira Turma, j. 28.04.2025; TJPR, REsp 1.578.553/SP, Rel. Min. Luis Felipe Salomão, Segunda Seção, j. 14.08.2013; TJPR, REsp 1.291.575/PR, Rel. Min. Luis Felipe Salomão, Segunda Seção, j. 14.08.2013; Súmula nº 539/STJ.
 
+## R30 — Capitalização de juros moratórios
+
+Tese: A cláusula que manda capitalizar os juros moratórios, expressamente ou por remissão à periodicidade dos remuneratórios, é abusiva: a capitalização em periodicidade inferior à anual (MP 2.170-36/2001, art. 5º; Súmulas 539 e 541/STJ) foi admitida só para os juros remuneratórios; os moratórios, de natureza sancionatória, limitam-se a 1% ao mês (Súmula 379/STJ) e incidem de forma simples (CC, art. 406), devendo ser recalculados e restituído o excesso efetivamente cobrado.
+
+### STJ · AREsp 2.815.158/SP
+- regras: R30
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: AREsp 2.815.158/SP
+- orgao: Terceira Turma
+- relator: Min. Ricardo Villas Bôas Cueva
+- julgamento: 2025-08-25
+- publicacao: 2025-08-29
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6576118185
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: A Terceira Turma afirma que a capitalização em periodicidade inferior à anual das Súmulas 539 e 541 vale só para os juros remuneratórios e que é vedada a capitalização dos juros moratórios (Súmula 379/STJ): a cláusula que capitaliza a mora (no caso, diariamente) é abusiva, com limitação e restituição simples do excesso, sem descaracterizar a mora.
+- observacao: Cartão de crédito. O agravante era o consumidor (pedia a limitação dos remuneratórios e a descaracterização da mora); a vedação da capitalização dos moratórios fora decidida pelo TJSP e o banco não recorreu. O STJ não só manteve o ponto como o endossou no voto ("com a devida precisão técnica, a Corte de origem diferenciou entre juros remuneratórios e juros moratórios, vedando a capitalização diária destes últimos, por ausência de previsão legal e por afronta à Súmula nº 379") e dele partiu para manter a mora; a tese é fundamento do acórdão, não objeto do recurso. Não há repetitivo nem acórdão de Seção sobre o tema; decisões monocráticas posteriores do STJ reproduzem esta ementa. Sessão virtual de 19 a 25/08/2025; DJEN de 29/08/2025, indicado no inteiro teor. Ementa sem correções.
+
+ementa:
+> AGRAVO EM RECURSO ESPECIAL. DIREITO CIVIL. REVISÃO DE CONTRATO. CARTÃO DE CRÉDITO. JUROS REMUNERATÓRIOS. CAPITALIZAÇÃO. JUROS MORATÓRIOS. MORA. ABUSIVIDADE PARCIAL. RESTITUIÇÃO SIMPLES. REEXAME DE PROVAS. SÚMULAS NºS 5 E 7 DO STJ.
+> 1. A estipulação de juros remuneratórios em patamar inferior ou ligeiramente superior à taxa média de mercado divulgada pelo Bacen não configura, por si só, abusividade.
+> 2. É válida a capitalização de juros remuneratórios em periodicidade inferior à anual, desde que pactuada, nos termos das Súmulas nºs 539 e 541 do STJ, sendo vedada a capitalização de juros moratórios, consoante a Súmula nº 379 do STJ.
+> 3. Caracteriza-se abusiva a cláusula contratual que prevê a capitalização diária dos juros moratórios, impondo-se sua limitação e a restituição simples de eventuais valores pagos a maior.
+> 4. O reconhecimento de abusividade restrita aos juros moratórios não descaracteriza a mora do devedor quanto aos encargos exigidos no período de normalidade contratual.
+> 5. É inviável o recurso especial quando a pretensão de reforma do julgado pressupõe reexame do conjunto fático-probatório e interpretação de cláusulas contratuais, nos termos das Súmulas nºs 5 e 7/STJ.
+> 6. Agravo em recurso especial conhecido para conhecer em parte do recurso especial e, nessa extensão, negar-lhe provimento.
+
+### TJPR · Apelação Cível 0007057-09.2024.8.16.0131
+- regras: R30
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0007057-09.2024.8.16.0131
+- orgao: 13ª Câmara Cível
+- relator: Des. Fernando Ferreira de Moraes
+- julgamento: 2025-12-05
+- publicacao: 2025-12-08
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000035119391/Ac%C3%B3rd%C3%A3o-0007057-09.2024.8.16.0131
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em financiamento de veículo com alienação fiduciária (CCB), o TJPR mantém a capitalização mensal pactuada dos remuneratórios, mas afasta os "juros moratórios de 1% ao mês capitalizados": o encargo do período de inadimplência não admite capitalização sem previsão legal específica (a Lei 10.931/2004 não a traz), segue o art. 406 do CC e a Súmula 379/STJ, e passa a incidir a 1% ao mês, de forma simples.
+- observacao: Revisional ajuizada pela consumidora; sentença de improcedência reformada em parte (também reconhecida a venda casada do seguro prestamista, com restituição simples). Mora mantida: a abusividade recaiu só sobre encargo da inadimplência e sobre encargo acessório. O voto cita, no mesmo sentido, a 13ª Câmara Cível (agravo de instrumento, j. 02/08/2024) e a 14ª Câmara Cível (apelação, j. 22/07/2025). A íntegra do portal cita o próprio CNJ. Ementa sem correções. Fonte: portal de jurisprudência do TJPR (comarca de Pato Branco).
+
+ementa:
+> APELAÇÃO CÍVEL. AÇÃO REVISIONAL. ALIENAÇÃO FIDUCIÁRIA. CAPITALIZAÇÃO DIÁRIA. INOVAÇÃO RECURSAL. TEMA NÃO CONHECIDO. CERCEAMENTO DE DEFESA. NÃO OBSERVADO. PROVA PERICIAL. DESNECESSIDADE. CAPITALIZAÇÃO DE JUROS. EXPRESSA PACTUAÇÃO. VERIFICADA. JUROS MORATÓRIOS CAPITALIZADOS. ILEGALIDADE. AUSÊNCIA DE PREVISÃO NA LEI Nº 10.931/2004. SÚMULA 379 DO STJ. VERIFICADA. ABUSIVIDADE DOS JUROS REMUNERATÓRIOS. NÃO CONSTATADA. LIMITAÇÃO. INDEVIDA. SEGURO PRESTAMISTA. IRREGULARIDADE. VENDA CASADA. REPETIÇÃO DEVIDA, NA FORMA SIMPLES. MORA. NÃO DESCARACTERIZADA. SENTENÇA REFORMADA EM PARTE. ÔNUS SUCUMBENCIAL. REDEFINIDO. RECURSO CONHECIDO EM PARTE E, NA PARTE CONHECIDA, PARCIALMENTE PROVIDO.
+
+### TJPR · Apelação Cível 0005062-02.2020.8.16.0001
+- regras: R30
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0005062-02.2020.8.16.0001
+- orgao: 14ª Câmara Cível
+- relator: Des.ª Josely Dittrich Ribas
+- julgamento: 2023-05-22
+- publicacao: 2023-06-02
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000022968171/Ac%C3%B3rd%C3%A3o-0005062-02.2020.8.16.0001
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em embargos à execução de cédula de crédito bancário, o TJPR afasta a cláusula de juros de mora capitalizados diariamente: a Lei 10.931/2004 não disciplina os juros moratórios, aplica-se a Súmula 379/STJ (até 1% ao mês) e não há amparo legal para capitalizá-los; a capitalização ficou demonstrada no próprio cálculo do credor (taxa de mora efetiva de 12,68% ao ano em vez de 12%).
+- observacao: Devedora pessoa jurídica. Recurso provido só para afastar os juros moratórios capitalizados, com recálculo da execução; a embargante ficou vencida quanto à comissão de permanência cumulada, ao CET e à estipulação prévia de honorários advocatícios (ponto relevante para a R32, em sentido contrário). Mostra o cuidado da R30: conferir se a memória do credor efetivamente capitalizou a mora. Julgado de 2023. A íntegra do portal cita o próprio CNJ. Correção na ementa: a quebra de linha do portal antes de "RECURSO CONHECIDO" foi trocada por espaço. Fonte: portal de jurisprudência do TJPR (comarca de Curitiba).
+
+ementa:
+> APELAÇÃO CÍVEL. EMBARGOS À EXECUÇÃO. CÉDULA DE CRÉDITO BANCÁRIO (CONFISSÃO DE DÍVIDA). SENTENÇA DE IMPROCEDÊNCIA DOS PEDIDOS INICIAIS. PRELIMINAR DE VIOLAÇÃO DO PRINCÍPIO DA DIALETICIDADE SUSCITADA PELO BANCO RÉU NAS CONTRARRAZÕES. AFASTAMENTO. CERCEAMENTO DE DEFESA. INOCORRÊNCIA. QUESTÕES DE DIREITO QUE PODEM SER RESOLVIDAS MEDIANTE A ANÁLISE DOS DOCUMENTOS JUNTADOS AOS AUTOS. DESNECESSIDADE DE PRODUÇÃO DE PROVA PERICIAL NA ESPÉCIE. JUIZ, ADEMAIS, QUE É DESTINATÁRIO DAS PROVAS. JULGAMENTO ANTECIPADO DA LIDE QUE NÃO CONFIGURA CERCEAMENTO DE DEFESA, QUANDO O MAGISTRADO ENTENDE EXISTIREM PROVAS SUFICIENTES PARA O DESLINDE DA CONTROVÉRSIA. COBRANÇA DE JUROS DE MORA CAPITALIZADOS DIARIAMENTE. PREVISÃO CONTRATUAL. AFASTAMENTO. IMPOSSIBILIDADE DE COBRANÇA DE JUROS MORATÓRIOS NA FORMA CAPITALIZADA, POR AUSÊNCIA DE AMPARO LEGAL. APLICAÇÃO, NA HIPÓTESE, DO ENUNCIADO DA SÚMULA 379 DO STJ. PRECEDENTES DO STJ E DESTE TRIBUNAL. CASO EM QUE RESTOU DEMONSTRADA A COBRANÇA DOS JUROS DE MORA NA FORMA CAPITALIZADA. ILEGALIDADE RECONHECIDA. OMISSÃO, NO CONTRATO, DO CUSTO EFETIVO TOTAL (CET). INOCORRÊNCIA. INSTRUMENTO CONTRATUAL QUE, EMBORA NÃO TENHA INFORMADO A TAXA PERCENTUAL ANUAL, DISCRIMINA NO INSTRUMENTO, E EM TERMO SEPARADO, A TOTALIDADE DOS ENCARGOS COBRADOS. SENTENÇA PARCIALMENTE REFORMADA. RECURSO CONHECIDO E PARCIALMENTE PROVIDO.
+
+## R31 — Multa moratória sobre base que inclui juros
+
+Tese: A multa moratória incide sobre o valor da prestação vencida (CDC, art. 52, § 1º) ou sobre o principal da obrigação inadimplida, e não sobre o débito total apurado com os juros, em especial os moratórios, que já sancionam o mesmo atraso; a cláusula ou o cálculo que amplia a base da multa gera bis in idem, e o excesso deve ser decotado (CC, arts. 404 e 884).
+
+### STJ · REsp 2.114.092/MG
+- regras: R31
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 2.114.092/MG
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2026-03-09
+- publicacao: 2026-03-16
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6613226320
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva da peça: o STJ admite a cumulação de multa moratória com juros de mora, por terem naturezas distintas, e fixa a multa em 2% "sobre o valor da prestação" (CDC, art. 52, § 1º). A R31 não deve atacar a cumulação, só a base ampliada; o parâmetro do próprio acórdão (valor da prestação) serve para recusar a multa calculada sobre o débito total acrescido de juros.
+- observacao: Recurso do banco parcialmente provido: o TJMG havia excluído a multa por inviável a cumulação com juros de mora; o STJ restabeleceu a multa, reduzida de 10% para 2% do valor da prestação, e a capitalização pactuada. O acórdão não examinou se juros integram a base da multa. Crédito rotativo com pessoa jurídica. Sessão virtual de 03 a 09/03/2026. Publicação pela data do Jusbrasil (o inteiro teor não traz o DJEN). Ementa sem correções.
+
+ementa:
+> DIREITO CIVIL. RECURSO ESPECIAL. CAPITALIZAÇÃO MENSAL DE JUROS EM CONTRATOS BANCÁRIOS. CUMULAÇÃO DE MULTA MORATÓRIA COM JUROS DE MORA. RECURSO PARCIALMENTE PROVIDO.
+> 1. A Medida Provisória nº 2.170-36/2001 permite a capitalização de juros com periodicidade inferior a um ano em contratos celebrados com instituições integrantes do Sistema Financeiro Nacional, desde que expressamente pactuada.
+> 2. A jurisprudência do Superior Tribunal de Justiça, consolidada na Súmula 539, reconhece a legalidade da capitalização mensal de juros em contratos bancários celebrados após 31 de março de 2000, desde que expressamente pactuada. A previsão no contrato bancário de taxa de juros anual superior ao duodécuplo da mensal é suficiente para permitir a cobrança da taxa efetiva anual contratada, conforme entendimento da Súmula 541 do STJ.
+> 3. A jurisprudência do STJ é firme no sentido de que é possível a cumulação de juros moratórios com multa moratória, pois possuem naturezas distintas: os juros remuneram o capital pelo atraso, enquanto a multa pune o inadimplemento.
+> 4. A multa moratória deve ser limitada ao patamar de 2% sobre o valor da prestação, conforme disposto no artigo 52, § 1º, do Código de Defesa do Consumidor, aplicável às instituições financeiras.
+> 5. Recurso especial parcialmente provido.
+
+### TJPR · Apelação Cível 0002410-79.2024.8.16.0095
+- regras: R31
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0002410-79.2024.8.16.0095
+- orgao: 14ª Câmara Cível
+- relator: Des.ª Josely Dittrich Ribas
+- julgamento: 2026-05-25
+- publicacao: 2026-06-02
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000035134121/Ac%C3%B3rd%C3%A3o-0002410-79.2024.8.16.0095
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: É a própria tese: a multa moratória incide exclusivamente sobre o valor da obrigação principal; aplicá-la sobre o débito total já acrescido de juros (no caso, principal corrigido + juros compensatórios + juros moratórios) amplia indevidamente a base e configura bis in idem. O TJPR restringe a multa de 2% ao principal e reconhece o excesso de execução.
+- observacao: Embargos à execução de CCB do PRONAMPE (devedora micro ou pequena empresa); o recurso do embargante foi provido só neste ponto (o banco venceu quanto à SELIC do programa; mantidos juros, capitalização e mora). O "precedente do STJ" citado é o AgInt no REsp 1.891.797/RS (juros de mora não incidem sobre multa cominatória), aplicado por analogia: não há precedente do STJ específico sobre a base da multa contratual. A íntegra do portal cita o próprio CNJ. Correções na ementa: espaços inseridos onde o portal emendou título de seção ou ponto final ao texto seguinte (ex.: "EXAME1." → "EXAME 1."; "contratuais.II." → "contratuais. II."); nenhuma palavra alterada. Fonte: portal de jurisprudência do TJPR (comarca de Irati).
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. APELAÇÕES CÍVEIS. EMBARGOS À EXECUÇÃO. CÉDULA DE CRÉDITO BANCÁRIO. PRONAMPE. INSURGÊNCIA DE AMBAS AS PARTES. APELO DA EMBARGADA CONHECIDO E PROVIDO. APELO DO EMBARGANTE PARCIALMENTE CONHECIDO E, NESSA EXTENSÃO, PARCIALMENTE PROVIDO. I. CASO EM EXAME 1. Apelações cíveis interpostas contra sentença que julgou parcialmente procedentes os embargos à execução, para o fim de declarar a ilegalidade da cumulação da SELIC com os encargos contratuais. II. QUESTÃO EM DISCUSSÃO 2. As questões em discussão consistem em verificar se: (i) o recurso do embargante comporta integral conhecimento; (ii) houve cerceamento de defesa; (iii) os juros remuneratórios são abusivos; (iv) é legal a capitalização de juros na espécie; (v) é possível a incidência de multa moratória sobre o valor total do débito; e (vi) deve ser descaracterizada a mora. III. RAZÕES DE DECIDIR 3.1. Apelação (02) não conhecida com relação à TAC, por ausência de interesse recursal, e à alegação de necessidade de observância do CET na análise da abusividade dos juros remuneratórios, por se tratar de inovação recursal. 3.2. Não há cerceamento de defesa, uma vez que a matéria é essencialmente de direito e os elementos constantes dos autos são suficientes para o deslinde da controvérsia, sendo desnecessária a produção de prova pericial. 3.3. Cédula de crédito bancário emitida no âmbito do Programa Nacional de Apoio às Microempresas e Empresas de Pequeno Porte – PRONAMPE, instituído pela Lei nº 13.999/2020. Previsão de incidência dos encargos básicos de acordo com a SELIC, somados aos encargos adicionais à taxa de 1,25% ao ano. Encargos que estão em consonância com o disposto no art. 3º, I, da Lei n° 13.999/2020, vigente à época da contratação. Inexistência de abusividade, por decorrer de expressa previsão legal. 3.4. Impossibilidade de limitação da taxa de juros à média de mercado, porquanto o percentual estabelecido no instrumento corresponde ao teto previsto na legislação específica aplicável na espécie. 3.5. Consoante os termos da súmula 539 do STJ, “é permitida a capitalização de juros com periodicidade inferior à anual em contratos celebrados com instituições integrantes do Sistema Financeiro Nacional a partir de 31/3/2000 (MP n. 1.963-17/2000, reeditada como MP n. 2.170-36/2001), desde que expressamente pactuada”. Ademais, a discrepância entre a taxa anual efetiva e o duodécuplo da taxa mensal prevista no contrato é suficiente para informar ao consumidor da existência da prática da capitalização de juros, conforme entendimento sedimentado pelo STJ (Súmula 541). No caso, além de o contrato prever expressamente a capitalização, a própria discrepância entre a taxa anual efetiva e o duodécuplo da taxa mensal prevista no contrato é suficiente para informar ao consumidor da existência da prática da capitalização de juros. Abusividade e onerosidade excessiva da cobrança não demonstrada. 3.6. Multa moratória que deve incidir exclusivamente sobre o valor da obrigação principal. Aplicação da multa moratória sobre o valor total do débito apurado, já acrescido de juros moratórios, implica indevida ampliação da base de cálculo e conduz a resultado incompatível com a sistemática das obrigações civis, pois configura bis in idem, ao penalizar duplamente o devedor. Precedente do STJ. 3.7. Não havendo abusividade nos encargos cobrados durante o período de normalidade contratual, não há que se falar em descaracterização da mora. IV. DISPOSITIVO 4.1. Recurso da embargada conhecido e provido. 4.2. Recurso do embargante parcialmente conhecido e, nessa extensão, parcialmente provido.______Dispositivos relevantes citados: CPC, arts. 141, 370 e 492; CC, art. 394; e Lei nº 13.999/2020, art. 3º. Jurisprudência relevante citada: STJ, AREsp n. 2.961.237/MS, relator Ministro Raul Araújo, Quarta Turma, julgado em 20/10/2025; STJ, AREsp n. 2.591.400/PR, relator Ministro Ricardo Villas Bôas Cueva, Terceira Turma, julgado em 18/8/2025; STJ, AgInt no REsp n. 1.891.797/RS, relatora Ministra Maria Isabel Gallotti, Quarta Turma, julgado em 23/5/2022; TJPR - 14ª Câmara Cível - 0006618-09.2025.8.16.0019 - Rel.: DES. FRANCISCO EDUARDO GONZAGA DE OLIVEIRA - J. 06.05.2026.
+
+## R32 — Honorários advocatícios extrajudiciais cumulados com judiciais
+
+Tese: Na cobrança judicial do contrato bancário, os honorários do advogado do credor são os de sucumbência, arbitrados pelo juízo (CPC, art. 85); a cláusula que soma honorários "extrajudiciais" a honorários "judiciais", ambos em percentual sobre o total da dívida, prefixa verba que só o juiz fixa e cobra duas vezes pela mesma cobrança, de modo que a rubrica extrajudicial lançada na execução sem prova de cobrança extrajudicial efetivamente feita por advogado deve ser decotada (CC, art. 884).
+
+### STJ · REsp 2.166.423/DF
+- regras: R32
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 2.166.423/DF
+- orgao: Terceira Turma
+- relator: Min. Moura Ribeiro
+- julgamento: 2025-12-09
+- publicacao: 2025-12-12
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6266031655
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: O STJ mantém o afastamento da cumulação de honorários contratuais "vinculados à cobrança em juízo" com os honorários sucumbenciais do CPC, por duplicidade sobre a mesma base da execução; no voto, registra que a prefixação só se admite para a cobrança extrajudicial e que, na via judicial, rege a verba sucumbencial do CPC, sem ofensa aos arts. 389, 395 e 404 do CC.
+- observacao: Não é contrato bancário: execução promovida por sociedade de advogados contra cliente, com cláusula de 20% de honorários "em caso de execução judicial da dívida". O STJ aplicou a Súmula 5 à releitura das cláusulas, mas afirmou, no mérito, que não há violação dos arts. 389, 395 e 404 do CC quando se afasta a sobreposição na via judicial. Sessão virtual de 03 a 09/12/2025. Publicação pela data do Jusbrasil (o inteiro teor não traz o DJEN). Ementa sem correções.
+
+ementa:
+> CIVIL. PROCESSUAL CIVIL. RECURSO ESPECIAL. EMBARGOS À EXECUÇÃO. HONORÁRIOS CONTRATUAIS E HONORÁRIOS SUCUMBENCIAIS. NEGATIVA DE PRESTAÇÃO JURISDICIONAL. INOCORRÊNCIA. BIS IN IDEM NA VIA JUDICIAL. CLÁUSULAS CONTRATUAIS. SÚMULA 5/STJ. RECONHECIMENTO. RECURSO NÃO PROVIDO.
+> 1. Não há negativa de prestação jurisdicional quando o acórdão recorrido aprecia os pontos essenciais, corrige contradição na distribuição dos honorários e enfrenta o pedido subsidiário com fundamentação suficiente.
+> 2. Afastada a cumulação de honorários contratuais - vinculados à cobrança em juízo - com honorários sucumbenciais previstos no CPC, considerando a duplicidade sobre a mesma base fática da execução, reinterpretar as cláusulas contratuais invocadas encontra óbice na Súmula 5 do STJ.
+> 3. Inviável o afastamento/compartilhamento de honorários sucumbenciais entre embargos distintos, por se tratarem de processos autônomos com partes e despesas próprias, sendo devida a verba em cada demanda conforme o trabalho realizado.
+> 4. Recurso desprovido.
+
+### STJ · REsp 2.157.400/RS
+- regras: R32
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 2.157.400/RS
+- orgao: Quarta Turma
+- relator: Min. João Otávio de Noronha
+- julgamento: 2026-04-22
+- publicacao: 2026-04-27
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6794461806
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva da peça: é válida a cláusula que, na mora, impõe ao devedor as despesas da cobrança extrajudicial, inclusive honorários de advogado (CC, arts. 389, 395 e 404), e esses honorários "não se confundem" com os de sucumbência. A R32 só se sustenta contra a rubrica que remunera a própria cobrança judicial ou contra a extrajudicial lançada sem prova de cobrança extrajudicial efetiva.
+- observacao: Consórcio; o STJ reformou o TJRS, que reputara a cláusula abusiva pelo art. 51, XII, do CDC. O voto reafirma o REsp 1.002.445/DF (Quarta Turma, 2015), o AgInt no REsp 1.730.248/PE (Terceira Turma, 2022) e o REsp 1.971.958/DF (Terceira Turma, 2025): a reciprocidade do art. 51, XII, é assegurada ao consumidor pela própria lei, e a falta dela no contrato não torna a cláusula abusiva. Sessão virtual de 14 a 22/04/2026. Publicação pela data do Jusbrasil. Ementa copiada do inteiro teor, sem correções.
+
+ementa:
+> DIREITO CIVIL. RECURSO ESPECIAL. AÇÃO DE COBRANÇA EM CONSÓRCIO. VALIDADE DE CLÁUSULA DE RESSARCIMENTO DE DESPESAS DE COBRANÇA EXTRAJUDICIAL, INCLUSIVE HONORÁRIOS ADVOCATÍCIOS. RECURSO ESPECIAL CONHECIDO E PROVIDO.
+> I. CASO EM EXAME
+> 1. Recurso especial interposto contra acórdão estadual que negou provimento ao apelo da autora e deu parcial provimento ao apelo dos réus, com reconhecimento de ilegitimidade passiva de dois corréus e redistribuição dos ônus sucumbenciais.
+> 2. A controvérsia envolve ação de cobrança de saldo remanescente de cotas de consórcio após alienação extrajudicial, com incidência de encargos de inadimplência previstos em cláusula contratual e sem ressarcimento de despesas de cobrança extrajudicial.
+> 3. Na sentença, o Juízo de primeiro grau julgou parcialmente procedentes os pedidos para condenar solidariamente os réus ao pagamento do saldo remanescente, com encargos de inadimplência, vedando o ressarcimento das despesas de cobrança extrajudicial; fixou custas e honorários em 10% sobre o valor da condenação.
+> 4. A Corte de origem negou provimento ao apelo da autora e deu parcial provimento ao apelo dos réus para reconhecer a ilegitimidade passiva de dois corréus e repartir os ônus sucumbenciais entre a administradora e os demais corréus.
+> II. QUESTÃO EM DISCUSSÃO
+> 5. A questão em exame consiste em saber se é válida a cláusula contratual que prevê o ressarcimento, pelo devedor inadimplente, das despesas de cobrança extrajudicial, inclusive honorários advocatícios, tendo em vista as disposições constantes dos arts. 389, 395 e 404 do CC e 51, XII, do CDC.
+> III. RAZÕES DE DECIDIR
+> 6. À luz da orientação consolidada do STJ, é válida a cláusula contratual que, em caso de mora, impõe ao devedor inadimplente o pagamento das despesas decorrentes de cobrança extrajudicial, inclusive honorários advocatícios, prerrogativa igualmente assegurada ao consumidor, independentemente de previsão contratual, nos termos do art. 51, XII, do CDC.
+> IV. DISPOSITIVO E TESE
+> 7. Recurso especial conhecido e provido.
+> Tese de julgamento: "1. É válida a cláusula que, na mora, obriga o devedor ao pagamento das despesas de cobrança extrajudicial, inclusive honorários advocatícios".
+> Dispositivos relevantes citados: CC, arts. 389, 395 e 404; CDC, art. 51, XII.
+> Jurisprudência relevante citada: STJ, AgInt no REsp n. 1.730.248/PE, relator Ministro Paulo de Tarso Sanseverino, Terceira Turma, julgado em 16/5/2022.
+
+### TJPR · Apelação Cível 0002573-05.2021.8.16.0050
+- regras: R32
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0002573-05.2021.8.16.0050
+- orgao: 19ª Câmara Cível
+- relator: Des. Domingos José Perfetto
+- julgamento: 2023-07-24
+- publicacao: 2023-07-24
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000024942471/Ac%C3%B3rd%C3%A3o-0002573-05.2021.8.16.0050
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em revisional de financiamento com alienação fiduciária, o TJPR mantém o afastamento da cláusula que previa honorários de até 10% do saldo devedor na cobrança extrajudicial e de 20% do valor da causa na judicial: além da falta de reciprocidade (CDC, art. 51, XII), a cláusula prefixa honorários de sucumbência, cuja fixação é atribuição exclusiva do juiz (CPC, art. 85).
+- observacao: O fundamento da reciprocidade (art. 51, XII) contraria a orientação do STJ (REsp 1.002.445/DF; REsp 2.157.400/RS); na peça, usar o segundo fundamento (prefixação da sucumbência, que só o juiz fixa). A íntegra do portal não cita o CNJ, mas descreve o mesmo caso da ementa (revisional contra financeira, comissão de permanência cumulada e honorários extrajudiciais); o parágrafo final do voto traz erro material ("desprovimento do recurso interposto pelo autor, a fim de manter a improcedência"), em desacordo com a fundamentação, a ementa e a sentença de parcial procedência que foi mantida. Publicação igual à data do julgamento, conforme o portal. Correções na ementa: as quebras de linha do portal foram unidas e inserido um espaço em "CONTRATO–"; nenhuma palavra alterada. Fonte: portal de jurisprudência do TJPR (comarca de Bandeirantes).
+
+ementa:
+> APELAÇÃO CÍVEL – AÇÃO REVISIONAL DE CONTRATO – COMISSÃO DE PERMANÊNCIA AFASTADA EM SENTENÇA POR ABUSIVIDADE – MANUTENÇÃO – IMPOSSIBILIDADE DE CUMULAÇÃO COM DEMAIS ENCARGOS REMUNERATÓRIOS OU MORATÓRIOS, SOB PENA DE BIS IN IDEM - CLÁUSULA QUE POSSIBILITA A COBRANÇA DE HONORÁRIOS EXTRAJUDICIAIS – ABUSIVIDADE – AUSÊNCIA DE RECIPROCIDADE EM FAVOR DO CONSUMIDOR – ARTIGO 51, XII DO CDC – VERBA DE NATUREZA SUCUMBENCIAL - REDAÇÃO INEQUÍVOCA DA RESPECTIVA CLÁUSULA – PRERROGATIVA EXCLUSIVA DO PODER JUDICIÁRIO - MANUTENÇÃO DO AFASTAMENTO - RECURSO CONHECIDO E DESPROVIDO.
+
+## R33 — Encargo com base de cálculo indeterminável pelo devedor
+
+Tese: É inexigível o encargo cujo valor ou base de cálculo não pode ser apurado pelo devedor a partir do próprio instrumento — como a comissão ou encargo de concessão de garantia (CCG do FGO, ECG do FGI-PEAC) ou a tarifa remetidos a fator ou tabela externa, sem valor na cédula e fora do CET declarado —, por violar o dever de informação (CDC, arts. 6º, III, e 52; Lei 10.931/2004, art. 28, § 2º, I) e a determinabilidade do objeto (CC, art. 104, II; Tema 958/STJ, tese 2.1, por analogia); cabe à instituição exibir a memória de apuração e, não o fazendo, restituir o valor cobrado.
+
+Regra sem precedente consolidado: um acórdão de Câmara do TJPR decide exatamente a hipótese; no STJ só há o limite (o repasse da comissão é lícito se expressamente pactuado). Ver o relatório.
+
+### STJ · REsp 1.848.714/PR
+- regras: R33
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 1.848.714/PR
+- orgao: Terceira Turma
+- relator: Min. Ricardo Villas Bôas Cueva
+- julgamento: 2022-11-29
+- publicacao: 2022-12-09
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/1730644817
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva: o repasse ao tomador da comissão de concessão de garantia (CCG) do FGO é lícito "desde que expressamente pactuado" (Lei 12.087/2009, art. 9º, § 3º); a petição não deve atacar a existência do encargo, mas a falta de valor ou de critério apurável no próprio instrumento — ponto que o STJ não examinou.
+- observacao: Recurso da CEF provido para reformar acórdão do TRF4 que declarava nula, em si, a cláusula de CCG. O voto transcreve o § 3º do art. 9º da Lei 12.087/2009 na redação da Lei 14.042/2020 ("seu custo poderá ser repassado ao tomador do crédito, nos termos dos regulamentos de operações dos fundos"). Reafirmado pela Quarta Turma no AREsp 2.830.378/PR (j. 09/02/2026, origem TJPR, Súmulas 5 e 7). DJe de 9/12/2022, conforme a citação deste acórdão no AREsp 2.830.378/PR e a data da lista de resultados do Jusbrasil. Ementa copiada da seção Ementa da página, igual à do inteiro teor.
+
+ementa:
+> RECURSO ESPECIAL. DIREITO BANCÁRIO. EMBARGOS À EXECUÇÃO. CONTRATO DE FINANCIAMENTO. FUNDO DE GARANTIA DE OPERAÇÕES (FGO). COMISSÃO DE CONCESSÃO DE GARANTIA (CCG). TOMADOR. REPASSE. POSSIBILIDADE. LEI Nº 12.087/2009. PREVISÃO LEGAL EXPRESSA.
+> 1. Recurso especial interposto contra acórdão publicado na vigência do Código de Processo Civil de 2015 (Enunciados Administrativos nºs 2 e 3/STJ).
+> 2. Nos contratos de financiamento em que a garantia é complementada pelo Fundo de Garantia de Operações (FGO), a Comissão de Concessão de Garantia (CCG) pode ser repassada ao tomador do empréstimo, desde que expressamente pactuada.
+> 3. Recurso especial provido.
+
+### TJPR · Apelação Cível 0002802-54.2017.8.16.0001
+- regras: R33
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0002802-54.2017.8.16.0001
+- orgao: 14ª Câmara Cível
+- relator: Des.ª Josely Dittrich Ribas
+- julgamento: 2026-10-05
+- publicacao: 2026-10-06
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000037784491/Ac%C3%B3rd%C3%A3o-0002802-54.2017.8.16.0001
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Caso-modelo da regra: a cédula previa a CCG do FGO só por remissão a um "fator K" de tabela divulgada no site do banco, sem o valor no quadro da operação; a Câmara declarou o encargo inexigível e manteve a restituição, porque a falta de informação do valor e do critério de apuração viola os arts. 6º, III, e 52 do CDC e o art. 28 da Lei 10.931/2004, e a memória de cálculo unilateral da execução não supre a omissão.
+- observacao: Embargos à execução de cédula de crédito bancário de 2015; apelo do banco desprovido (corrigido só erro material na sucumbência). O voto reconhece que a CCG é válida em abstrato (Lei 12.087/2009) e que a própria Câmara já a admitiu quando expressamente pactuada (0034401-45.2016 e 0026391-07.2019, citados na ementa, ambos contrários ao tomador); o que a afastou foi a indeterminação do valor no título: "a remissão à obtenção de informações externas à cédula de crédito [...] reforça a deficiência informacional, especialmente porque o contrato não indicou o valor da comissão, tampouco forneceu elementos suficientes para sua imediata apuração". É CCG do FGO, não ECG do FGI-PEAC: usar por analogia no PEAC. O fundamento principal é o CDC; em tomador pessoa jurídica sem relação de consumo, apoiar-se também no art. 28, § 2º, I, da Lei 10.931/2004, citado no voto. Correções na ementa: nenhuma no texto (só a divisão das linhas). Fonte: portal de jurisprudência do TJPR (comarca de Curitiba).
+
+ementa:
+> DIREITO CIVIL E DIREITO DO CONSUMIDOR. EMBARGOS À EXECUÇÃO. COBRANÇA ABUSIVA DE COMISSÃO DE CONCESSÃO DE GARANTIA (CCG) E DIREITO À INFORMAÇÃO DO CONSUMIDOR. RECURSO DE APELAÇÃO DESPROVIDO.
+> I. CASO EM EXAME
+> 1. Apelação cível interposta pelo embargado contra sentença que julgou parcialmente procedentes os pedidos iniciais, reconhecendo a abusividade da cobrança da Comissão de Concessão de Garantia (CCG) na cédula de crédito bancário em execução, determinando a restituição dos valores pagos, acrescidos de juros e correção monetária, e estabelecendo a distribuição proporcional das custas e honorários entre as partes.
+> II. QUESTÃO EM DISCUSSÃO
+> 2. A questão em discussão consiste em verificar se: (i) a cobrança da Comissão de Concessão de Garantia (CCG) prevista na cédula de crédito bancário é abusiva, diante da ausência de informações claras a respeito da origem, valor e finalidade do encargo; e (ii) é caso de redistribuição do ônus sucumbencial entre as partes, com aplicação do princípio da causalidade.
+> III. RAZÕES DE DECIDIR
+> 3.1. A cobrança da Comissão de Concessão de Garantia (CCG), embora admitida pelo ordenamento jurídico, pressupõe informação clara e adequada acerca do valor do encargo e dos critérios empregados em sua apuração.
+> 3.2. O título de crédito não atendeu aos requisitos legais de clareza e transparência exigidos pelo art. 52 do CDC e pela Lei nº 10.931/2004, especialmente quanto à demonstração clara da finalidade do encargo e forma de apuração do valor correspondente.
+> 3.3. A memória de cálculo que instruiu a execução, embora discrimine o montante cobrado, não demonstra os elementos considerados nem a operação realizada para sua obtenção.
+> 3.4. A deficiência informacional viola os arts. 6º, III, e 52 do Código de Defesa do Consumidor e impede a exigência do encargo no caso concreto.
+> 3.5. A obtenção de êxito relevante quanto a um dos pedidos formulados nos embargos caracteriza sucumbência recíproca e afasta a aplicação exclusiva do princípio da causalidade.
+> IV. DISPOSITIVO
+> 4. Apelação cível conhecida e desprovida.
+> _________
+> Dispositivos relevantes citados: CDC, art. 6º, III; Lei nº 10.931/2004, arts. 26, 28, §§ 1º e 2º; Lei nº 12.087/2009; CPC, arts. 85, §§ 2º e 11.
+> Jurisprudência relevante citada: TJPR, Apelação Cível 0034401-45.2016.8.16.0001, Rel. Des. Francisco Eduardo Gonzaga de Oliveira, 14ª Câmara Cível, j. 24.03.2026; TJPR, Apelação Cível 0026391-07.2019.8.16.0001, Rel. Des. Hamilton Rafael Marins Schwartz, 14ª Câmara Cível, j. 14.04.2025.
+
 ## R34 — SFH: capitalização de juros vedada em qualquer periodicidade
 
 Tese: Nos contratos do Sistema Financeiro da Habitação anteriores à Lei 11.977/2009 é vedada a capitalização de juros em qualquer periodicidade, ainda que pactuada (Decreto 22.626/1933, art. 4º; Súmula 121/STF); se a Tabela Price a produz, o excesso deve ser apurado por perícia e expurgado.
@@ -2358,6 +3063,183 @@ ementa:
 
 ementa:
 > APELAÇÃO CÍVEL. AÇÃO DE REVISÃO CONTRATUAL C/C REPETIÇÃO DE INDÉBITO. NEGÓCIO PARTICULAR DE COMPRA E VENDA DE IMÓVEL URBANO. SENTENÇA DE IMPROCEDÊNCIA. INSURGÊNCIA RECURSAL DOS AUTORES (PROMISSÁRIOS COMPRADORES). PRELIMINAR DE CERCEAMENTO DE DEFESA PELO JULGAMENTO ANTECIPADO DA LIDE SEM A PRODUÇÃO DE PROVA TÉCNICA. Acolhimento. Matéria de fato relevante acerca da cobrança de juros remuneratórios e sua capitalização. Autores que assinaram apenas proposta de compra em que não eram previstos juros. Instrumentos contratuais outros, elaborados pela empresa ré, que não foram assinados. Relação típica de consumo. Documentos emitidos pela promitente vendedora sobre os pagamentos feitos que sinalizam para aplicação da Tabela Price como método de amortização da dívida e eventual capitalização. Prova pericial contábil que foi especificamente requerida por ambas as partes. Empresa ré que não integra o Sistema Financeiro Imobiliário. Capitalização de juros vedada na espécie, o que justifica a realização de perícia para sua confirmação e/ou afastamento. Tema Repetitivo nº 572 do Superior Tribunal de Justiça. Cassação da sentença e retorno dos autos à origem para regular instrução probatória, com a realização da perícia e a prévia definição quanto a extensão da inversão do ônus da prova incidentemente decretada. Demais questões prejudicadas. RECURSO CONHECIDO E PROVIDO.
+
+## R36 — SFH: amortização negativa — juros impagos incorporados ao saldo
+
+Tese: Nos contratos do SFH anteriores à Lei 11.977/2009, quando a prestação não cobre sequer os juros do mês (amortização negativa), os juros não pagos não podem ser incorporados ao saldo devedor para render novos juros: devem ser lançados em conta separada, sujeita apenas à correção monetária, e o anatocismo apurado deve ser expurgado do saldo e restituído.
+
+### STJ · REsp 1.095.852/PR
+- regras: R36
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.095.852/PR
+- orgao: Segunda Seção
+- relator: Min. Maria Isabel Gallotti
+- julgamento: 2012-03-14
+- publicacao: 2012-03-19
+- precedente_qualificado: não (Segunda Seção; interpreta o repetitivo REsp 1.070.297/PR)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/21428658
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Leading case da Segunda Seção: no SFH, se a prestação não cobre sequer os juros, os juros vencidos e não pagos vão para conta separada, sujeita apenas à correção monetária, para evitar o anatocismo; o voto determina a criação dessa conta para preservar a vedação do Decreto 22.626/1933.
+- observacao: LIMITE no mesmo acórdão: o recurso da instituição financeira foi provido para (i) imputar os pagamentos primeiro aos juros (CC, art. 354; REsp 1.194.402/RS, repetitivo) e (ii) permitir a capitalização ANUAL dos juros vencidos e não pagos, independentemente de pactuação, em contrato anterior à Lei 11.977/2009; o TRF4 havia mandado desconsiderar os juros impagos, solução afastada. Há tensão posterior: o REsp 2.186.454/SP (Quarta Turma, 2026) fala em conta separada "com atualização apenas monetária, vedada a cobrança de novos juros", e o TRF4 (AC 5048665-28.2015.4.04.7100) recusou a capitalização anual pedida pelo agente financeiro. Unânime. DJe de 19/03/2012, indicado no inteiro teor. Correção na ementa: til restaurado em "HABITAÇÃO", "CAPITALIZAÇÃO" e "IMPUTAÇÃO" (o inteiro teor grafa "HABITAÇAO" etc.); nenhuma palavra alterada.
+
+ementa:
+> RECURSO ESPECIAL. SISTEMA FINANCEIRO DA HABITAÇÃO. SFH. CAPITALIZAÇÃO ANUAL DE JUROS. POSSIBILIDADE. ENCARGOS MENSAIS. IMPUTAÇÃO DO PAGAMENTO. ART. 354 CC 2002. ART. 993 CC 1916.
+> 1. Interpretação do decidido pela 2ª Seção, no Recurso Especial Repetitivo 1.070.297, a propósito de capitalização de juros, no Sistema Financeiro da Habitação.
+> 2. Segundo o acórdão no Recurso Repetitivo 1.070.297, para os contratos celebrados no âmbito do Sistema Financeiro da Habitação até a entrada em vigor da Lei 11.977/2009 não havia regra especial a propósito da capitalização de juros, de modo que incidia a restrição da Lei de Usura (Decreto 22.626/33, art. 4º). Assim, para tais contratos, não é válida a capitalização de juros vencidos e não pagos em intervalo inferior a um ano, permitida a capitalização anual, regra geral que independe de pactuação expressa. Ressalva do ponto de vista da Relatora, no sentido da aplicabilidade, no SFH, do art. 5º da MP 2.170-36, permissivo da capitalização mensal, desde que expressamente pactuada.
+> 3. No Sistema Financeiro da Habitação, os pagamentos mensais devem ser imputados primeiramente aos juros e depois ao principal, nos termos do disposto no art. 354 Código Civil em vigor (art. 993 Código de 1916). Entendimento consagrado no julgamento, pela Corte Especial, do Recurso Especial nº 1.194.402-RS (Relator Min. Teori Albino Zavascki), submetido ao rito do art. 543-C.
+> 4. Se o pagamento mensal não for suficiente para a quitação sequer dos juros, a determinação de lançamento dos juros vencidos e não pagos em conta separada, sujeita apenas à correção monetária, com o fim exclusivo de evitar a prática de anatocismo, encontra apoio na jurisprudência atual do STJ. Precedentes.
+> 5. Recurso especial provido.
+
+### STJ · REsp 2.186.454/SP
+- regras: R36, R38
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 2.186.454/SP
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2026-03-02
+- publicacao: 2026-03-11
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6806310814
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Acórdão recente que decide as duas teses: (R36) nos períodos de amortização negativa, os juros não pagos vão para planilha separada, com atualização apenas monetária, vedada a cobrança de novos juros; (R38) o CES só pode ser cobrado com expressa previsão contratual, não podendo ser imposto com base em circulares administrativas ou resoluções do extinto BNH.
+- observacao: Recurso do mutuante do SFH (entidade pública estadual) provido só para afastar o CDC (contrato de 1988, anterior ao Código); mantidos a exclusão do CES (contrato sem cláusula) e o afastamento da capitalização apurada em perícia. O voto afirma a vedação da capitalização "em qualquer periodicidade" (Súmula 121/STF), em tensão com o REsp 1.095.852/PR (capitalização anual permitida). Sessão virtual de 24/02 a 02/03/2026. Publicação pela data do Jusbrasil (o inteiro teor não traz o DJEN). Ementa sem correções (o item "2 A cobrança", sem ponto, está assim no original).
+
+ementa:
+> DIREITO CIVIL. RECURSO ESPECIAL. AÇÃO REVISIONAL DE CONTRATO DE FINANCIAMENTO IMOBILIÁRIO. COEFICIENTE DE EQUIPARAÇÃO SALARIAL (CES). CÓDIGO DE DEFESA DO CONSUMIDOR. CAPITALIZAÇÃO DE JUROS. RECURSO PARCIALMENTE PROVIDO.
+> 1. O acórdão recorrido examinou de forma suficiente todas as matérias controvertidas, emitindo pronunciamento fundamentado sobre os pontos essenciais ao deslinde da causa, não havendo omissão ou negativa de prestação jurisdicional.
+> 2 A cobrança do Coeficiente de Equiparação Salarial (CES) é admissível na hipótese de expressa previsão contratual, não podendo ser imposta unilateralmente com base em circulares administrativas ou resoluções do extinto BNH.
+> 3. O Código de Defesa do Consumidor não se aplica aos contratos regidos pelo Sistema Financeiro da Habitação celebrados antes de sua vigência, em razão do princípio da irretroatividade das leis e da proteção ao ato jurídico perfeito.
+> 4. É vedada a capitalização de juros nos contratos regidos pelo Sistema Financeiro da Habitação, ainda que haja previsão contratual expressa, conforme o enunciado da Súmula 121 do Supremo Tribunal Federal.
+> 5. Nos períodos de amortização negativa, o valor dos juros não pagos deve ser lançado em planilha separada, com atualização apenas monetária, vedada a cobrança de novos juros sobre o montante, a fim de evitar anatocismo.
+> 6. Recurso parcialmente provido, para afastar a aplicação do Código de Defesa do Consumidor ao contrato em questão.
+
+### STJ · REsp 1.476.395/RS
+- regras: R36
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 1.476.395/RS
+- orgao: Terceira Turma
+- relator: Min. Paulo de Tarso Sanseverino
+- julgamento: 2018-08-14
+- publicacao: 2018-10-11
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/3445134702
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva da peça: o reconhecimento da amortização negativa não descaracteriza a mora do mutuário, porque a disfunção decorre do próprio sistema da Lei 4.380/1964 (prestação pelo PES e saldo por índice diverso), não de ato abusivo do agente financeiro; não pedir o afastamento da mora só com base na R36.
+- observacao: O mesmo acórdão ajuda no mérito: o voto qualifica a reincorporação dos juros não pagos ao saldo como "vedado anatocismo" e, por maioria (vencidos os Ministros Villas Bôas Cueva e Bellizze), nega o recurso da instituição financeira e mantém o recálculo do TRF4 que garante a amortização em cada prestação (item 2.4 da ementa); o recurso dos mutuários foi desprovido por unanimidade. Julgamento concluído em 14/08/2018, após voto-vista; DJe de 11/10/2018, indicado no inteiro teor. Divergência: o TRF4 (AC 5048665-28.2015.4.04.7100, 2023) afastou a mora em caso análogo. Correções na ementa: espaços inseridos em "IMPOSSIBILIDADE.1.1." e "CONSUMIDOR.2.1." e em "NESSAPARTE"; grafias do original mantidas ("inexitindo", "muito vezes", "decádas").
+
+ementa:
+> RECURSOS ESPECIAIS DAS DUAS PARTES. CIVIL E PROCESSUAL CIVIL. SISTEMA FINANCEIRO HABITACIONAL.
+> I - RECURSO ESPECIAL DOS MUTUÁRIOS. CONTRATO DE FINANCIAMENTO. AMORTIZAÇÃO NEGATIVA. DESCARACTERIZAÇÃO DA MORA. IMPOSSIBILIDADE. 1.1. O reconhecimento, na origem, da amortização negativa não se mostra suficiente para o afastamento da mora do mutuário. A disfunção gerada pelo sistema de amortização decorre da Lei 4.380/64 a estabelecer métodos de correção diversos em relação às prestações e ao saldo devedor, inexitindo, no que respeita, agir abusivo por parte da instituição mutuante a justificar o afastamento da mora dos mutuários.
+> 1.2. Demais questões impugnadas no apelo excepcional dos autores obstaculizadas pelos enunciados 282/STF e 7/STJ.
+> 1.3. RECURSO ESPECIAL DOS MUTUÁRIOS EM PARTE CONHECIDO E, NESSA PARTE, DESPROVIDO. II - RECURSO ESPECIAL. SISTEMA DE AMORTIZAÇÃO DO SALDO DEVEDOR. INTERPRETAÇÃO CONTIDA NO ACÓRDÃO RECORRIDO QUE SE AMOLDA AO SISTEMA DE FINANCIAMENTO DA HABITAÇÃO, À FUNÇÃO SOCIAL DO CONTRATO E À PROTEÇÃO DO CONSUMIDOR. 2.1. Densidade social do Sistema Financeiro Habitacional presente em vários dos dispositivos da Lei 4.380/64, priorizando a construção de conjuntos habitacionais destinados à população de baixa renda, buscando a eliminação de favelas, mocambos e outras aglomerações em condições sub-humanas de habitação, bem como projetos municipais ou estaduais com oferta de terrenos já urbanizados que permitam o início imediato da construção; projetos de cooperativas e outras formas associativas de construção de casa própria, além daqueles da iniciativa privada voltados à solução de problemas habitacionais e a construção de moradia à população rural.
+> 2.2. Fixação, porém, de um sistema de amortização do saldo devedor deficiente, pois, mediante o plano de equivalência salarial, as parcelas do financiamento tinham atualização vinculada aos reajustes dos salários (ou do salário mínimo), sucessivamente congelados ou subdimensionados, submetidos a mal sucedidos planos econômicos, e o saldo devedor era atualizado mediante índices de remuneração da poupança.
+> 2.3. Como resultado desse sistema, ao término de longos prazos de amortização (15 a 30 anos), em face da deficiente amortização do saldo devedor, passaram a remanescer insolúveis saldos devedores, muito vezes superiores ao montante dos financiamentos originalmente contratados e do próprio valor dos imóveis adquiridos, exigindo, após o prazo previsto no contrato, o recálculo de prestações, alcançando-se valores incompatíveis com a capacidade financeira dos adquirentes, e a prorrogação do contrato por decádas outras a fio.
+> 2.4. A solução ao grave problema criado, adotada pelo acórdão recorrido, no sentido de determinar que sejam os pagamentos recalculados durante todo o contrato e que se garanta a amortização e o pagamento dos juros, amolda-se à função social dos contratos celebrados no âmbito do Sistema Financeiro Habitacional; preserva o mínimo existencial dos mutuários, projetado no direito à habitação, e resguarda o consumidor, garantindo-lhe uma interpretação mais favorável das cláusulas contratuais.
+> 2.5. RECURSO ESPECIAL DA CEF DESPROVIDO. 3. RECURSO ESPECIAL DOS MUTUÁRIOS PARCIALMENTE CONHECIDO E, NESSA PARTE, DESPROVIDO E RECURSO ESPECIAL DA CEF DESPROVIDO.
+
+### TRF4 · Apelação Cível 5048665-28.2015.4.04.7100/RS
+- regras: R36
+- posicao: FAV
+- tribunal: TRF4
+- classe_numero: Apelação Cível 5048665-28.2015.4.04.7100/RS
+- orgao: 4ª Turma
+- relator: Juíza Federal Vera Lúcia Feil (convocada)
+- julgamento: 2023-08-16
+- publicacao: 2023-08-18
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/trf-4/3077696683
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Com amortização negativa incontroversa num contrato do SFH, o TRF4 mantém a sentença que destacou do saldo devedor os juros não pagos: a parcela de juros impaga vai para conta apartada, com correção monetária pelos índices contratuais e sem novos juros; rejeita a tese do agente financeiro de que esses juros devem voltar ao saldo a cada ano.
+- observacao: Recurso do agente financeiro desprovido e o dos mutuários provido (inversão da sucumbência). O TRF4 também afastou os encargos moratórios por entender descaracterizada a mora, ponto em que diverge do STJ (REsp 1.476.395/RS): não usar este acórdão para a mora. Contrato com PES/CP. Julgamento em 16/08/2023 (voto assinado em 17/08/2023); publicação pela data do Jusbrasil. Ementa sem correções; grafias do original mantidas ("CAPITLIZAÇÃO", "para ao cálculo").
+
+ementa:
+> SFH. REVISIONAL. TABELA PRICE. CAPITLIZAÇÃO DE JUROS. AMORTIZAÇÃO NEGATIVA. AFASTAMENTO. CÁLCULO EM CONTA APARTADA. ENCARGOS DE MORA. HONORÁRIOS ADVOCATÍCIOS. SUCUMBÊNCIA RECÍPROCA.
+> 1. A utilização da Tabela Price como técnica de amortização não implica obrigatoriamente em capitalização de juros, eis que não há previsão para a incidência de juros sobre juros. Tal prática somente ocorre quando verificada a ocorrência de "amortização negativa", que ocorre quando a prestação mensal não quita sequer a parcela referente aos juros.
+> 2. Todavia, verificada a amortização negativa e não havendo previsão contratual para ao cálculo de juros capitalizado mensalmente, impõe-se que a parcela dos juros não-paga seja acumulada em conta apartada, sujeita à correção monetária pelos índices contratuais, sem a incidência de novos juros. Precedentes.
+> 3. A ré sucumbiu em parcela significativamente maior, devendo arcar com o maior percentual de honorários, enquanto a parte autora sucumbiu em parte menor, sendo justa a condenação em percentual menor de honorários. Merece reforma, portanto, a sentença, para determinação de inversão dos percentuais de honorários sucumbenciais devidos na origem.
+> 4. Negado provimento à apelação da Caixa Econômica Federal, provida a apelação dos autores.
+
+### TRF4 · Apelação Cível 5009409-21.2014.4.04.7001/PR
+- regras: R36, R38
+- posicao: FAV
+- tribunal: TRF4
+- classe_numero: Apelação Cível 5009409-21.2014.4.04.7001/PR
+- orgao: 3ª Turma
+- relator: Des.ª Federal Vânia Hack de Almeida
+- julgamento: 2018-08-21
+- publicacao: 2018-08-23
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/trf-4/3762835434
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em contrato do SFH de 1988 sem cláusula de CES, o TRF4 mantém a exclusão do coeficiente das prestações (R38: antes da lei que introduziu o CES, só com cláusula contratual expressa) e a revisão do saldo para que os juros não amortizados formem conta separada, sujeita só à correção monetária (R36).
+- observacao: Apelações do agente financeiro e dos mutuários desprovidas; repetição simples (art. 23 da Lei 8.004/1990), sem dobro por falta de má-fé. O laudo confirmou amortizações negativas em cerca de um terço dos encargos. A ementa grafa "L 8.962/1993"; a lei que introduziu o CES é a Lei 8.692/1993, de 28/07/1993 (data citada no voto): mantida a grafia do acórdão, corrigir na peça. Ementa do campo "Ementa" do Jusbrasil (o inteiro teor traz o cabeçalho em versalete); grafia do original mantida ("Não à que se falar"). Julgado de 2018, fora da faixa preferida: não se achou acórdão do TRF4 de 2023–2026 sobre o CES. Publicação pela data do Jusbrasil (voto assinado em 23/08/2018).
+
+ementa:
+> ADMINISTRATIVO E CIVIL. SISTEMA FINANCEIRO DA HABITAÇÃO. CDC. CES. CAPITALIZAÇÃO DE JUROS. REPETIÇÃO EM DOBRO. COMPENSAÇÃO.
+> 1. A aplicação do Código de Defesa do consumidor nas relações de financiamento habitacional não é regra de aplicação automática, porquanto o legislador tratou de maneira diferenciada as relações de financiamento para a aquisição da casa própria. Não tendo o mutuário comprovado o atendimento dos pressupostos aludidos no inc. VIII do art. 6º da Lei nº 8.078/90, não lhe assiste o direito à inversão do ônus da prova.
+> 2. A cobrança do CES foi introduzida na legislação do SFH com a edição da L 8.962/1993, que prevê, no art. 8º, a incidência do coeficiente nos contratos regidos com cláusula PES. No caso de contratos celebrados em período anterior ao da vigência desse diploma legal, é imprescindível a existência de cláusula contratual que justifique a cobrança.
+> 3. A aplicação do Sistema Francês de amortização aos contratos vinculados ao Sistema Financeiro da Habitação (SFH) é admitida por este Tribunal Regional da Quarta Região. Todavia, se o pagamento mensal não for suficiente para a quitação sequer dos juros, a determinação de lançamento dos juros vencidos e não pagos em conta separada, sujeita apenas à correção monetária, com o fim exclusivo de evitar a prática de anatocismo, encontra apoio na jurisprudência atual do STJ.
+> 4. Conforme orientação do STJ, a repetição em dobro prevista no artigo 42, parágrafo único, do CDC, somente se aplica nas hipóteses em que há prova de que o credor agiu com má-fé, nos contratos firmados no âmbito do SFH.
+> 5. Não à que se falar em compensação de valores quando não subsiste dívida do mutuário frente ao agente financeiro.
+
+## R38 — SFH: CES sem cláusula expressa; PES/CP e TR
+
+Tese: O Coeficiente de Equiparação Salarial só pode ser cobrado nos contratos do SFH com cláusula contratual expressa: resolução do extinto BNH ou circular do Banco Central não supre a falta de pactuação, e o pagamento da primeira prestação com o acréscimo não convalida a cobrança; ausente a cláusula, o CES deve ser excluído das prestações e restituído o que foi pago a maior.
+
+### STJ · REsp 2.166.103/SP
+- regras: R38
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 2.166.103/SP
+- orgao: Terceira Turma
+- relator: Min. Moura Ribeiro
+- julgamento: 2025-12-09
+- publicacao: 2025-12-12
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6266006669
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: O STJ mantém a exclusão do CES da primeira prestação: a cobrança depende de expressa pactuação contratual, não bastando referência a resoluções do BNH ou circulares do Banco Central (normas infralegais não criam obrigação sem pactuação), e o pagamento da primeira prestação com o acréscimo não convalida cláusula inexistente em contrato de adesão.
+- observacao: Recurso do banco desprovido; julgado na mesma sessão e pelo mesmo relator do REsp 2.166.177/SP, em que o CES foi mantido porque o contrato o previa (ver a entrada ADV). No mesmo caso foram mantidos o PES/CP nas prestações, a TR como indexador pactuado e a repetição simples. Sessão virtual de 03 a 09/12/2025; DJEN de 12/12/2025, conforme citação em decisão posterior do STJ e a data do Jusbrasil. Correção na ementa: "PES /CP" → "PES/CP" (espaço de extração); grafia "INFRAALEGAIS" mantida.
+
+ementa:
+> PROCESSUAL CIVIL E DIREITO BANCÁRIO. RECURSO ESPECIAL. AÇÃO REVISIONAL DE MÚTUO HABITACIONAL NO SFH. PES/CP NAS PRESTAÇÕES. TR COMO INDEXADOR PACTUADO. ATUALIZAÇÃO DO SALDO DEVEDOR ANTES DA AMORTIZAÇÃO. JUROS REMUNERATÓRIOS SEM LIMITAÇÃO LEGAL EM 10% AO ANO. CES NA PRIMEIRA PARCELA. AUSÊNCIA DE PREVISÃO CONTRATUAL E DE BASE LEGAL À ÉPOCA. NORMAS INFRAALEGAIS DO BNH E BACEN INSUFICIENTES. PREQUESTIONAMENTO DEFICIENTE DOS DISPOSITIVOS FEDERAIS. RECURSO ESPECIAL NÃO PROVIDO.
+> 1. Trata-se de recurso especial, fundado na alínea a do inciso III do art. 105 da Constituição Federal, interposto contra acórdão que, em ação revisional de mútuo habitacional, determinou a observância ao Plano de Equivalência Salarial por Categoria Profissional nas prestações, admitiu a TR como indexador pactuado, reconheceu a legitimidade da atualização e incidência de juros antes do abatimento da prestação, afastou a limitação dos juros a 10% ao ano, excluiu o Coeficiente de Equiparação Salarial na primeira parcela por ausência de previsão contratual e legal, assegurou a liberdade de escolha da seguradora e fixou a repetição simples.
+> 2. O objetivo recursal é decidir se (i) houve violação dos arts. 82, 145, III, 148 e 151 do Código Civil de 1916 ao excluir o CES sem considerar a alegada ratificação e execução voluntária pelos mutuários; (ii) a aplicação do CES na primeira parcela encontra respaldo nas normas do extinto BNH e do Banco Central do Brasil, prescindindo de cláusula contratual expressa; (iii) a exclusão do CES implicou indevida alteração do equilíbrio contratual e do regime jurídico do SFH; (iv) houve prequestionamento suficiente dos dispositivos federais indicados.
+> 3. A cobrança do Coeficiente de Equiparação Salarial depende de expressa pactuação contratual, não bastando a mera referência a resoluções ou circulares administrativas, e a alegada ratificação pelo pagamento isolado da primeira prestação não convalida cláusula inexistente em contrato de adesão.
+> 4. A conclusão decorre de que a validade de encargos acessórios em financiamentos do SFH exige consentimento claro e inequívoco das partes; normas infralegais não criam obrigações sem pactuação; a discussão sobre eventual benefício econômico do CES é irrelevante diante da ausência de cláusula; e não houve enfrentamento específico, no acórdão recorrido, dos arts. 145, III, 148 e 150 do Código Civil de 1916, nem dos atos regulamentares invocados, evidenciando prequestionamento insuficiente.
+> 5. Recurso especial não provido.
+
+### STJ · REsp 2.166.177/SP
+- regras: R38
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 2.166.177/SP
+- orgao: Terceira Turma
+- relator: Min. Moura Ribeiro
+- julgamento: 2025-12-09
+- publicacao: 2025-12-12
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6266010904
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Ressalva da peça: havendo previsão expressa do CES no contrato (no caso, coeficiente de 1,15), o STJ o valida mesmo em contrato anterior à Lei 8.692/1993. A ementa apoia a validade no "regime normativo" do SFH (Res. BNH 36/69, Circular Bacen 1.278/1988), argumento que o banco usará para defender CES sem cláusula: distinguir, porque no caso havia previsão explícita do coeficiente, e no REsp 2.166.103/SP, da mesma sessão, a falta de cláusula levou à exclusão.
+- observacao: Recurso do mutuário desprovido; contrato de 07/03/1989 com banco estadual; também mantidos Tabela Price, correção do saldo antes da amortização e TR como componente da remuneração da poupança, e negada a repetição em dobro (sem relação de consumo apta). O voto registra que "consta, de forma explícita", o CES de 1,15 (item "z", conforme a sentença transcrita). Sessão virtual de 03 a 09/12/2025. Publicação pela data do Jusbrasil. Correções na ementa: espaços inseridos em "dobro.5." e "contratação;a"; a numeração do original salta do item 3 para o 5 e volta ao 4.
+
+ementa:
+> PROCESSUAL CIVIL E DIREITO BANCÁRIO. RECURSO ESPECIAL. AÇÃO REVISIONAL DE MÚTUO HABITACIONAL (SFH). COEFICIENTE DE EQUIPARAÇÃO SALARIAL. CONTRATO ANTERIOR À LEI 8.692/1993. REGIME NORMATIVO PRÉVIO (DECRETO-LEI 2.291/1986, RESOLUÇÃO CMN 1.446/1988, CIRCULAR BACEN 1.278/1988). VALIDADE. TABELA PRICE. AUSÊNCIA DE ANATOCISMO. ATUALIZAÇÃO DO SALDO DEVEDOR ANTES DA AMORTIZAÇÃO. VINCULAÇÃO À REMUNERAÇÃO DA CADERNETA DE POUPANÇA. UTILIZAÇÃO DA TR. CÓDIGO DE DEFESA DO CONSUMIDOR. INAPLICABILIDADE DA REPETIÇÃO EM DOBRO SEM DEMONSTRAÇÃO DE CLÁUSULA SURPRESA OU FALHA INFORMACIONAL. RECURSO ESPECIAL NÃO PROVIDO.
+> 1. Trata-se de recurso especial interposto em ação revisional de contrato de mútuo habitacional, visando afastar a incidência do Coeficiente de Equiparação Salarial, substituir a Taxa Referencial pelo Índice Nacional de Preços ao Consumidor e aplicar o Código de Defesa do Consumidor para repetição de indébito em dobro.
+> 2. O objetivo recursal é decidir se (i) o Coeficiente de Equiparação Salarial incide em contratos anteriores à Lei 8.692/1993; (ii) a Taxa Referencial pode ser utilizada como parâmetro de atualização do saldo devedor em contratos vinculados à remuneração da caderneta de poupança firmados antes da Lei 8.177/1991; (iii) incide o Código de Defesa do Consumidor para autorizar interpretação contratual favorável ao mutuário e repetição de indébito em dobro.
+> 3. O Coeficiente de Equiparação Salarial integra o regime jurídico do SFH antes da Lei 8.692/1993 e é disciplinado por atos normativos válidos, com previsão expressa no regramento técnico aplicável; a atualização do saldo devedor pela variação dos índices da caderneta de poupança autoriza a utilização da Taxa Referencial como componente da remuneração dessa aplicação, não configurando substituição indevida de índice contratual; a natureza adesiva e o dirigismo contratual do SFH, por si sós, não tornam abusivas cláusulas sem prova de surpresa ou deficiência informacional, não se aplicando a repetição em dobro. 5. A conclusão decorre dos seguintes fundamentos: a validade do CES se apoia no regime normativo do SFH vigente à época da contratação; a Tabela Price e o critério de correção do saldo antes da amortização não implicam anatocismo; a vinculação contratual à remuneração da poupança permite a utilização da TR como componente dessa remuneração; a ausência de relação de consumo apta a atrair a repetição em dobro afasta a aplicação pretendida do art. 42, parágrafo único, do CDC; não há demonstração de cláusula surpresa ou falha informacional a justificar o afastamento de cláusulas com base nos arts. 46 e 47 do CDC.
+> 4. Recurso especial não provido.
 
 ## R39 — Alienação fiduciária (Lei 9.514, art. 26) e DL 70/66: intimação por edital só após esgotada a notificação pessoal
 
@@ -2731,3 +3613,366 @@ ementa:
 ementa:
 > Direito civil, processual civil e do consumidor. Apelação cível em ação de cobrança. FOPAG COVID-19. Aplicação do CDC à pessoa jurídica por vulnerabilidade técnica e informacional. Inversão do ônus da prova. Insuficiência de instrução probatória e divergência quanto ao valor mutuado. Cassação de ofício da sentença e retorno dos autos à origem. Recurso parcialmente provido.I. CASO EM EXAME1. Recurso de apelação interposto contra sentença que julgou procedente ação de cobrança fundada em contrato de financiamento vinculado ao programa FOPAG COVID-19, condenando a parte ré ao pagamento de saldo devedor. A recorrente sustenta a aplicação do Código de Defesa do Consumidor, a nulidade da cobrança por ausência de demonstrativo idôneo do débito, a existência de excesso de cobrança e a inadequação dos encargos. Requer, ainda, a remessa ao CEJUSC em segundo grau e a reforma da sentença para improcedência dos pedidos. II. QUESTÃO EM DISCUSSÃO2. Há três questões em discussão: (i) saber se incide o Código de Defesa do Consumidor na relação contratual firmada entre instituição financeira e pessoa jurídica, diante de eventual vulnerabilidade; (ii) saber se é cabível a inversão do ônus da prova em razão da impossibilidade de produção probatória pela devedora; (iii) saber se a sentença pode subsistir diante da divergência entre os documentos apresentados e da ausência de comprovação do valor efetivamente mutuado, exigindo maior dilação probatória.III. RAZÕES DE DECIDIR3. Aplica-se o Código de Defesa do Consumidor ao caso, em razão da vulnerabilidade técnica, informacional e probatória da pessoa jurídica frente à instituição financeira, nos termos da teoria finalista mitigada adotada pelo Superior Tribunal de Justiça.4. A inversão do ônus da prova é medida adequada, pois os elementos necessários à comprovação do valor efetivamente disponibilizado encontram-se na esfera exclusiva da instituição financeira, sendo inviável à parte devedora demonstrar fato negativo ou acessar registros internos do credor.5. Verifica-se divergência substancial entre os documentos que instruem a inicial quanto ao valor mutuado e à forma de liberação dos recursos, bem como ausência de comprovação dos créditos realizados, o que compromete a liquidez e a certeza do débito.6. A insuficiência da instrução probatória inviabiliza o exercício do contraditório e da ampla defesa, tornando imprescindível a reabertura da fase instrutória para apuração do montante efetivamente liberado, das parcelas adimplidas, da correta evolução da dívida e da correção dos encargos.7. Diante da deficiência da prova e da ausência de elementos mínimos para julgamento, impõe-se a cassação de ofício da sentença, com retorno dos autos à origem para regular instrução.8. Inviável a remessa ao CEJUSC de segundo grau na ausência de manifestação bilateral de interesse na autocomposição.IV. DISPOSITIVO E TESE9. Recurso parcialmente provido, com cassação de ofício da sentença e retorno dos autos à origem para reabertura da instrução probatória, reconhecida a incidência do Código de Defesa do Consumidor e determinada a inversão do ônus da prova.Tese de julgamento: “1. Aplica-se o Código de Defesa do Consumidor às relações contratuais entre instituição financeira e pessoa jurídica quando demonstrada vulnerabilidade técnica, informacional ou probatória. 2. É cabível a inversão do ônus da prova quando os elementos necessários à comprovação do débito estão na posse exclusiva do fornecedor. 3. A divergência entre os documentos apresentados e a ausência de comprovação do valor efetivamente mutuado comprometem a certeza e a liquidez da obrigação, o que impõem a cassação da sentença para reabertura da instrução probatória.”Dispositivos relevantes citados: CPC, arts. 373, II, e 487, I; CDC, art. 6º, VIII; CC, art. 405.Jurisprudência relevante citada: STJ, Recurso Especial nº 2.020.811/SP, Rel. Ministra Nancy Andrighi, Terceira Turma, julgado em 29.11.2022; TJPR, Agravo de Instrumento nº 0033126-15.2026.8.16.0000, Rel. Des. Fernando Ferreira de Moraes, julgado em 26.06.2026; TJPR, Apelação Cível nº 0033974-04.2023.8.16.0001, Rel. Des. Fabio André Santos Muniz, julgado em 27.06.2025.
 
+## CONTA-CAPDIARIA — Capitalização diária de juros em conta corrente sem pactuação expressa
+
+Tese: Em conta corrente, cheque especial e conta garantida, a capitalização de juros em periodicidade inferior à anual — inclusive a diária — só é exigível se expressamente pactuada no instrumento exibido pelo banco, com informação clara da periodicidade e da taxa diária; sem o instrumento, ou diante de cláusula genérica de capitalização diária sem a taxa diária, afasta-se a capitalização diária na recomposição do saldo, substituída pela mensal quando pactuadas as taxas mensal e anual (Súmula 541/STJ) ou por juros simples quando nada estiver pactuado.
+
+### STJ · REsp 1.826.463/SC
+- regras: CONTA-CAPDIARIA, R19
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.826.463/SC
+- orgao: Segunda Seção
+- relator: Min. Paulo de Tarso Sanseverino
+- julgamento: 2020-10-14
+- publicacao: 2020-10-29
+- precedente_qualificado: não (Segunda Seção, sem rito repetitivo; a questão está afetada no Tema 1474/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2678916690
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Leading case da Segunda Seção: cláusula de capitalização diária que não informa a taxa diária viola o dever de informação (CDC, arts. 6º, III, 46 e 52) e é abusiva na parte em que omite essa taxa, mantidas as taxas efetivas mensal e anual pactuadas; é a base do cenário de recomposição com capitalização mensal.
+- observacao: Cédula de crédito bancário, não conta corrente; o voto reproduz, do REsp 1.568.290/RS, simulação feita com dívida de cheque especial. Unânime. ALERTA: a questão foi afetada ao rito dos repetitivos no Tema 1474/STJ (ProAfR no REsp 2.252.171/RS, Segunda Seção, 01/09/2026: basta a previsão da periodicidade diária ou é indispensável a taxa diária?), pendente de julgamento e com suspensão dos REsps e AREsps sobre a matéria; conferir o resultado antes de citar. No cheque especial com juros flutuantes, ver a distinção do EDcl no REsp 2.162.177/PR (ADV, abaixo).
+
+ementa:
+> RECURSO ESPECIAL. DIREITO CIVIL, PROCESSUAL CIVIL E DO CONSUMIDOR. (EN. 3/STJ). CÉDULA DE CRÉDITO BANCÁRIO. CAPITALIZAÇÃO DIÁRIA DE JUROS REMUNERATÓRIOS. TAXA DIÁRIA NÃO INFORMADA. VIOLAÇÃO AO DEVER DE INFORMAÇÃO. ABUSIVIDADE.
+> 1. Controvérsia acerca do cumprimento de dever de informação na hipótese em que pactuada capitalização diária de juros em contrato bancário.
+> 2. Necessidade de fornecimento, pela instituição financeira, de informações claras ao consumidor acerca da periodicidade da capitalização dos juros adotada no contrato, e das respectivas taxas.
+> 3. Insuficiência da informação acerca das taxas efetivas mensal e anual, na hipótese em que pactuada capitalização diária, sendo imprescindível, também, informação acerca da taxa diária de juros, a fim de se garantir ao consumidor a possibilidade de controle 'a priori' do alcance dos encargos do contrato. Julgado específico da Terceira Turma.
+> 4. Na espécie, abusividade parcial da cláusula contratual na parte em que, apesar de pactuar as taxas efetivas anual e mensal, que ficam mantidas, conforme decidido pelo acórdão recorrido, não dispôs acerca da taxa diária.
+> 5. RECURSO ESPECIAL DESPROVIDO, COM MAJORAÇÃO DE HONORÁRIOS.
+
+### STJ · AgInt no REsp 1.414.764/PR
+- regras: CONTA-CAPDIARIA, R19, CONTA-ENCARGOS, CONTA-EXIBICAO, CONTA-HAMBURGUES
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: AgInt no REsp 1.414.764/PR
+- orgao: Quarta Turma
+- relator: Min. Raul Araújo
+- julgamento: 2017-02-21
+- publicacao: 2017-03-13
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/443358095
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em contrato de abertura de crédito em conta corrente, a capitalização em qualquer periodicidade (mensal ou anual) só é exigível com pactuação expressa e, sem o contrato nos autos, não se presume o ajuste; tarifas e demais encargos também dependem de previsão contratual, com o ônus da prova do banco.
+- observacao: Ação de prestação de contas (segunda fase) de conta corrente de pessoa jurídica; agravo interno do banco desprovido por unanimidade. O item 1 não conheceu da tese de capitalização anual por inovação recursal, mas os itens 2 e 3 afirmam a regra e o item 4 mantém sentença que acolheu o laudo pericial com saldo credor para a correntista.
+
+ementa:
+> AGRAVO INTERNO NO RECURSO ESPECIAL. AÇÃO DE PRESTAÇÃO DE CONTAS. CONTRATO DE ABERTURA DE CRÉDITO EM CONTA-CORRENTE. CAPITALIZAÇÃO ANUAL DE JUROS. INOVAÇÃO RECURSAL. NECESSIDADE DE PACTUAÇÃO EXPRESSA DA CAPITALIZAÇÃO, SEJA MENSAL OU ANUAL. AUSÊNCIA DOS CONTRATOS. ÔNUS DA INSTITUIÇÃO FINANCEIRA. TAXAS, TARIFAS E DEMAIS ENCARGOS. EXCLUSÃO ANTE A AUSÊNCIA DE PROVA DE CONTRATAÇÃO. DECISÃO MANTIDA. RECURSO DESPROVIDO.
+> 1. A legitimidade da cobrança da capitalização anual deixou de ser suscitada perante o primeiro grau, sendo vedado ao Tribunal de origem apreciar o tema no julgamento da apelação, sob pena de supressão de instância e inobservância do princípio do duplo grau de jurisdição.
+> 2. A Segunda Seção do Superior Tribunal de Justiça, no julgamento do AgRg no AREsp 429.029/PR, Rel. Ministro MARCO BUZZI, DJe de 14/04/2016, consolidou o entendimento de que a cobrança de juros capitalizados - inclusive na periodicidade anual - só é permitida quando houver expressa pactuação. Nas hipóteses em que o contrato não é juntado, é inviável presumir o ajuste do encargo, mesmo sob a periodicidade anual.
+> 3. É necessária a expressa previsão contratual das tarifas e demais encargos bancários para que possam ser cobrados pela instituição financeira. Não juntados aos autos os contratos, deve a instituição financeira suportar o ônus da prova, afastando-se as respectivas cobranças.
+> 4. A sentença suficientemente fundamentada que acata laudo pericial apontando saldo credor em favor da autora, com a ressalva de que a parte ré não se desincumbiu do ônus da prova, abstendo-se de apresentar os contratos e as autorizações para débito em conta-corrente, imprescindíveis à apuração das contas, não ofende os arts. 131 e 436 do CPC/73. 5. Agravo interno não provido.
+
+### STJ · EDcl no REsp 2.162.177/PR
+- regras: CONTA-CAPDIARIA
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: EDcl no REsp 2.162.177/PR
+- orgao: Quarta Turma
+- relator: Min. Maria Isabel Gallotti
+- julgamento: 2026-04-13
+- publicacao: 2026-04-22
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/6621158222
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: LIMITE a antecipar: no cheque especial com juros flutuantes e apuração diária sobre saldo variável, a Quarta Turma reputou suficiente a cláusula expressa de capitalização diária acompanhada da metodologia de cálculo (saldo devedor de cada dia multiplicado pela taxa e dividido por 30) e das taxas mensal e anual, distinguindo o REsp 1.826.463/SC; a peça deve mostrar que o instrumento exibido não traz cláusula expressa nem metodologia, ou que a taxa era prefixada e informável.
+- observacao: Embargos de declaração rejeitados por unanimidade (sessão virtual de 07 a 13/04/2026); o acórdão embargado (REsp 2.162.177/PR, que negou provimento ao recurso do correntista e manteve a capitalização diária em ação de cobrança de cooperativa de crédito, origem TJPR) não foi localizado no Jusbrasil, e a ementa dos embargos resume a distinção. Decisões monocráticas de 2026 repetem-na (REsp 2.259.943, 2.260.172, 2.263.229, 2.265.273 e 2.278.340). Publicação pelo DJEN indicado nos dados do Jusbrasil. A questão está no Tema 1474/STJ (afetado em 01/09/2026, pendente). Em sentido contrário, o TJPR (14ª Câmara Cível) afastou a capitalização diária sem taxa diária em cheque especial (apelação listada abaixo).
+
+ementa:
+> PROCESSUAL CIVIL. EMBARGOS DE DECLARAÇÃO NO RECURSO ESPECIAL. ART. 1.022 DO CPC. CABIMENTO RESTRITO. INEXISTÊNCIA DE OMISSÃO, OBSCURIDADE, CONTRADIÇÃO OU ERRO MATERIAL. AÇÃO DE COBRANÇA. CONTRATO DE ABERTURA DE CRÉDITO EM CONTA CORRENTE (CHEQUE ESPECIAL). CAPITALIZAÇÃO DIÁRIA DE JUROS REMUNERATÓRIOS. CLÁUSULA EXPRESSA. JUROS FLUTUANTES. METODOLOGIA DE CÁLCULO DIÁRIO PREVISTA NO CONTRATO. DEVER DE INFORMAÇÃO. ANÁLISE À LUZ DAS PARTICULARIDADES DA CONTRATAÇÃO. REsp 1.826.463/SC. DISTINÇÃO FUNDAMENTADA NO ACÓRDÃO EMBARGADO. AUSÊNCIA DE DECISÃO SURPRESA. ARTS. 9º E 10 DO CPC. INAPLICABILIDADE. PRETENSÃO DE REDISCUSSÃO DO MÉRITO. EMBARGOS REJEITADOS.
+> 1. Os embargos de declaração possuem cabimento restrito às hipóteses previstas no art. 1.022 do CPC, não se prestando à rediscussão do mérito nem à reapreciação do entendimento adotado no julgamento do recurso especial.
+> 2. Não se caracteriza obscuridade quanto ao dever de informação na capitalização diária de juros quando o acórdão embargado, considerando a natureza do cheque especial, reconhece a inviabilidade de fixação prévia de taxa diária única e reputa suficiente, para fins de transparência, a previsão expressa da capitalização diária aliada à explicitação da metodologia de cálculo e aos demais elementos informativos constantes do contrato.
+> 3. O precedente da Segunda Seção no REsp 1.826.463/SC foi devidamente enfrentado, tendo o acórdão embargado explicitado distinção fundada nas particularidades do contrato rotativo, com juros flutuantes e apuração diária sobre saldo variável, afastando a alegação de aplicação automática da tese firmada naquele julgamento.
+> 4. Inexiste omissão ou nulidade por violação aos arts. 9º e 10 do CPC, uma vez que o julgado não se apoiou em fatos novos, mas realizou qualificação jurídica a partir de premissas constantes do próprio objeto litigioso.
+> 5. Embargos de declaração rejeitados.
+
+### TJPR · Apelação Cível 0015851-98.2023.8.16.0019
+- regras: CONTA-CAPDIARIA, R19
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0015851-98.2023.8.16.0019
+- orgao: 14ª Câmara Cível
+- relator: Des.ª Josely Dittrich Ribas
+- julgamento: 2026-02-03
+- publicacao: 2026-02-06
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000033880771/Ac%C3%B3rd%C3%A3o-0015851-98.2023.8.16.0019
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: No cheque especial (adiantamento a depositante com encargos 'aplicados sobre o saldo devedor diário'), a previsão genérica de capitalização diária sem a taxa diária não vale: o TJPR afastou a capitalização, mandou calcular os encargos de forma simples e descaracterizou a mora.
+- observacao: Ação de cobrança de cooperativa de crédito; recurso do correntista provido. Aplica o REsp 1.826.463/SC e é anterior ao EDcl no REsp 2.162.177/PR (Quarta Turma, abril de 2026), que validou cláusula semelhante de cooperativa com metodologia descrita; conferir o instrumento antes de citar. Consequência fixada: encargos calculados de forma simples, e não a capitalização mensal. Fonte: portal de jurisprudência do TJPR (comarca de Ponta Grossa).
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. APELAÇÃO CÍVEL. AÇÃO DE COBRANÇA. CHEQUE ESPECIAL. SENTENÇA DE PROCEDÊNCIA. ILEGALIDADE DA CAPITALIZAÇÃO DE JUROS. DESCARACTERIZAÇÃO DA MORA. RECURSO CONHECIDO E PROVIDO.I. CASO EM EXAME1. Apelação cível interposta contra sentença que julgou procedente a pretensão deduzida na ação de cobrança, condenando o réu ao pagamento dos valores devidos em razão do inadimplemento do contrato de cheque especial. Inconformismo da parte ré. II. QUESTÕES EM DISCUSSÃO2. A questão em discussão consiste em verificar se: (i) há cobrança indevida da capitalização de juros; e (ii) deve ser descaracterizada a mora. III. RAZÕES DE DECIDIR3.1. A capitalização de juros exige expressa pactuação, conforme Súmula 539 do STJ. Pactuação da cobrança de juros capitalizados diariamente não demonstrada. A ausência de indicação clara e expressa quanto à taxa diária de juros inviabiliza a cobrança de capitalização diária, mesmo havendo previsão contratual genérica nesse sentido.3.2. Conforme o entendimento firmado pelo STJ no REsp nº 1.061.530/RS, a cobrança de encargos abusivos no período de normalidade contratual descaracteriza a mora. Hipótese aplicável ao caso concreto, diante da ausência de pactuação válida da capitalização de juros. Sentença reformada nesse ponto, com a redistribuição da sucumbência. IV. DISPOSITIVO 4. Recurso conhecido e provido. ____________________________________________________Dispositivos relevantes citados: CPC/2015, art. 85, §11; Súmulas nº 539 e 541 do STJ.Jurisprudência relevante citada: STJ, REsp nº 1.061.530/RS, rel. Min. Nancy Andrighi, Segunda Seção, j. 22.10.2008, DJe 10.03.2009.
+
+### TJPR · Apelação Cível 0001945-76.2016.8.16.0119
+- regras: CONTA-CAPDIARIA, R19, CONTA-ENCARGOS, CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0001945-76.2016.8.16.0119
+- orgao: 14ª Câmara Cível
+- relator: Des. Francisco Eduardo Gonzaga de Oliveira
+- julgamento: 2024-07-29
+- publicacao: 2024-07-29
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000027371621/Ac%C3%B3rd%C3%A3o-0001945-76.2016.8.16.0119
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Na conta garantida (cédula de crédito bancário), a capitalização diária pactuada só com as taxas mensal e anual, sem a taxa diária, é ilegal e deve ser expurgada; as tarifas da conta corrente vinculada caem porque o banco, intimado, não apresentou o contrato; mora descaracterizada.
+- observacao: Ação monitória do banco contra empresa correntista; apelação do banco desprovida, com nulidade parcial de ofício da sentença na parte em que revisou contratos de capital de giro não impugnados (ultra petita). Aplica o REsp 1.826.463/SC. Fonte: portal de jurisprudência do TJPR (comarca de Nova Esperança).
+
+ementa:
+> APELAÇÃO CÍVEL. AÇÃO MONITÓRIA. CÉDULA DE CRÉDITO BANCÁRIO – CONTA GARANTIDA. EMBARGOS À MONITÓRIA PARCIALMENTE ACOLHIDOS. IRRESIGNAÇÃO DA PARTE AUTORA. 1. REVISÃO DOS CONTRATOS ANTERIORES (STJ, SÚMULA 286). POSSIBILIDADE, DESDE QUE ESPECIFICADOS OS ENCARGOS SUPOSTAMENTE ABUSIVOS NOS CONTRATOS ORIGINÁRIOS. CASO CONCRETO: ARGUIÇÃO DE ABUSIVIDADES SOMENTE EM RELAÇÃO AO TÍTULO OBJETO DE COBRANÇA E À CONTA CORRENTE VINCULADA. PLEITO REVISIONAL QUE DEVE SE LIMITAR A TAIS OPERAÇÕES. SENTENÇA QUE ANALISOU A LEGALIDADE DOS ENCARGOS INCIDENTES EM DOIS CONTRATOS DE EMPRÉSTIMO – CAPITAL DE GIRO. JULGAMENTO ULTRA PETITA CARACTERIZADO. VIOLAÇÃO AOS ARTIGO 141 E 492 DO CÓDIGO DE PROCESSO CIVIL. NULIDADE PARCIAL RECONHECIDA DE OFÍCIO. DECOTE DA PARTE EXCEDENTE. 2. CAPITALIZAÇÃO DIÁRIA DE JUROS. POSSIBILIDADE, DESDE QUE HAJA EXPRESSA INFORMAÇÃO AO CONSUMIDOR DA TAXA DIÁRIA. PACTUAÇÃO CONTRATUAL APENAS DAS TAXAS MENSAL E ANUAL DE JUROS. ILEGALIDADE DA COBRANÇA. EXPURGO DEVIDO. 3. TARIFAS BANCÁRIAS. COBRANÇA CONDICIONADA À PREVISÃO CONTRATUAL, AINDA QUE GENÉRICA. SÚMULA 44 DO TJPR. INSTITUIÇÃO FINANCEIRA QUE, EMBORA INTIMADA A APRESENTAR O CONTRATO DE CONTA CORRENTE, PERMANECEU INERTE. EXPURGO DEVIDO. 4. DESCARACTERIZAÇÃO DA MORA. MANUTENÇÃO. ABUSIVIDADE DOS ENCARGOS DE NORMALIDADE RECONHECIDA. SENTENÇA MANTIDA, COM A FIXAÇÃO DE HONORÁRIOS RECURSAIS (CPC, ART. 85, §11). DECRETAÇÃO, DE OFÍCIO, DA NULIDADE PARCIAL DA SENTENÇA. RECURSO CONHECIDO E NÃO PROVIDO.
+
+## CONTA-HAMBURGUES — Saldo devedor diário (método hamburguês) como metodologia pericial
+
+Tese: Na revisão de conta corrente, cheque especial e conta garantida, a perícia que reconstitui o saldo dia a dia a partir dos extratos e apura os encargos sobre o saldo devedor diário (método hamburguês) é metodologia idônea para a recomposição, e os extratos e planilhas do próprio banco, impugnados com prova, não demonstram por si a regularidade do débito: sem contrato que preveja outra metodologia, prevalece o laudo e cabe ao banco provar o crédito.
+
+### STJ · REsp 1.783.253/SP
+- regras: CONTA-HAMBURGUES
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.783.253/SP
+- orgao: Terceira Turma
+- relator: Min. Ricardo Villas Bôas Cueva
+- julgamento: 2019-08-06
+- publicacao: 2019-08-13
+- precedente_qualificado: não
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2679605128
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em monitória de contratos de conta garantida, o contrato com os extratos basta para iniciar a cobrança (Súmula 247), mas é presunção que cede à prova contrária: infirmada a idoneidade dos documentos do banco (perícia, escrituração frágil), passa a ele o ônus de provar o crédito.
+- observacao: Recurso especial da massa falida do banco desprovido por unanimidade; fatos peculiares (notas promissórias devolvidas como liquidadas, reciprocidade entre as partes). Não trata do método hamburguês: serve à segunda parte da tese (extrato e planilha do banco, impugnados com prova, não demonstram por si o débito). O STJ não tem acórdão de mérito sobre o método (questão de prova, Súmula 7); só decisões monocráticas o mencionam.
+
+ementa:
+> RECURSO ESPECIAL. PROCESSUAL CIVIL. AÇÃO MONITÓRIA. EMBARGOS. CONTRATO DE LIMITE DE CRÉDITO. IDONEIDADE INFIRMADA PELO EMBARGANTE. EXISTÊNCIA DO CRÉDITO. PROVA. ÔNUS DO AUTOR/EMBARGADO.
+> 1. Recurso especial interposto contra acórdão publicado na vigência do Código de Processo Civil de 1973 (Enunciados Administrativos nºs 2 e 3/STJ).
+> 2. Para dar início ao processo monitório, o autor deve exibir prova escrita capaz de comprovar os fatos constitutivos do direito alegado, não havendo dúvida de que os contratos de limite de crédito, acompanhados dos respectivos extratos, constituem documentos idôneos para a propositura da demanda, a teor do disposto na Súmula nº 247/STJ.
+> 3. A decisão que considera idôneo o documento apresentado pelo autor da ação monitória e determina a expedição do correspondente mandado de pagamento é proferida em juízo de cognição sumária.
+> 4. Na ação monitória, o contraditório é exercitado de modo diferido, por meio do oferecimento de embargos, momento em que o magistrado passa a exercer cognição plena e exauriente acerca da presença ou não dos pressupostos necessários à concessão de eficácia executiva ao mandado expedido initio litis.
+> 5. Hipótese em que as instâncias ordinárias, com base na prova pericial produzida, na fragilidade da escrituração contábil de ambas as partes, na relação de reciprocidade havida entre autor e réu e na existência de peculiaridades que sempre permearam os negócios realizados pelo Banco Santos S.A., concluíram que os documentos apresentados pela parte autora, conquanto suficientes para dar início ao procedimento monitório, não conferiam credibilidade à dívida cobrada a ponto de se atribuir eficácia executiva ao mandado monitório.
+> 6. Nos embargos monitórios, cabe ao réu/embargante desconstituir a presunção inicial que milita em favor do autor/embargado, utilizando-se dos meios de prova disponíveis em direito.
+> 7. Se o réu/embargante apresenta prova hábil para infirmar a idoneidade do documento escrito no qual se funda a ação monitória, passa a ser do autor/embargado a incumbência de provar a presença dos requisitos necessários para a atribuição de força executiva ao mandado monitório.
+> 8. A presunção que se estabelece em favor do autor da ação monitória no momento em que se expede o mandado para pagamento cede diante da produção de prova capaz de ilidir a existência do crédito.
+> 9. Recurso especial não provido.
+
+### TJPR · Agravo de Instrumento 0006305-13.2022.8.16.0000
+- regras: CONTA-HAMBURGUES
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Agravo de Instrumento 0006305-13.2022.8.16.0000
+- orgao: 14ª Câmara Cível
+- relator: Juíza Subst. 2º Grau Cristiane Santos Leite
+- julgamento: 2022-09-19
+- publicacao: 2022-09-19
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000020183921/Ac%C3%B3rd%C3%A3o-0006305-13.2022.8.16.0000
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: No cumprimento de sentença de revisional de conta corrente (cheque especial), o TJPR manteve a perícia que apurou os juros pelo método hamburguês, sobre os dias em que o saldo esteve negativo, como 'método predominantemente aceito' (CPC, art. 473, III), rejeitando a base de dias úteis do banco, que não exibiu contrato com metodologia diversa.
+- observacao: Agravo do banco parcialmente provido só quanto às tarifas (limites da coisa julgada); no ponto da metodologia, favorável ao correntista. ATENÇÃO: o próprio voto cita precedentes que exigem a base de dias úteis quando prevista no contrato ou quando o título não a altera (acórdãos da 14ª e da 15ª Câmaras Cíveis citados no voto) — a perícia deve declarar a base de dias e justificá-la pela falta de cláusula. Fonte: portal de jurisprudência do TJPR (comarca de Faxinal). Correção: 'INSURGêNCIA' por 'INSURGÊNCIA' (defeito de extração).
+
+ementa:
+> AGRAVO DE INSTRUMENTO. CUMPRIMENTO DE SENTENÇA. DECISÃO HOMOLOGATÓRIA DOS CÁLCULOS PERICIAIS. INSURGÊNCIA DA INSTITUIÇÃO FINANCEIRA EXECUTADA.1. PERIODICIDADE DA TAXA DE JUROS REMUNERATÓRIOS. PERÍCIA APURA DIAS QUE A CONTA PERMANECEU NEGATIVA. ALEGAÇÃO QUE O CORRETO SERIA DIAS ÚTEIS. SEM RAZÃO. ART. 473, INCISO III, DO CÓDIGO DE PROCESSO CIVIL, IMPÕE QUE O CÁLCULO DEVE LEVAR EM CONTA O MÉTODO PREDOMINANTEMENTE ACEITO PELOS ESPECIALISTAS DA ÁREA DO CONHECIMENTO. NESTE ASPECTO, NÃO HÁ DÚVIDAS QUANTO A HIGIDEZ DOS CÁLCULOS DO PERITO JUDICIAL, POIS LEVOU EM CONTA O MÉTODO PREDOMINANTEMENTE ACEITO, O MÉTODO HAMBURGUÊS, QUE LEVA EM CONTA O TOTAL DE DIAS EM QUE O SALDO ESTAVA NEGATIVO. OMISSO O TÍTULO JUDICIAL EXEQUENDO QUANTO À METODOLÓGICA APLICADA, A DISCUSSÃO SOMENTE TERIA RELEVÂNCIA ACASO EXPRESSAMENTE PACTUADO ALGUM MÉTODO ESPECIFICO ENTRE AS PARTES. CONTUDO, A INSTITUIÇÃO FINANCEIRA AGRAVANTE NÃO APRESENTOU CONTRATOS OU TERMOS ADITIVOS DA CONTA CORRENTE REVISADA, CONTENDO CONDIÇÕES ESPECÍFICAS QUANTO À METODOLOGIA DO CÁLCULO PARA EXCLUSÃO DA CAPITALIZAÇÃO MENSAL DE JUROS DOS SALDOS DEVEDORES. PRECEDENTES DESTA CÂMARA CÍVEL. DECISÃO MANTIDA.2. DEVOLUÇÃO TARIFAS BANCÁRIAS. ALEGAÇÃO DE OFENSA À COISA JULGADA. COM RAZÃO. O PLEITO INICIAL, BEM COMO O TÍTULO EXECUTIVO, DELIMITARAM OS VALORES INDEVIDOS A SEREM RESTITUÍDOS, ENCARGOS SOB DENOMINAÇÃO “NHOC”(CÓDIGO 62) E SEUS REFLEXOS, NÃO ABRANGENDO DEMAIS ENCARGOS QUE NÃO SEJAM ESTES. VEDADO AO JULGADOR CONHECER, DE OFÍCIO, DA ABUSIVIDADE DAS CLÁUSULAS. SÚMULA 381 DO SUPERIOR TRIBUNAL DE JUSTIÇA. DECISÃO REFORMADA.RECURSO CONHECIDO E PARCIALMENTE PROVIDO.
+
+### TJPR · Apelação Cível 0006221-09.2021.8.16.0077
+- regras: CONTA-HAMBURGUES, R16, R19, CONTA-ENCARGOS, CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0006221-09.2021.8.16.0077
+- orgao: 16ª Câmara Cível
+- relator: Juíza Subst. 2º Grau Vania Maria da Silva Kramer
+- julgamento: 2026-07-06
+- publicacao: 2026-07-06
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000037589291/Ac%C3%B3rd%C3%A3o-0006221-09.2021.8.16.0077
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Na revisional de conta corrente, prevaleceu o laudo que, pelo método hamburguês e pela dinâmica dos lançamentos dos extratos, demonstrou capitalização composta sem pactuação; o banco, intimado, não exibiu o contrato nem os instrumentos dos encargos, o que atraiu a presunção de veracidade (art. 400 do CPC) e levou ao expurgo da capitalização, à taxa média e à restituição das tarifas sem contratação.
+- observacao: Recurso do banco parcialmente provido só para afastar o dobro (cobranças anteriores a 30/03/2021, pela modulação do EAREsp 676.608/RS; o Tema 929/STJ foi fixado sem modulação — ver R26). A ação anterior de exigir contas interrompeu a prescrição. O rol de dispositivos da ementa menciona o art. 192, § 3º, da CF só porque o banco o invocou; não é fundamento. Serve também a CONTA-EXIBICAO e CONTA-ENCARGOS. Fonte: portal de jurisprudência do TJPR (comarca de Cruzeiro do Oeste). Correção: retirado o rótulo 'Ementa:' que abre o texto do portal.
+
+ementa:
+> DIREITO CIVIL E PROCESSUAL CIVIL. APELAÇÃO CÍVEL. AÇÃO REVISIONAL DE CONTA CORRENTE CUMULADA COM REPETIÇÃO DE INDÉBITO. CONTRATO BANCÁRIO. RELAÇÃO DE CONSUMO. INVERSÃO DO ÔNUS DA PROVA. AUSÊNCIA DE APRESENTAÇÃO DO CONTRATO PELA INSTITUIÇÃO FINANCEIRA. CAPITALIZAÇÃO DE JUROS NÃO PACTUADA. JUROS REMUNERATÓRIOS ACIMA DA TAXA MÉDIA DE MERCADO. COBRANÇA DE TARIFAS BANCÁRIAS SEM COMPROVAÇÃO DE CONTRATAÇÃO. INTERRUPÇÃO DA PRESCRIÇÃO POR AÇÃO ANTERIOR DE EXIGIR CONTAS. RESTITUIÇÃO SIMPLES DO INDÉBITO. PARCIAL PROVIMENTO DO RECURSO.I. Caso em exame1. Apelação cível interposta contra sentença que julgou procedentes os pedidos para declarar a ilegalidade da capitalização de juros, das tarifas bancárias e da cobrança de juros remuneratórios acima da taxa média de mercado, condenando o banco à restituição dos valores cobrados indevidamente. II. Questão em discussão2. Há quatro questões em discussão: (i) definir se a ação anterior de exigir contas interrompeu o prazo prescricional da posterior ação revisional; (ii) estabelecer se a ausência de apresentação do contrato bancário autoriza o reconhecimento da ilegalidade da capitalização de juros, das tarifas bancárias e da cobrança de juros remuneratórios acima da média de mercado; (iii) determinar se a petição inicial é inepta pela ausência de consignação do valor incontroverso e de especificação suficiente das cláusulas impugnadas; e (iv) verificar se é cabível a restituição em dobro dos valores cobrados indevidamente.III. Razões de decidir3. A relação jurídica entre as partes possui natureza consumerista, o que autoriza a inversão do ônus da prova em favor do correntista, diante de sua hipossuficiência técnica e documental perante a instituição financeira.4. A instituição financeira, embora intimada, não apresentou o contrato de abertura de conta corrente nem os instrumentos de pactuação dos encargos cobrados, circunstância que atrai a presunção de veracidade das alegações autorais e impede a comprovação da regularidade das cobranças.5. A pretensão revisional de contrato bancário submete-se ao prazo prescricional decenal do art. 205 do Código Civil, observada a regra de transição do art. 2.028 do mesmo diploma, sendo interrompida pela citação válida em ação anterior de exigir contas referente ao mesmo contrato, ainda que extinta sem resolução do mérito.6. A petição inicial não é inepta quando descreve adequadamente a relação jurídica, delimita o período controvertido, identifica as rubricas impugnadas e formula pedidos certos e determinados, sendo inaplicável ao caso a exigência de consignação do valor incontroverso prevista no art. 330, § 2º, do CPC.7. A primeira perícia judicial demonstrou, mediante método hamburguês e análise da dinâmica dos lançamentos bancários, a ocorrência de capitalização composta de juros sem pactuação expressa, sendo legítima a prevalência desse laudo diante de sua maior coerência técnica e aderência aos elementos dos autos.8. A ausência de contrato inviabiliza a comprovação da pactuação válida da capitalização mensal de juros, impondo o afastamento e a restituição dos valores cobrados indevidamente.9. A cobrança de juros remuneratórios acima da taxa média de mercado restou comprovada por perícia judicial, sendo adequada a utilização das taxas médias divulgadas pelo Banco Central como parâmetro de aferição da abusividade, diante da ausência de comprovação da taxa contratada.10. A cobrança de tarifas bancárias exige previsão contratual expressa, autorização do correntista e comprovação da efetiva prestação do serviço correspondente, requisitos não demonstrados pela instituição financeira nos autos.11. A repetição em dobro do indébito não é cabível em relação a cobranças realizadas antes de 30/03/2021 sem demonstração de má-fé da instituição financeira, devendo a restituição ocorrer de forma simples.IV. Dispositivo e tese12. Recurso parcialmente provido.____________Dispositivos relevantes citados: CDC, arts. 6º, VIII, e 42, parágrafo único; CPC/2015, arts. 330, §§ 2º e 3º, 371, 373, § 1º, 400, 479 e 85, § 2º e § 11; CC/2002, arts. 202, I, 205, 354 e 2.028; CC/1916, art. 177; CF/1988, art. 192, § 3º; MP nº 2.170-36/2001.Jurisprudência relevante citada: STJ, AgInt no AREsp nº 2.978.345/PR, Rel. Min. Humberto Martins, 3ª Turma, j. 23.03.2026; STJ, AgInt no REsp nº 2.124.259/SP, Rel. Min. Raul Araújo, 4ª Turma, j. 22.09.2025; STJ, AgInt no REsp nº 1.934.949/PR, Rel. Min. Maria Isabel Gallotti, 4ª Turma, j. 29.11.2021; STJ, AgInt no AREsp nº 1.948.228/PR, Rel. Min. Marco Aurélio Bellizze, 3ª Turma, j. 14.03.2022; STJ, REsp nº 1.497.831/PR, Rel. Min. Maria Isabel Gallotti, 2ª Seção, j. 14.09.2016; STJ, EAREsp nº 676.608/RS; Súmulas nº 530 e 539/STJ.
+
+## CONTA-ENCARGOS — Débitos em conta sem lastro contratual (tarifas, seguros e títulos de capitalização)
+
+Tese: Tarifas, seguros, títulos de capitalização e pacotes de serviços debitados na conta corrente sem previsão contratual expressa ou autorização do correntista são indevidos e devem ser restituídos e expurgados do saldo recomposto: não juntado o contrato, o ônus da prova é do banco (telas sistêmicas unilaterais não bastam), a exigência de pactuação alcança também tarifas anteriores a 30/04/2008 e o seguro imposto com a abertura da conta ou do limite é venda casada (CDC, art. 39, I; Tema 972/STJ).
+
+### STJ · AgInt no REsp 2.017.968/PR
+- regras: CONTA-ENCARGOS
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: AgInt no REsp 2.017.968/PR
+- orgao: Quarta Turma
+- relator: Min. João Otávio de Noronha
+- julgamento: 2024-07-01
+- publicacao: 2024-07-08
+- precedente_qualificado: não (aplica os Temas 618/619 e 972/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2939392900
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em revisão de conta corrente com contrato não exibido, a Quarta Turma afastou as tarifas sem previsão contratual — inclusive as anteriores a 30/04/2008, porque esse marco só diz respeito à TAC e à TEC — e declarou ilegal o seguro de vida debitado na conta sem livre contratação (Tema 972).
+- observacao: Agravo interno do banco desprovido por unanimidade (sessão virtual de 25/06 a 01/07/2024), mantida a decisão que deu provimento ao recurso especial dos correntistas. O TJPR havia mantido as tarifas debitadas desde 1998 pela Res. CMN 2.303/1996 e o seguro 'por ser em favor dos correntistas'; o STJ tratou como revaloração jurídica (sem Súmula 7).
+
+ementa:
+> AGRAVO INTERNO NO RECURSO ESPECIAL. AÇÃO REVISIONAL. CONTRATO BANCÁRIO. TAXAS E TARIFAS. SERVIÇOS BANCÁRIOS. SEGURO. COBRANÇA. NECESSIDADE DE PACTUAÇÃO. DECISÃO MANTIDA. AGRAVO INTERNO DESPROVIDO.
+> 1. As normas regulamentadoras editadas pela autoridade monetária permitem que as instituições financeiras efetuem cobranças administrativas de taxas e tarifas pela prestação de serviços bancários não isentos, desde que expressamente previstas no contrato.
+> 2. Nos contratos bancários em geral, o consumidor não pode ser compelido a contratar seguro com a instituição financeira ou com seguradora por ela indicada.
+> 3. Agravo interno desprovido.
+
+### STJ · AgInt nos EDcl no REsp 2.048.901/PR
+- regras: CONTA-ENCARGOS, R16, CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: AgInt nos EDcl no REsp 2.048.901/PR
+- orgao: Quarta Turma
+- relator: Min. João Otávio de Noronha
+- julgamento: 2024-03-12
+- publicacao: 2024-03-14
+- precedente_qualificado: não (aplica a Súmula 530/STJ)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2939390777
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em revisão de conta corrente (abertura de limite de crédito), a Quarta Turma afastou as tarifas debitadas sem cláusula contratual expressa, inclusive as de 2001 a 2005 que o TJPR mantinha pela Res. CMN 2.303/1996, e limitou os juros à taxa média (Súmula 530) mesmo tendo a perícia apurado as taxas pelos extratos, porque o contrato não previa as taxas e o banco não apresentou outro instrumento.
+- observacao: Agravo interno do banco desprovido por unanimidade (sessão virtual de 05 a 12/03/2024). Quanto aos juros do cheque especial, diverge do REsp 2.065.222/PR (mesma Turma, dez/2025; ver R16).
+
+ementa:
+> AGRAVO INTERNO NOS EMBARGOS DE DECLARAÇÃO EM RECURSO ESPECIAL. AÇÃO REVISIONAL. CONTRATO BANCÁRIO. JUROS REMUNERATÓRIOS. TAXA CONTRATADA. NECESSIDADE DE COMPROVAÇÃO. TAXAS E TARIFAS BANCÁRIAS. COBRANÇA. NECESSIDADE DE EXPRESSA PREVISÃO CONTRATUAL.
+> 1. Nos contratos bancários, na impossibilidade de comprovar a taxa de juros efetivamente contratada - por ausência de pactuação ou pela falta de juntada do instrumento aos autos -, aplica-se a taxa média de mercado, divulgada pelo Bacen, praticada nas operações da mesma espécie, salvo se a taxa cobrada for mais vantajosa para o devedor.
+> 2. As normas regulamentares editadas pela autoridade monetária facultam às instituições financeiras a cobrança administrativa de taxas e tarifas para a prestação de serviços bancários não isentos, desde que comprovadamente pactuadas mediante cláusula contratual expressa.
+> 3. Agravo interno não provido.
+
+### TJPR · Apelação Cível 0001681-42.2025.8.16.0055
+- regras: CONTA-ENCARGOS
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0001681-42.2025.8.16.0055
+- orgao: 15ª Câmara Cível
+- relator: Des. Luiz Cezar Nicolau
+- julgamento: 2026-08-29
+- publicacao: 2026-08-31
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000038747221/Ac%C3%B3rd%C3%A3o-0001681-42.2025.8.16.0055
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Em conta corrente: o seguro do limite (LIS) contratado no próprio instrumento de abertura, sem apólice nem escolha de seguradora, é venda casada (CDC, art. 39, I; Tema 972); títulos de capitalização, seguros e pacotes de serviços sem prova inequívoca de contratação — telas sistêmicas não bastam — são cobrança indevida, com restituição e dano moral (conta de benefício previdenciário).
+- observacao: Recurso da correntista parcialmente provido; mantida só a tarifa de extrato excedente, prevista no contrato e na Res. CMN 3.919/2010. ATENÇÃO à repetição: o acórdão aplica a modulação do EAREsp 676.608/RS (dobro só a partir de 31/03/2021) — o Tema 929/STJ (REsp 1.963.770/CE, em R26) foi fixado sem modulação; não citar este julgado para o dobro. A íntegra do portal não repete o número do processo, mas descreve o mesmo caso. Fonte: portal de jurisprudência do TJPR (comarca de Cambará).
+
+ementa:
+> AÇÃO DECLARATÓRIA DE INEXISTÊNCIA DE DÉBITO CUMULADA COM REPETIÇÃO DE INDÉBITO E INDENIZAÇÃO POR DANO MORAL POR COBRANÇA INDEVIDA DE TAXAS E TARIFAS BANCÁRIAS NÃO CONTRATADAS. SEGURO LIS, SEGURO DE VIDA, SEGURO RESIDENCIAL, SEGURO CARTÃO PROTEGIDO, PIC (TÍTULO DE CAPITALIZAÇÃO), COMBINAQUI, PACOTE DE SERVIÇOS DE CONTA CORRENTE E TARIFA DE MOVIMENTAÇÃO DE EXTRATO. IMPROCEDÊNCIA DOS PEDIDOS. INSURGÊNCIA DA AUTORA.(A) SEGURO LIS. CONTRATAÇÃO DO SEGURO NO MESMO INSTRUMENTO DE ABERTURA DA CONTA, SEM APÓLICE OU DEMONSTRAÇÃO DA POSSIBILIDADE DE ESCOLHA DE OUTRA SEGURADORA. VENDA CASADA. PRÁTICA ABUSIVA (CDC, ART. 39, INCISO I). NULIDADE DO CONTRATO DE SEGURO. ORIENTAÇÃO DO SUPERIOR TRIBUNAL DE JUSTIÇA NO RECURSO ESPECIAL REPETITIVO 1.639.320/SP (TEMA 972).(B) TÍTULOS DE CAPITALIZAÇÃO (PIC), SEGURO DE VIDA, SEGURO CARTÃO PROTEGIDO, SEGURO RESIDENCIAL, PACOTES DE SERVIÇO DE CONTA CORRENTE E SERVIÇO COMBINAQUI. AUSÊNCIA DE PROVA INEQUÍVOCA DA CONTRATAÇÃO DOS SERVIÇOS. TELAS SISTÊMICAS SEM INDICAÇÃO DE FORMA E LOCAL OU DISPOSITIVO DE CONTRATAÇÃO. COBRANÇA INDEVIDA.(C) TARIFA DE MOVIMENTAÇÃO DE EXTRATO. SERVIÇO EXCEDENTE PREVISTO NO CONTRATO DE ABERTURA DE CONTA E NAS CONDIÇÕES GERAIS. PREVISÃO NA RESOLUÇÃO 3919/2010 DO BACEN. AUTORA QUE NÃO CONTROVERTEU O FORNECIMENTO DO EXTRATO, APENAS A COBRANÇA DA TARIFA. COBRANÇA REGULAR.(D) APLICAÇÃO DO INSTITUTO DA SUPRESSIO. IMPOSSIBILIDADE. INEXISTÊNCIA DE RELAÇÃO CONTRATUAL ENTRE AS PARTES. NÃO CARACTERIZAÇÃO DE LEGÍTIMA EXPECTATIVA DE UMA DAS PARTES EM VER MANTIDA UMA OBRIGAÇÃO QUE JAMAIS FOI FIRMADA. APLICAÇÃO DO INSTITUTO QUE SERIA CONTRÁRIA A BOA-FÉ OBJETIVA.(E) REPETIÇÃO DO INDÉBITO. CONSEQUÊNCIA DO RECONHECIMENTO DA COBRANÇA ILEGAL. VEDAÇÃO AO ENRIQUECIMENTO ILÍCITO. REPETIÇÃO EM DOBRO (CDC, ART. 42, PARÁGRAFO ÚNICO). APLICABILIDADE PARCIAL DA TESE FIRMADA NO ERESP 1.413.542/RS, ANTE A MODULAÇÃO DE EFEITOS. ENTENDIMENTO JURISPRUDENCIAL ANTERIOR ACERCA DA NECESSIDADE DE COMPROVAÇÃO DA MÁ-FÉ DO FORNECEDOR. PARTE AUTORA QUE NÃO SE DESINCUMBIU DESTE ÔNUS. CABIMENTO DA RESTITUIÇÃO EM DOBRO APENAS DOS VALORES COBRADOS POSTERIORMENTE À PUBLICAÇÃO DO ACÓRDÃO PELA CORTE SUPERIOR.(F) DANO MORAL. CARACTERIZAÇÃO. BANCO QUE RESPONDE OBJETIVAMENTE POR FORTUITO INTERNO. DANO EVIDENCIADO. DESCONTOS INDEVIDOS EM CONTA CORRENTE NA QUAL A AUTORA RECEBE BENEFÍCIO PREVIDENCIÁRIO. VERBA DE NATUREZA ALIMENTAR ESSENCIAL AO SEU SUSTENTO.(G) VALOR DA INDENIZAÇÃO. UTILIZAÇÃO DO MÉTODO BIFÁSICO ORIENTADO PELO SUPERIOR TRIBUNAL DE JUSTIÇA. TÉCNICA DO GRUPO DE CASOS ATRELADA À ANÁLISE DAS CIRCUNSTÂNCIAS DO CASO CONCRETO. COMPENSAÇÃO ARBITRADA EM OITO MIL REAIS.(H) ÔNUS DA SUCUMBÊNCIA. DECAIMENTO MÍNIMO DA AUTORA. RESPONSABILIZAÇÃO INTEGRAL DO RÉU PELO RECOLHIMENTO DAS CUSTAS PROCESSUAIS E PELO PAGAMENTO DOS HONORÁRIOS ADVOCATÍCIOS. ART. 86, PARÁGRAFO ÚNICO, DO CPC.RECURSO PARCIALMENTE PROVIDO.
+
+## CONTA-EXIBICAO — Exibição do contrato e dos extratos pela instituição financeira
+
+Tese: Na revisão de conta corrente, cheque especial ou conta garantida, a instituição financeira deve exibir o instrumento de abertura da conta e do limite, os aditivos e os extratos do período (arts. 396 a 404 do CPC), obrigação legal que, pedida dentro da ação, não depende de prévio requerimento administrativo nem de pagamento de custo; a recusa ou a omissão injustificada faz presumir verdadeiros os fatos que o correntista pretendia provar (art. 400 do CPC) — em especial a falta de pactuação da taxa, da capitalização e das tarifas — e admite multa coercitiva nos termos do Tema 1000/STJ.
+
+### STJ · REsp 1.388.972/SC
+- regras: CONTA-EXIBICAO, R19, CONTA-CAPDIARIA
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.388.972/SC
+- orgao: Segunda Seção
+- relator: Min. Marco Buzzi
+- julgamento: 2017-02-08
+- publicacao: 2017-03-13
+- precedente_qualificado: Tema 953/STJ (repetitivo)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2106307171
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Repetitivo julgado em revisional de contratos de conta corrente, limite de crédito e capital de giro: não exibidos os contratos apesar da ordem judicial, aplica-se ao banco a pena do art. 359 do CPC/73 (art. 400 do CPC/2015), tendo-se por verdadeira a não pactuação dos encargos, e a capitalização em qualquer periodicidade só é cobrada com pactuação expressa (Tema 953).
+- observacao: A tese repetitiva é a do item 1.1 (capitalização); a aplicação do art. 359/400 está no caso concreto (item 2.2) e no voto, que a estende à 'não pactuação ou abusividade dos encargos cobrados'. Autora microempresa, com o CDC aplicado; unânime no resultado (vencidos quatro ministros só quanto à redação da tese). Correção: 'ara' por 'para' no item 2.5 (erro de digitação).
+
+ementa:
+> RECURSO ESPECIAL REPRESENTATIVO DE CONTROVÉRSIA - ARTIGO 1036 E SEGUINTES DO CPC/2015 - AÇÃO REVISIONAL DE CONTRATOS BANCÁRIOS - PROCEDÊNCIA DA DEMANDA ANTE A ABUSIVIDADE DE COBRANÇA DE ENCARGOS - INSURGÊNCIA DA CASA BANCÁRIA VOLTADA À PRETENSÃO DE COBRANÇA DA CAPITALIZAÇÃO DE JUROS
+> 1. Para fins dos arts. 1036 e seguintes do CPC/2015.
+> 1.1 A cobrança de juros capitalizados nos contratos de mútuo é permitida quando houver expressa pactuação.
+> 2. Caso concreto:
+> 2.1 Quanto aos contratos exibidos, a inversão da premissa firmada no acórdão atacado acerca da ausência de pactuação do encargo capitalização de juros em qualquer periodicidade demandaria a reanálise de matéria fática e dos termos dos contratos, providências vedadas nesta esfera recursal extraordinária, em virtude dos óbices contidos nos Enunciados 5 e 7 da Súmula do Superior Tribunal de Justiça.
+> 2.2 Relativamente aos pactos não exibidos, verifica-se ter o Tribunal a quo determinado a sua apresentação, tendo o banco-réu, ora insurgente, deixado de colacionar aos autos os contratos, motivo pelo qual lhe foi aplicada a penalidade constante do artigo 359 do CPC/73 (atual 400 do NCPC), sendo tido como verdadeiros os fatos que a autora pretendia provar com a referida documentação, qual seja, não pactuação dos encargos cobrados.
+> 2.3 Segundo a jurisprudência do Superior Tribunal de Justiça, é possível tanto a compensação de créditos quanto a devolução da quantia paga indevidamente, independentemente de comprovação de erro no pagamento, em obediência ao princípio que veda o enriquecimento ilícito. Inteligência da Súmula 322/STJ.
+> 2.4 Embargos de declaração manifestados com notório propósito de prequestionamento não tem caráter protelatório. Inteligência da súmula 98/STJ.
+> 2.5 Recurso especial parcialmente provido apenas para afastar a multa imposta pelo Tribunal a quo.
+
+### STJ · REsp 1.133.872/PB
+- regras: CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: STJ
+- classe_numero: REsp 1.133.872/PB
+- orgao: Segunda Seção
+- relator: Min. Massami Uyeda
+- julgamento: 2011-12-14
+- publicacao: 2012-03-28
+- precedente_qualificado: Tema 411/STJ (repetitivo)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2106305749
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Repetitivo: na ação em que o correntista discute a conta, cabe inverter o ônus para que o banco exiba os extratos, obrigação legal e de integração contratual compulsória que não se sujeita a recusa nem a condicionantes (adiantamento de custos ou prévia recusa administrativa); ao correntista cabe indicar a relação e os períodos.
+- observacao: Caso de expurgos de poupança, com a exibição dos extratos determinada dentro da própria ação de cobrança. É o contraponto do Tema 648 (ADV, abaixo): prévio pedido e pagamento do custo são requisitos da ação cautelar autônoma, não da exibição pedida dentro da revisional. A peça deve especificar contas e períodos. Unânime. Correção: 'incindindo' por 'incidindo' no item III (erro de digitação).
+
+ementa:
+> RECURSO ESPECIAL REPETITIVO (ART. 543-C DO CPC)- AÇÃO DE COBRANÇA - EXPURGOS INFLACIONÁRIOS EM CADERNETA DE POUPANÇA - PLANOS BRESSER E VERÃO - PRELIMINAR - PRESCRIÇÃO VINTENÁRIA - NÃO-OCORRÊNCIA - EXIBIÇÃO DOS EXTRATOS BANCÁRIOS - INVERSÃO DO ÔNUS DA PROVA EM FAVOR DA CORRENTISTA - POSSIBILIDADE - OBRIGAÇÃO DECORRENTE DE LEI - CONDICIONAMENTO OU RECUSA - INADMISSIBILIDADE - RESSALVA - DEMONSTRAÇÃO DE INDÍCIOS MÍNIMOS DA EXISTÊNCIA DA CONTRATAÇÃO - INCUMBÊNCIA DO AUTOR (ART. 333, I, DO CPC)- ART. 6º DA LEI DE INTRODUÇÃO AO CÓDIGO CIVIL - AUSÊNCIA DE PREQUESTIONAMENTO - INCIDÊNCIA DO ENUNCIADO N. 211/STJ - NO CASO CONCRETO, RECURSO ESPECIAL IMPROVIDO.
+> I - Preliminar: nas ações em que se discutem os critérios de remuneração de caderneta de poupança e são postuladas as respectivas diferenças de correção monetária e dos juros remuneratórios, o prazo prescricional é de vinte anos, não transcorrido, na espécie;
+> II - A obrigação da instituição financeira de exibir os extratos bancários necessários à comprovação das alegações do correntista decorre de lei, já que se trata de relação jurídica tutelada pelas normas do Código do Consumidor, de integração contratual compulsória, não podendo ser objeto de recusa nem de condicionantes, em face do princípio da boa-fé objetiva;
+> III - A questão relativa ao art. 6º da LICC não foi objeto de debate no v. acórdão recorrido, ressentindo-se o especial, portanto, do indispensável prequestionamento, incidindo, na espécie, o Enunciado n. 211/STJ;
+> IV - Para fins do disposto no art. 543-C, do Código de Processo Civil, é cabível a inversão do ônus da prova em favor do consumidor para o fim de determinar às instituições financeiras a exibição de extratos bancários, enquanto não estiver prescrita a eventual ação sobre eles, tratando-se de obrigação decorrente de lei e de integração contratual compulsória, não sujeita à recusa ou condicionantes, tais como o adiantamento dos custos da operação pelo correntista e a prévia recusa administrativa da instituição financeira em exibir os documentos, com a ressalva de que ao correntista, autor da ação, incumbe a demonstração da plausibilidade da relação jurídica alegada, com indícios mínimos capazes de comprovar a existência da contratação, devendo, ainda, especificar, de modo preciso, os períodos em que pretenda ver exibidos os extratos;
+> V - Recurso especial improvido, no caso concreto.
+
+### STJ · REsp 1.349.453/MS
+- regras: CONTA-EXIBICAO
+- posicao: ADV
+- tribunal: STJ
+- classe_numero: REsp 1.349.453/MS
+- orgao: Segunda Seção
+- relator: Min. Luis Felipe Salomão
+- julgamento: 2014-12-10
+- publicacao: 2015-02-02
+- precedente_qualificado: Tema 648/STJ (repetitivo)
+- url: https://www.jusbrasil.com.br/jurisprudencia/stj/2106314257
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: LIMITE a antecipar: a ação cautelar autônoma de exibição de documentos bancários exige relação jurídica, prévio pedido à instituição não atendido em prazo razoável e pagamento do custo do serviço; para evitar a extinção, pedir a exibição dentro da revisional (Tema 411) ou instruir a cautelar com o protocolo do pedido administrativo e o comprovante da tarifa.
+- observacao: Caso de expurgos de poupança: o recurso da poupadora foi provido para restabelecer a sentença que acolhera a cautelar contra o banco; a tese repetitiva é que fixa os requisitos da cautelar autônoma. O voto lembra que a exibição pedida na ação principal já é regida pelo Tema 411 (REsp 1.133.872/PB, acima). Sobre multa: a Súmula 372/STJ ('na ação de exibição de documentos, não cabe a aplicação de multa cominatória') consta vigente no catálogo do BNP, mas o Tema 1000/STJ (REsp 1.763.462/MG, Segunda Seção, 09/06/2021, transitado) admite multa no CPC/2015, incidental ou autônoma, após contraditório e tentativa de busca e apreensão ou outra medida — o Tema 1000 não foi aberto nesta pesquisa (texto conferido no Radar).
+
+ementa:
+> PROCESSO CIVIL. RECURSO ESPECIAL REPRESENTATIVO DE CONTROVÉRSIA. ART. 543-C DO CPC. EXPURGOS INFLACIONÁRIOS EM CADERNETA DE POUPANÇA. EXIBIÇÃO DE EXTRATOS BANCÁRIOS. AÇÃO CAUTELAR DE EXIBIÇÃO DE DOCUMENTOS. INTERESSE DE AGIR. PEDIDO PRÉVIO À INSTITUIÇÃO FINANCEIRA E PAGAMENTO DO CUSTO DO SERVIÇO. NECESSIDADE.
+> 1. Para efeitos do art. 543-C do CPC, firma-se a seguinte tese: A propositura de ação cautelar de exibição de documentos bancários (cópias e segunda via de documentos) é cabível como medida preparatória a fim de instruir a ação principal, bastando a demonstração da existência de relação jurídica entre as partes, a comprovação de prévio pedido à instituição financeira não atendido em prazo razoável, e o pagamento do custo do serviço conforme previsão contratual e normatização da autoridade monetária.
+> 2. No caso concreto, recurso especial provido.
+
+### TJPR · Apelação Cível 0002541-25.2018.8.16.0108
+- regras: CONTA-EXIBICAO, R16, R19, CONTA-ENCARGOS
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Apelação Cível 0002541-25.2018.8.16.0108
+- orgao: 14ª Câmara Cível
+- relator: Juiz Subst. 2º Grau Eduardo Novacki
+- julgamento: 2026-03-30
+- publicacao: 2026-04-06
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000035460091/Ac%C3%B3rd%C3%A3o-0002541-25.2018.8.16.0108
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Revisão de abertura de crédito em conta corrente: a não exibição dos contratos, apesar de reiteradas ordens judiciais, faz presumir verdadeiros os fatos que o correntista pretendia provar (art. 400 do CPC), com taxa média de mercado (Súmula 530), expurgo da capitalização não pactuada e restituição do seguro e do consórcio debitados sem contratação válida (venda casada).
+- observacao: Correntista pessoa jurídica; apelação do banco desprovida; repetição simples mantida. A íntegra do portal não repete o número do processo, mas descreve o mesmo caso (comarca, partes e pedidos conferidos). Fonte: portal de jurisprudência do TJPR (comarca de Mandaguaçu).
+
+ementa:
+> DIREITO BANCÁRIO. APELAÇÃO CÍVEL. AÇÃO REVISIONAL DE CONTRATO BANCÁRIO. SENTENÇA DE PARCIAL PROCEDÊNCIA. CONTRATO DE ABERTURA DE CRÉDITO EM CONTA CORRENTE. NÃO EXIBIÇÃO DOS CONTRATOS. APLICAÇÃO DO ART. 400 DO CPC. PRESUNÇÃO DE VERACIDADE DAS ALEGAÇÕES AUTORAIS. LIMITAÇÃO DOS JUROS REMUNERATÓRIOS À TAXA MÉDIA DE MERCADO. CAPITALIZAÇÃO DE JUROS. NECESSIDADE DE PACTUAÇÃO EXPRESSA. COBRANÇA DE SEGURO E CONSÓRCIO SEM COMPROVAÇÃO DE CONTRATAÇÃO VÁLIDA. VENDA CASADA. CONFIGURAÇÃO. REPETIÇÃO SIMPLES DO INDÉBITO. HONORÁRIOS RECURSAIS. RECURSO DE APELAÇÃO CONHECIDO E DESPROVIDO.I. CASO EM EXAMEAção revisional de contrato bancário julgada parcialmente procedente para reconhecer a ilegalidade da capitalização de juros, da cobrança de juros superiores à taxa média de mercado e da cobrança de valores referentes a seguro e consórcio, com condenação à restituição simples do indébito. Sustenta a instituiçãofinanceira em suas razões recursais, a regularidade da taxa de juros flutuante, a inexistência de capitalização de juros, a legalidade das cobranças de seguro e consórcio e a inaplicabilidade do art. 400 do CPCII. QUESTÕES EM DISCUSSÃODiscute-se: (a) a aplicação do art. 400 do CPC em razão da não exibição dos contratos bancários; (b) a legalidade da capitalização de juros sem pactuação expressa; (c) a abusividade dos juros remuneratórios e a possibilidade de limitação à taxa média de mercado; (d) a regularidade da cobrança de seguro e consórcio sem comprovação de contratação válida ou autorização expressa; e (e) o cabimento da majoração dos honorários advocatícios em grau recursal, nos termos do art. 85, § 11, do CPC.III. RAZÕES DE DECIDIR1. A não exibição dos contratos bancários, apesar de reiteradas determinações judiciais, autoriza a aplicação das penalidades previstas no art. 400 do CPC, presumindo-se verdadeiros os fatos que a parte autora pretendia demonstrar por meio da prova documental.2. A capitalização de juros em periodicidade inferior à anual é admitida apenas quando expressamente pactuada em contratos firmados após a vigência da Medida Provisória nº 2.170-36/2001, o que não restou comprovado nos autos.3. Na ausência de comprovação da taxa de juros efetivamente contratada, impõe-se a aplicação da taxa média de mercado divulgada pelo Banco Central do Brasil, nos termos da Súmula 530 do Superior Tribunal de Justiça.4. A cobrança de seguro e de consórcio sem prova de contratação válida ou de autorização expressa configura prática abusiva, vedada pelo art. 39, inc. I, do CDC, caracterizando venda casada.5. Mantida a condenação à restituição simples dos valores cobrados indevidamente.6. Com o desprovimento do recurso, é devida a majoração dos honorários advocatícios, nos termos do art. 85, §11, do CPC.7. Jurisprudência relevante do Superior Tribunal de Justiça e deste Tribunal de Justiça do Paraná aplicada ao caso concreto.IV. DISPOSITIVO E TESERecurso de apelação conhecido e desprovido.Teses de julgamento: a) A não exibição de contratos bancários autoriza a aplicação do art. 400 do CPC, com presunção de veracidade das alegações do consumidor; b) A capitalização de juros exige pactuação expressa, sendo indevida na ausência de comprovação contratual; c) Na impossibilidade de comprovação da taxa de juros contratada, aplica-se a taxa média de mercado; d) É abusiva a cobrança de seguro e consórcio sem contratação válida ou autorização expressa; e) Mantida a restituição simples do indébito e majorados os honorários recursais.DISPOSITIVOS RELEVANTES:CPC/2015, arts. 85, §11; 373, II; 400; 1.009.CDC, arts. 6º, VIII; 39, I; 42.MEDIDA PROVISÓRIA Nº 2.170-36/2001, art. 5º.SÚMULAS DO STJ: 530, 539.JURISPRUDÊNCIA:STJ, REsp 1.061.530/RS.STJ, REsp 1.388.972/SC.TJPR, 14ª Câmara Cível, Apelação Cível 0011720-86.2023.8.16.0017.TJPR, 14ª Câmara Cível, Apelação Cível 0004927-34.2023.8.16.0017.
+
+### TJPR · Agravo de Instrumento 0078285-15.2025.8.16.0000
+- regras: CONTA-EXIBICAO
+- posicao: FAV
+- tribunal: TJPR
+- classe_numero: Agravo de Instrumento 0078285-15.2025.8.16.0000
+- orgao: 14ª Câmara Cível
+- relator: Des. Iraja Pigatto Ribeiro
+- julgamento: 2026-03-16
+- publicacao: 2026-03-19
+- precedente_qualificado: não
+- url: https://portal.tjpr.jus.br/jurisprudencia/j/4100000034278511/Ac%C3%B3rd%C3%A3o-0078285-15.2025.8.16.0000
+- verificado_em: 2026-11-16
+- status: VERIFICADO
+- uso_na_peca: Na revisional de conta corrente, mantida a ordem de exibição do contrato de abertura, dos aditivos e dos extratos sob multa diária limitada (Tema 1000/STJ, após contraditório e busca e apreensão frustrada), com a advertência da presunção do art. 400 do CPC, que decorre do próprio art. 400 e independe da vulnerabilidade do correntista.
+- observacao: Agravo do banco conhecido em parte e desprovido; correntista pessoa jurídica, com documentos pedidos havia cerca de 16 anos em ação anterior. Fonte: portal de jurisprudência do TJPR (comarca de Cidade Gaúcha). Correção: retirado o rótulo 'Ementa:' que abre o texto do portal.
+
+ementa:
+> Direito processual civil. Agravo de instrumento. Ação revisional de conta corrente. Exibição de documentos bancários. Imposição de astreintes. Art. 400 do CPC. Tema 1.000 do STJ. Multa mantida. Recurso conhecido em parte e não provido.I. Caso em exame1. Agravo de instrumento interposto contra a decisão proferida em ação revisional de conta corrente com pedido de repetição do indébito, que determinou ao recorrente a exibição do contrato de abertura de conta bancária, eventuais aditamentos, extratos e demais documentos vinculados, no prazo de 30 dias, sob pena de multa diária limitada, bem como advertiu acerca da presunção de veracidade em caso de recusa injustificada.II. Questão em discussão2. Há duas questões em discussão: (i) definir a possibilidade de imposição de multa diária para compelir a instituição financeira à exibição de documentos bancários, à luz do art. 400 do CPC e do Tema 1.000 do STJ; e (ii) estabelecer se o valor da multa fixada é excessivo ou desproporcional, a justificar sua redução ou afastamento.III. Razões de decidir3. Não há interesse recursal quanto à discussão sobre a inaplicabilidade do Código de Defesa do Consumidor e da inversão do ônus da prova, objeto de decisão anterior transitada em julgado.4. Exibição de documentos, sob pena de multa. Requisitos fixados pelo STJ no Tema Repetitivo n. 1.000 suficientemente demonstrados. Prova da relação jurídica entre as partes e probabilidade da existência dos documentos pretendidos. Ocorrência de contraditório prévio e de tentativa infrutífera de busca e apreensão.5. Multa diária fixada em valor moderado e limitada a montante máximo adequados e proporcionais ao longo lapso temporal de inadimplemento da obrigação de exibição e à expressiva capacidade econômica da instituição financeira, cumprindo, dentro de parâmetros de razoabilidade, o efeito coercitivo que lhe é próprio.IV. Dispositivo e teses6. Recurso conhecido em parte e não provido._______________Teses de julgamento: “1. É cabível a imposição de multa diária para compelir a parte à exibição de documentos, uma vez observados os requisitos do art. 400 do CPC e fixados pelo STJ no Tema Repetitivo n.1.000. 2. A multa cominatória fixada em valor razoável e proporcional, diante da capacidade econômica do obrigado e da renitência histórica da parte em cumprir a obrigação processual, não comporta redução.Dispositivos relevantes citados: CPC, arts 400, caput e parágrafo único, e 1.040.Jurisprudência relevante citada: STJ, REsp n. 1.763.462/MG, Rel. Min. PAULO DE TARSO SANSEVERINO, Segunda Seção, j. 09/6/2021.

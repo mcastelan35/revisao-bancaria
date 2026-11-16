@@ -1,6 +1,6 @@
 # Arquitetura do plugin `revisao-bancaria`
 
-> Versão do pacote: **v6.2.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
+> Versão do pacote: **v6.3.0** (16/11/2026). Este arquivo é o mapa; o comportamento normativo
 > está na `SKILL.md` do orquestrador e nas camadas. Em divergência, a camada prevalece no seu
 > escopo — e a divergência é bug: `python ferramentas/verificar_consistencia.py` e a suíte de
 > testes falham quando versão, contagens, tiers, cores do schema, numeração das regras de
@@ -19,7 +19,7 @@ datada, e os dois juntos tornam o laudo reproduzível por terceiro.
 | INSTRUMENTO | O contrato e suas cláusulas | L-1 → L0 → L4 | `motores/calculo.py` (Price/SAC) + `motores/cet.py` (pós-fixadas/CET) |
 | INSTRUMENTO · SFH/SFI | Mútuo habitacional com saldo indexado | L-1 → L0 → L1 → L2 + L2b → L3 → L4 | `motores/calculo.py` (`tabela_sfh`, `comparar_sfh`) |
 | INSTRUMENTO · cartão | Faturas | L-1 → L0 → `camadas/analise-faturas-cartao.md` (substitui L1–L3) → L4 | `motores/cartao.py` |
-| CONTA | O extrato e a evolução do saldo | L-1 → C0 → C6 | `motores/conta_corrente.py` (saldo diário, SMD, art. 354) — **beta** enquanto o repertório estiver em ESQUELETO |
+| CONTA | O extrato e a evolução do saldo | L-1 → C0 → C6 | `motores/conta_corrente.py` (saldo diário, SMD, art. 354); repertório próprio (teses `CONTA-*`, R16, R26) |
 
 As rotas compartilham conector, cascata de taxa, gate de qualificação do regime, encargos sem
 lastro, exibição de documentos e encontro de contas. **Não compartilham motor nem regra de
@@ -51,7 +51,7 @@ revisao-bancaria/                         ← raiz do repositório = plugin = ma
 │   │   │   ├── payload-schema.md         ← contrato de dados L3 → saída
 │   │   │   ├── pesquisa-base.md          ← pesquisa consolidada (INSTRUMENTO)
 │   │   │   ├── repertorio-jurisprudencial.md ← julgados validados (Jusbrasil, portal do TJPR) por regra/tese (lido pela CLI)
-│   │   │   ├── repertorio-jurisprudencial-contas.md ← ESQUELETO — [PENDENTE], preencher via JusIA
+│   │   │   ├── repertorio-jurisprudencial-contas.md ← mapa das teses da rota CONTA no repertório
 │   │   │   └── teste-contrato-bacen.md   ← alarme de drift do catálogo do conector
 │   │   ├── dados/
 │   │   │   └── regras-bancarias.json     ← base do motor de regras (versão = a do pacote)
@@ -197,7 +197,7 @@ indexador custa uma chamada dedicada. Chamada é a unidade de quota do aluno.
   o motivo. O Edge pode devolver o controle antes de gravar o arquivo, então o `pdf.py` espera o
   PDF aparecer por inteiro.
 
-## Motor de regras — estatísticas (v6.2.0)
+## Motor de regras — estatísticas (v6.3.0)
 
 40 regras em 14 categorias (19 T1, 13 T2, 8 sem tier); 33 vigentes, 2 suspensas (R15 — Tema
 1378; R24 — Tema 1414, que absorveu o 1328), 5 sem precedente consolidado (R30–R33, R40); 10 marcos temporais
@@ -227,8 +227,9 @@ base simples (menor excesso).
 
 ## Pendências abertas
 
-1. Repertório jurisprudencial da rota CONTA: preencher as 7 teses via JusIA (inteiro teor
-   conferido) — até lá a rota é **beta** e a C6 fundamenta só no `regras-bancarias.json`.
+1. Repertório: revalidar cada entrada um ano depois do `verificado_em`. Regras ainda sem
+   favorável do STJ: R23 e R24 (lei recente e tema afetado), R31 e R33 (só limite ou nada no
+   STJ). Tema 1474/STJ (capitalização diária) afetado: acompanhar.
 2. **Decisão jurídica do autor — regras para PJ sem CDC.** `empresarial_pj.regras_sem_cdc`
    lista R01, R02, R03, R17–R21 e R25, mas a L2 da v5 só excluía as regras exclusivas de
    `consumo_pf`. Regras `todos` fora da lista (R11, R12, R14, R16, R28–R33) hoje saem em
@@ -270,7 +271,7 @@ base simples (menor excesso).
 | Julgamento Tema 1414 | RMC (prazo, validade, consequência e dano moral) | Atualizar R24 |
 | Julgamento Tema 1396 | Interesse de agir sem reclamação prévia | Atualizar a providência e, se exigida, o gate de entrada |
 | Nova resolução CMN (cartão) | Teto de 100% | Atualizar R23 e MT06 |
-| Repertório CONTA validado | Habilita fundamentação plena da C6 | Retirar status ESQUELETO/beta |
+| Julgamento Tema 1474 (capitalização diária) | R18, R19 e CONTA-CAPDIARIA | Atualizar a pendência e o repertório |
 | STJ unifica o critério temporal da purga (Lei 13.465) | R40 | Mudar `status` para vigente e fixar o critério |
 | TRF4 aplica (ou rejeita) o REsp 2.086.650/MG | R35 | Atualizar `alerta` e pendência; se rejeitar, rebaixar a T2 |
 | Conector muda o contrato de uma tool | Protocolo | Atualizar `referencia/bacen-consulta.md`, `CONECTOR.md` e rodar `referencia/teste-contrato-bacen.md` |

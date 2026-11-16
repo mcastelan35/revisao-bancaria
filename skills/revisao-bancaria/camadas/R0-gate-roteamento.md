@@ -14,7 +14,7 @@ Code; tap no claude.ai); senão, opções numeradas.
 |---|---|---|---|
 | Revisar um contrato (financiamento, consignado, capital de giro, cédula, leasing) | **INSTRUMENTO** | `motores/calculo.py` | L-1 → L0 → L4 |
 | Revisar financiamento habitacional ou imobiliário (SFH, SFI, alienação fiduciária, consolidação, leilão) | **INSTRUMENTO (ramo SFH/SFI)** | `motores/calculo.py` (`tabela_sfh` / `comparar_sfh`) | L-1 → L0 → L1 → L2 (+ `L2b-procedimento-expropriatorio.md`) → L3 → L4 |
-| Revisar a movimentação de uma conta (cheque especial, limite, conta garantida) | **CONTA** — *beta enquanto o repertório jurisprudencial estiver em ESQUELETO; avisar ao confirmar a rota* | `motores/conta_corrente.py` | L-1 → C0 → C6 |
+| Revisar a movimentação de uma conta (cheque especial, limite, conta garantida) | **CONTA** | `motores/conta_corrente.py` | L-1 → C0 → C6 |
 | Analisar faturas de cartão de crédito | **INSTRUMENTO (ramo cartão)** | `motores/cartao.py` | L-1 → L0 (intake) → `camadas/analise-faturas-cartao.md` (**substitui L1–L3**: gate de valor original, extração por competência, teto e excesso) → L4 |
 | Contrato E conta (encontro de contas) | **AMBAS** | os dois | CONTA primeiro, depois INSTRUMENTO |
 | Só saber se a taxa está acima da média de mercado, sem documento | — (não é rota) | nenhum | skill `triagem`: uma consulta ao conector, razão e limiares; se houver tese, volta para cá com os documentos |
