@@ -52,6 +52,16 @@ STATUS_NAO_CONCLUSIVOS = ("suspensa", "sem_precedente_consolidado")
 CHAVES_TESTE = ("logica", "campos_necessarios", "requer_consulta_bacen", "parametros",
                 "usar_deteccao_padroes", "requer_sub_skill")
 
+#: Espécies que o `consultar_precedente` do conector aceita, por tribunal.
+ESPECIES_PRECEDENTE = {"STJ": ("sumula", "tema_repetitivo"),
+                       "STF": ("sumula", "sumula_vinculante", "repercussao_geral")}
+INSTRUCAO_PENDENCIAS = (
+    "Para cada pendência com `conferir_no_conector`, uma chamada ao `consultar_precedente` com os "
+    "`argumentos`; informe a `situacao` devolvida em `--situacao \"<tema>=<situacao>\"`. Tema com "
+    "`mudou: true` andou depois desta versão do plugin: não concluir nas regras afetadas, mostrar ao "
+    "operador a situação e a tese que o conector devolveu e atualizar o plugin. Pendência sem "
+    "`conferir_no_conector` (fora do catálogo do STJ/STF) segue pela pesquisa-jurisprudencial-jusia.")
+
 NOTA_PAGAMENTO = ("corte por pagamento: reparte a apuração (cada pagamento antes ou depois do "
                   "marco), não exclui a regra")
 NOTA_OPERACAO = "corte pela data da operação de rotativo/parcelamento, não pela data do contrato"
@@ -276,6 +286,18 @@ def _marco_da_leitura(regime_por_marco: dict) -> str | None:
     return None
 
 
+def _conferencia(tema: dict) -> dict | None:
+    """O que pedir ao `consultar_precedente` do conector para conferir a pendência, ou None
+    quando ela não é tema nem súmula do STJ/STF (divergência interna, recepção por tribunal)."""
+    alvo = tema.get("precedente")
+    if not alvo:
+        return None
+    return {"ferramenta": "consultar_precedente",
+            "argumentos": {"tribunal": alvo["tribunal"], "especie": alvo["especie"],
+                           "numero": alvo["numero"]},
+            "situacao_esperada": tema["situacao_esperada"]}
+
+
 def _item(r: dict, regime: str, dc: date | None, hoje: date, dados: dict, marcos: dict,
           formato: str, motivo: str | None, corte: dict | None) -> dict:
     """Monta o item de uma regra aplicável ou a confirmar, no formato pedido."""
@@ -321,6 +343,9 @@ def _item(r: dict, regime: str, dc: date | None, hoje: date, dados: dict, marcos
                      "verificado_em": tema["verificado_em"], "vencida": vencida}
         if tema.get("providencia"):
             pendencia["providencia"] = tema["providencia"]
+        conferencia = _conferencia(tema)
+        if conferencia:
+            pendencia["conferir_no_conector"] = conferencia
         pendencias.append(pendencia)
         if vencida:
             alertas_vencidos.append(modelo_alerta.replace("{tema}", tema["tema"])
@@ -437,6 +462,65 @@ def regra(id, dados: dict | None = None) -> dict:
     ids = [r["id"] for r in dados["regras"]]
     raise KeyError(f"regra {id!r} não existe (válidas: {ids[0]} a {ids[-1]})" if ids
                    else f"regra {id!r} não existe")
+
+
+def pendencias(regras_ids=None, hoje=None, situacoes: dict | None = None,
+               dados: dict | None = None) -> dict:
+    """Pendências jurisprudenciais com validade e o que pedir ao conector.
+
+    regras_ids  só as pendências que afetam essas regras (lista ou 'R15,R26'); None = todas
+    hoje        data da análise, para a validade (padrão: hoje)
+    situacoes   {tema: situação devolvida pelo `consultar_precedente`} — cada tema informado ganha
+                `situacao_informada` e `mudou` (diferente da `situacao_esperada`). Tema que não está
+                na lista, ou sem `conferir_no_conector`, é recusado (ValueError): nada é presumido.
+    """
+    dados = _dados(dados)
+    hoje_d = _data(hoje, "hoje") or date.today()
+    pend = dados.get("pendencias_jurisprudenciais", {})
+    validade = pend.get("validade_dias", 90)
+    if isinstance(regras_ids, str):
+        regras_ids = regras_ids.split(",")
+    filtro = None
+    if regras_ids is not None:
+        existentes = {r["id"] for r in dados["regras"]}
+        filtro = {str(i).strip().upper() for i in regras_ids if str(i).strip()}
+        faltando = sorted(filtro - existentes)
+        if faltando:
+            raise KeyError(f"regra(s) inexistente(s): {', '.join(faltando)}")
+    saida, por_tema = [], {}
+    for t in pend.get("temas", []):
+        afetadas = list(t.get("regras_afetadas", []))
+        if filtro is not None and not filtro & set(afetadas):
+            continue
+        verificado = date.fromisoformat(t["verificado_em"])
+        item = {"tema": t["tema"], "regras_afetadas": afetadas, "status": t["status"],
+                "verificado_em": t["verificado_em"],
+                "vencida": (hoje_d - verificado).days > validade}
+        if t.get("providencia"):
+            item["providencia"] = t["providencia"]
+        conferencia = _conferencia(t)
+        if conferencia:
+            item["conferir_no_conector"] = conferencia
+        saida.append(item)
+        por_tema[t["tema"].casefold()] = item
+    mudaram = []
+    for tema, situacao in (situacoes or {}).items():
+        item = por_tema.get(str(tema).strip().casefold())
+        if item is None:
+            raise ValueError(f"tema {tema!r} não está entre as pendências consultadas: "
+                             + ", ".join(i["tema"] for i in saida))
+        if "conferir_no_conector" not in item:
+            raise ValueError(f"{item['tema']} não é conferível no conector (sem `precedente`): "
+                             "validar via pesquisa-jurisprudencial-jusia")
+        if not isinstance(situacao, str) or not situacao.strip():
+            raise ValueError(f"situação vazia para {item['tema']!r}")
+        item["situacao_informada"] = situacao.strip()
+        item["mudou"] = (situacao.strip().casefold()
+                         != item["conferir_no_conector"]["situacao_esperada"].casefold())
+        if item["mudou"]:
+            mudaram.append(item["tema"])
+    return {"hoje": hoje_d.isoformat(), "validade_dias": validade, "pendencias": saida,
+            "mudaram": mudaram, "instrucao": INSTRUCAO_PENDENCIAS}
 
 
 def sumula(numero, dados: dict | None = None) -> dict:
@@ -580,6 +664,33 @@ def validar_dados(dados: dict | None = None) -> list[str]:
         for rid in tema.get("regras_afetadas", []):
             if rid not in existentes:
                 problemas.append(f"pendência {tema.get('tema')!r}: a regra {rid} não existe")
+        problemas.extend(_problemas_precedente(tema))
+    return problemas
+
+
+def _problemas_precedente(tema: dict) -> list[str]:
+    """`precedente` e `situacao_esperada` de uma pendência. Tema rotulado 'Tema N/STJ' (ou STF)
+    tem de trazer o `precedente` correspondente, para o conector poder conferi-lo."""
+    nome = tema.get("tema", "?")
+    rotulo = re.fullmatch(r"Tema (\d+)/(STJ|STF)", str(nome))
+    alvo = tema.get("precedente")
+    if alvo is None:
+        return [f"pendência {nome!r}: tema do {rotulo.group(2)} sem `precedente` para o conector"] \
+            if rotulo else []
+    problemas = []
+    tribunal, especie, numero = alvo.get("tribunal"), alvo.get("especie"), alvo.get("numero")
+    if tribunal not in ESPECIES_PRECEDENTE:
+        problemas.append(f"pendência {nome!r}: precedente.tribunal {tribunal!r} (use STJ ou STF)")
+    elif especie not in ESPECIES_PRECEDENTE[tribunal]:
+        problemas.append(f"pendência {nome!r}: precedente.especie {especie!r} não existe no "
+                         f"{tribunal} ({', '.join(ESPECIES_PRECEDENTE[tribunal])})")
+    if not isinstance(numero, int) or isinstance(numero, bool) or numero < 1:
+        problemas.append(f"pendência {nome!r}: precedente.numero {numero!r} (inteiro positivo)")
+    if rotulo and (str(numero) != rotulo.group(1) or tribunal != rotulo.group(2)
+                   or (tribunal == "STJ" and especie != "tema_repetitivo")):
+        problemas.append(f"pendência {nome!r}: precedente {alvo} não corresponde ao rótulo")
+    if not isinstance(tema.get("situacao_esperada"), str) or not tema["situacao_esperada"].strip():
+        problemas.append(f"pendência {nome!r}: `precedente` sem `situacao_esperada`")
     return problemas
 
 
@@ -814,6 +925,45 @@ def _testes() -> tuple[int, int]:
     # ── consultas ─────────────────────────────────────────────────
     chk("regra integral e KeyError", regra("R15") == R["R15"] and levanta(KeyError, regra, "R99"))
     chk("súmula 530 e KeyError", sumula(530)["numero"] == 530 and levanta(KeyError, sumula, 1))
+
+    # ── pendências: conector e situação informada ─────────────────
+    temas_json = dados["pendencias_jurisprudenciais"]["temas"]
+    com_conector = [t for t in temas_json if t.get("precedente")]
+    tudo = pendencias(hoje=HOJE)
+    chk("pendencias: todas, com o consultar_precedente nas do STJ e nada nas outras",
+        len(tudo["pendencias"]) == len(temas_json) and com_conector
+        and all(("conferir_no_conector" in p) == bool(t.get("precedente"))
+                for p, t in zip(tudo["pendencias"], temas_json))
+        and tudo["mudaram"] == [] and "consultar_precedente" in tudo["instrucao"])
+    t0 = com_conector[0]
+    so_uma = pendencias([t0["regras_afetadas"][0]], hoje=HOJE)
+    chk("pendencias: filtro por regra e argumentos do conector iguais ao `precedente`",
+        all(t0["regras_afetadas"][0] in p["regras_afetadas"] for p in so_uma["pendencias"])
+        and next(p for p in so_uma["pendencias"] if p["tema"] == t0["tema"])
+        ["conferir_no_conector"]["argumentos"] == t0["precedente"])
+    igual = pendencias(hoje=HOJE, situacoes={t0["tema"]: t0["situacao_esperada"].upper()})
+    mudou = pendencias(hoje=HOJE, situacoes={t0["tema"].lower(): "transitado_qualquer"})
+    chk("pendencias: situação igual (sem caixa) não muda; diferente muda e entra em `mudaram`",
+        igual["mudaram"] == [] and mudou["mudaram"] == [t0["tema"]]
+        and next(p for p in mudou["pendencias"] if p["tema"] == t0["tema"])["mudou"] is True)
+    sem = next((t for t in temas_json if not t.get("precedente")), None)
+    chk("pendencias: tema fora da lista, sem conector ou regra inexistente são recusados",
+        levanta(ValueError, pendencias, situacoes={"Tema 1/STJ": "afetado"})
+        and (sem is None or levanta(ValueError, pendencias, situacoes={sem["tema"]: "afetado"}))
+        and levanta(KeyError, pendencias, ["R99"]))
+    ruim = copy.deepcopy(dados)
+    alvo = next(t for t in ruim["pendencias_jurisprudenciais"]["temas"] if t.get("precedente"))
+    alvo["precedente"] = {"tribunal": "STJ", "especie": "repercussao_geral", "numero": 0}
+    alvo.pop("situacao_esperada")
+    outro = next(t for t in ruim["pendencias_jurisprudenciais"]["temas"]
+                 if t.get("precedente") and t is not alvo)
+    outro.pop("precedente")
+    acusa = " | ".join(validar_dados(ruim))
+    chk("validar_dados acusa espécie, número, rótulo, situação esperada e tema do STJ sem precedente",
+        "precedente.especie" in acusa and "precedente.numero" in acusa
+        and "não corresponde ao rótulo" in acusa and "situacao_esperada" in acusa
+        and "sem `precedente`" in acusa, acusa[:120])
+
     mapa = dados["series_bacen_por_modalidade"]["mapeamento"]
     chk("series: tudo, por modalidade exata e por busca sem acento e sem caixa",
         series() == mapa and [s["serie"] for s in series(modalidade="cartao_rotativo")] == [25477]

@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## [Não lançado]
+
+### Jurisprudência conferida no conector (consultar_precedente e verificar_citacoes)
+
+Nenhum cálculo, tese, tier ou limiar mudou: muda como a situação dos temas e as citações são
+conferidas antes de concluir e de protocolar.
+
+- Pendências do STJ ganham `precedente` (`tribunal`, `especie`, `numero`, os argumentos do
+  `consultar_precedente` do conector) e `situacao_esperada` (a situação do catálogo BNP/CNJ na
+  data de `verificado_em`). O `<rb> regras` entrega `conferir_no_conector` em cada pendência; o
+  `validar_dados` recusa espécie inexistente no tribunal, número inválido, rótulo "Tema N/STJ"
+  que não bate com o `precedente`, `precedente` sem `situacao_esperada` e tema do STJ/STF sem
+  `precedente`.
+- Novo subcomando `revisao.py pendencias [--regras R15,R26] [--hoje D] [--situacao
+  "<tema>=<situação>"]`: lista os temas pendentes com validade e o que pedir ao conector e, com a
+  situação devolvida pelo `consultar_precedente`, marca `mudou` e lista os temas em `mudaram`.
+  Tema fora da lista, pendência sem conector (divergência interna, recepção pelo TRF4) e regra
+  inexistente saem com código 2.
+- O alerta de pendência vencida manda conferir no conector (e, sem tema no catálogo, na
+  `pesquisa-jurisprudencial-jusia`). Regra de conduta 4 e L2: pendência vencida exige a
+  conferência; tema que mudou não conclui e o operador vê a situação e a tese devolvidas.
+- Espelho da petição: cada pendência de tema traz a chamada ao `consultar_precedente` e a
+  situação esperada, e o JSON do espelho ganha `conferir_no_conector` e `citacoes_stj_stf` (as
+  citações do STJ e do STF usadas no espelho, sem repetir). "Pendências antes de protocolar"
+  manda passar a peça no `verificar_citacoes`. Regra de conduta 3 e gate pós-entrega da L4: as
+  duas conferências antes de entregar a peça, com o resultado dito ao usuário.
+- `CONECTOR.md` (uso sem o plugin): regra 11, jurisprudência do STJ/STF pelo conector.
+- Teste ao vivo (16/11/2026): as quatro pendências do STJ conferem com a situação esperada, e as
+  12 citações do STJ de um espelho com R04, R13, R26 e R28 foram ao `verificar_citacoes`: 8
+  conferem (2 em parte, só por dado que a fonte não traz), 3 são repetitivos antigos fora do
+  índice do conector e 1 diverge. O conector resolve cerca de 3 citações por chamada antes do
+  tempo-limite e guarda o progresso: daí os lotes de até 4 e a repetição das que faltam.
+- Repertório: o AgInt no AREsp 2.097.250/PR (R28) volta a `CONFERIR` — a fonte oficial do STJ
+  registra outro relator (Min. Ricardo Villas Bôas Cueva). Entradas citáveis: 111.
+
 ## v6.1.0 — 16/11/2026 — Temas do STJ, repertório validado e entrega padronizada
 
 Reúne o que estava sem lançamento desde a v6.0.0 (repertório jurisprudencial, espelho da petição,

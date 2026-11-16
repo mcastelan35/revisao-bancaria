@@ -773,3 +773,53 @@ def test_espelho_recusa_payload_sem_achados(cli, tmp_path):
     payload = escrever_payload(tmp_path / "p.json", achados=None)
     r = cli("espelho", payload, "--saida", tmp_path / "saida")
     assert r.codigo == 2 and "achados" in r.err
+
+
+# ── pendências e conector (consultar_precedente, verificar_citacoes) ──
+
+def test_pendencias_lista_o_que_conferir_no_conector(cli):
+    r = cli("pendencias", "--regras", "R15,R26", "--hoje", "2026-11-16")
+    assert r.codigo == 0, r.err
+    saida = r.json()
+    temas = [p["tema"] for p in saida["pendencias"]]
+    assert temas == ["Tema 1378/STJ", "Tema 929/STJ", "Tema 1396/STJ"]
+    assert all(p["conferir_no_conector"]["ferramenta"] == "consultar_precedente" for p in saida["pendencias"])
+    assert saida["pendencias"][0]["conferir_no_conector"]["argumentos"] == {
+        "tribunal": "STJ", "especie": "tema_repetitivo", "numero": 1378}
+    assert saida["mudaram"] == [] and not any(p["vencida"] for p in saida["pendencias"])
+
+
+def test_pendencias_marca_o_tema_que_mudou_de_situacao(cli):
+    r = cli("pendencias", "--regras", "R15", "--hoje", "2026-11-16",
+            "--situacao", "Tema 1378/STJ=Transitado")
+    assert r.codigo == 0, r.err
+    [p] = r.json()["pendencias"]
+    assert p["situacao_informada"] == "Transitado" and p["mudou"] is True
+    assert r.json()["mudaram"] == ["Tema 1378/STJ"]
+    igual = cli("pendencias", "--regras", "R15", "--situacao", "tema 1378/stj=AFETADO").json()
+    assert igual["mudaram"] == [] and igual["pendencias"][0]["mudou"] is False
+
+
+@pytest.mark.parametrize("args, trecho", [
+    (("--situacao", "sem-sinal-de-igual"), "use"),
+    (("--situacao", "Tema 1/STJ=afetado"), "não está entre as pendências"),
+    (("--situacao", "Capitalização no SFI — recepção pelo TRF4=afetado"), "não é conferível"),
+    (("--regras", "R99"), "inexistente"),
+])
+def test_pendencias_entrada_invalida_sai_com_2(cli, args, trecho):
+    r = cli("pendencias", *args)
+    assert r.codigo == 2 and r.out == "" and trecho in r.err
+
+
+def test_espelho_traz_conferencia_de_tema_e_citacoes_do_stj(cli, tmp_path):
+    achados = relatorios._payload_demo()["achados"]
+    for a in achados:
+        a["regras"] = ["R04", "R26"]
+    payload = escrever_payload(tmp_path / "p.json", achados=achados)
+    r = cli("espelho", payload, "--saida", tmp_path / "saida", "--hoje", "2026-11-16")
+    assert r.codigo == 0, r.err
+    saida = r.json()
+    assert {c["tema"] for c in saida["conferir_no_conector"]} == {"Tema 929/STJ", "Tema 1396/STJ"}
+    assert saida["citacoes_stj_stf"] and all(c.startswith(("STJ", "STF")) for c in saida["citacoes_stj_stf"])
+    texto = Path(saida["arquivo"]).read_text(encoding="utf-8")
+    assert "`verificar_citacoes`" in texto and "`consultar_precedente`" in texto

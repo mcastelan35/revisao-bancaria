@@ -282,7 +282,7 @@ def main() -> int:
         dias = (hoje - date.fromisoformat(t["verificado_em"])).days
         if dias > pend.get("validade_dias", 90):
             vencidas += 1
-            aviso(f"{t['tema']} conferido há {dias} dias (validade {pend.get('validade_dias')}) — validar via JusIA e publicar nova versão")
+            aviso(f"{t['tema']} conferido há {dias} dias (validade {pend.get('validade_dias')}) — conferir no conector (revisao.py pendencias + consultar_precedente) e publicar nova versão")
     if not vencidas:
         ok("pendências jurisprudenciais dentro da validade")
 

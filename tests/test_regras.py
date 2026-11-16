@@ -492,12 +492,20 @@ def test_alerta_vencido_usa_o_modelo_do_json():
     tema = _tema("R15")
     verificado = date.fromisoformat(tema["verificado_em"])
     item = achar(rodar(hoje=verificado + timedelta(days=200)), "R15")[1]
+    modelo = DADOS["pendencias_jurisprudenciais"]["alerta_vencido"]
     assert item["alertas_vencidos"] == [
-        "STATUS POSSIVELMENTE DESATUALIZADO: a pendência do Tema 1378/STJ foi conferida pela última vez em "
-        f"{verificado:%d/%m/%Y}. Validar via pesquisa-jurisprudencial-jusia antes de citar ou de emitir conclusão."]
+        modelo.replace("{tema}", "Tema 1378/STJ").replace("{verificado_em}", f"{verificado:%d/%m/%Y}")]
+    assert item["alertas_vencidos"][0].startswith("STATUS POSSIVELMENTE DESATUALIZADO: a pendência do "
+                                                  "Tema 1378/STJ foi conferida pela última vez em ")
+    assert "consultar_precedente" in modelo and "pesquisa-jurisprudencial-jusia" in modelo
     assert item["pendencias"] == [{"tema": tema["tema"], "status": tema["status"],
                                    "verificado_em": tema["verificado_em"], "vencida": True,
-                                   "providencia": tema["providencia"]}]
+                                   "providencia": tema["providencia"],
+                                   "conferir_no_conector": {
+                                       "ferramenta": "consultar_precedente",
+                                       "argumentos": {"tribunal": "STJ", "especie": "tema_repetitivo",
+                                                      "numero": 1378},
+                                       "situacao_esperada": "afetado"}}]
 
 
 def test_hoje_aceita_data_ou_texto_e_aparece_na_saida():

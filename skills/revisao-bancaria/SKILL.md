@@ -58,6 +58,7 @@ SKILL.md).
 | Regras aplicáveis ao caso (L2, C3) | `<rb> regras --tipo T --regime consumerista\|civil_empresarial --data-contrato AAAA-MM-DD [--data-consolidacao AAAA-MM-DD] [--categorias a,b] [--formato resumo\|padrao\|completo]` |
 | Texto integral de regra ou súmula, para fundamentar | `<rb> regra R15 R16` · `<rb> sumula 530 541` |
 | Julgados validados das regras do caso (estratégia, petição) | `<rb> jurisprudencia consultar --regras R04,R13` · `<rb> jurisprudencia cobertura` |
+| Temas pendentes das regras do caso e o que conferir no conector | `<rb> pendencias --regras R15,R26` → `consultar_precedente(argumentos)` → `<rb> pendencias --regras R15,R26 --situacao "Tema 929/STJ=<situação>"` |
 | Espelho da petição inicial (gate pós-entrega da L4) | `<rb> espelho payload.json --saida <pasta de saída> --config-dir "${CLAUDE_PLUGIN_DATA}"` |
 | Posição do contrato nos marcos MT01–MT10 (L0) | `<rb> marcos --data-contrato AAAA-MM-DD [--data-consolidacao AAAA-MM-DD]` |
 | Série BACEN da modalidade | `<rb> serie --buscar "cheque especial"` · `<rb> serie --modalidade aquisicao_veiculo_pf` |
@@ -132,7 +133,7 @@ juros remuneratórios, em qualquer rota e qualquer tipo de contrato; o que muda 
 (consumerista / civil-empresarial) é a consequência e o tier — bloco `regime` da R15, já
 resolvido por `<rb> regras`. Alerta permanente do **Tema 1378/STJ** em toda análise; se a
 pendência estiver vencida (`alertas_vencidos` na saída de `<rb> regras`), emitir também o
-alerta vencido e não concluir sem validar via `pesquisa-jurisprudencial-jusia`.
+alerta vencido e conferir a situação no conector antes de concluir (regra de conduta 4).
 
 ## Conector BACEN — fonte única, cache primeiro
 
@@ -179,10 +180,21 @@ falha de fonte.
    ementa citada vai **na íntegra**, padrão sanduíche (tese → ementa integral → identificação
    completa: tribunal, número, relator, órgão, datas → aplicação). Entrada `[PENDENTE]`/
    `[CONFERIR]` não se cita; completar identificação por memória é falta absoluta. Fora do
-   acervo: dizer que não está coberto e remeter a `pesquisa-jurisprudencial-jusia`.
+   acervo: dizer que não está coberto e remeter a `pesquisa-jurisprudencial-jusia`. Antes de
+   protocolar, as citações do STJ e do STF da peça passam pelo `verificar_citacoes` do conector
+   (a peça inteira em `texto`, ou a lista `citacoes_stj_stf` do JSON do espelho em lotes de até
+   4): o veredito vale para a citação, não para o argumento; citação não localizada pede
+   conferência manual, nunca exclusão nem afirmação de que o julgado não existe; campo `diverge`
+   devolve a entrada do repertório a `CONFERIR` (leitura dos vereditos na L4, gate pós-entrega).
+   TJ e TRF ficam fora dessa cobertura.
 4. **Regra suspensa ou sem precedente consolidado não conclui.** `status: suspensa` ou
    `sem_precedente_consolidado` (`conclusiva: false` na saída do motor) → só o `alerta`,
-   decisão do advogado. Pendência vencida → alerta vencido obrigatório.
+   decisão do advogado. Pendência vencida → alerta vencido obrigatório **e** conferência no
+   conector: uma `consultar_precedente` por tema, com os `argumentos` de `conferir_no_conector`,
+   e a situação devolvida em `<rb> pendencias --situacao`. Tema com `mudou: true` andou depois
+   desta versão do plugin: não concluir nas regras afetadas, mostrar ao operador a situação e a
+   tese que o conector devolveu e recomendar a atualização do plugin. Pendência sem
+   `conferir_no_conector` (fora do catálogo do STJ/STF): `pesquisa-jurisprudencial-jusia`.
 5. **Sempre mostrar a razão contratada/média** e o limiar aplicado (regra crítica).
 6. **Gates são obrigatórios.** O usuário controla o fluxo; nenhuma camada avança sem aprovação.
 7. **Classificar pela natureza, não pelo nome.** Comissão de permanência disfarçada se detecta
@@ -281,7 +293,9 @@ cliente antes de ajuizar); `proposta-comercial` (prospecção); `liquidacao-corr
 operador, de onde a `configurar` importou o `tema.json`; o `gerar` nunca a chama). As skills
 externas são opcionais: ausentes, entregar o briefing em markdown. Conector
 **Radar Apogeu**: `listar_series_bacen`, `consultar_taxa_bacen`, `consultar_indice`,
-`atualizar_debito`.
+`atualizar_debito`; para a jurisprudência, `consultar_precedente` (situação de tema ou súmula do
+STJ/STF no catálogo oficial, sem a cota do Jusbrasil) e `verificar_citacoes` (citações do
+STJ/STF da peça contra a fonte oficial).
 
 ## Versionamento
 

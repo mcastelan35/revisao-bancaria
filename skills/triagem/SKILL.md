@@ -64,7 +64,9 @@ giro, veículo PJ, desconto), `cartao_credito`, `cartao_consignado` ou `cedula_r
 12% a.a., que independe da média) — mostrar as duas comparações. Sem o dia do contrato, omita
 `--data-contrato`: as regras com corte pela data voltam em `confirmar`. Da saída de `regras`
 saem a consequência e o tier da R15 conforme o regime, o `alerta` do Tema 1378 e os
-`alertas_vencidos`.
+`alertas_vencidos`. Pendência vencida: uma `consultar_precedente` com os `argumentos` de
+`conferir_no_conector` e a situação em `<rb> pendencias --regras R15 --situacao
+"Tema 1378/STJ=<situação>"`; se `mudou`, a triagem não enquadra e manda atualizar o plugin.
 
 ## 5. Economia estimada — só se a razão for ≥ 1,5x e houver valor, prazo e sistema
 

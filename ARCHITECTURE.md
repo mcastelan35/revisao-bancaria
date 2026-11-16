@@ -244,7 +244,9 @@ base simples (menor excesso).
 6. Conferir o status dos temas em `pendencias_jurisprudenciais`: os do STJ, conferidos em
    16/11/2026, valem até 14/02/2027 e os de 09/10/2026 até 07/01/2027 (validade de 90 dias);
    depois disso o motor passa a emitir o alerta vencido em toda análise que os invoque. A
-   situação dos temas sai do `consultar_precedente` do conector, sem gastar cota do Jusbrasil.
+   situação dos temas sai do `consultar_precedente` do conector, sem gastar cota do Jusbrasil:
+   `revisao.py pendencias` lista os argumentos e, com `--situacao`, diz o que mudou. Para
+   atualizar o JSON, conferir todas e mover `situacao_esperada`, `status` e `verificado_em`.
    Pendente desde a v6.1.0: ler o inteiro teor do REsp 1.963.770/CE (Tema 929) e conferir se a
    modulação de 30/03/2021 (MT05) foi mantida.
 7. Ramo SFH/SFI: completar relator, órgão e data de julgamento dos 15 precedentes `[CONFERIR]`

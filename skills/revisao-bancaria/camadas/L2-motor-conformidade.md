@@ -88,10 +88,15 @@ a aplicação é registrada em `premissas`.
    do resultado. Sinalizar como "tese pendente de julgamento — decisão do advogado" ou "tese
    sem repetitivo — pesquisa obrigatória antes da peça".
 
-10. **Pendência vencida** (`alertas_vencidos` não vazio): emitir o alerta junto ao da regra. O
-    motor não sabe o resultado de um julgamento que ninguém conferiu — validar via
-    `pesquisa-jurisprudencial-jusia`; a atualização do `verificado_em` no JSON sai numa nova
-    versão do plugin.
+10. **Pendência vencida** (`alertas_vencidos` não vazio): emitir o alerta junto ao da regra e
+    conferir no conector antes do gate. O motor não sabe o resultado de um julgamento que
+    ninguém conferiu: para cada pendência com `conferir_no_conector`, uma `consultar_precedente`
+    com os `argumentos`, e a `situacao` devolvida em `<rb> pendencias --regras … --situacao
+    "<tema>=<situação>"`. `mudou: false` → segue com o alerta vencido e a data da conferência
+    feita agora; `mudou: true` → o tema andou depois desta versão: a regra não conclui, o painel
+    mostra a situação e a tese devolvidas e recomenda atualizar o plugin. Sem
+    `conferir_no_conector`, validar via `pesquisa-jurisprudencial-jusia`. A atualização do
+    `verificado_em` no JSON sai numa nova versão do plugin.
 
 ## Regras que exigem interação extra
 

@@ -1917,9 +1917,9 @@ ementa:
 - precedente_qualificado: não
 - url: https://www.jusbrasil.com.br/jurisprudencia/stj/1922832316
 - verificado_em: 2026-10-29
-- status: VERIFICADO
+- status: CONFERIR
 - uso_na_peca: Reafirma o Tema 1061 em financiamento bancário (financeira que sustentava a dificuldade de provar a assinatura, inclusive no contrato eletrônico, perdeu): a impugnação do consumidor transfere à instituição financeira o ônus de provar a autenticidade.
-- observacao: Decisão colegiada curta; o voto não esmiúça os fatos. A "data de julgamento" é a do encerramento da sessão virtual (28/03 a 03/04/2023). Publicação pela data do Jusbrasil.
+- observacao: Decisão colegiada curta; o voto não esmiúça os fatos. A "data de julgamento" é a do encerramento da sessão virtual (28/03 a 03/04/2023). Publicação pela data do Jusbrasil. Voltou a CONFERIR em 16/11/2026: no `verificar_citacoes` do conector, a fonte oficial do STJ registra como relator o Min. Ricardo Villas Bôas Cueva, e não o Min. Paulo de Tarso Sanseverino (órgão, datas e UF conferem). Ler o inteiro teor e corrigir o relator (ou registrar quem lavrou o acórdão) antes de citar.
 
 ementa:
 > AGRAVO INTERNO NO AGRAVO EM RECURSO ESPECIAL. PROCESSUAL CIVIL. ACÓRDÃO RECORRIDO PROFERIDO EM CONSONÂNCIA COM PRECEDENTE DA SEGUNDA SEÇÃO. TEMA 1.061/STJ. CONTRATOS BANCÁRIOS. DOCUMENTO PARTICULAR. IMPUGNAÇÃO DA AUTENTICIDADE DA ASSINATURA. ÔNUS DA PROVA. CONSUMIDOR IMPUGNOU A AUTENTICIDADE. ÔNUS DA PROVA DA INSTITUIÇÃO FINANCEIRA. RAZÕES QUE NÃO INFIRMAM A DECISÃO AGRAVADA. AGRAVO INTERNO DESPROVIDO.

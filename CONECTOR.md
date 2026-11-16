@@ -61,3 +61,13 @@ sempre ativo. Regras:
     `regra: { tipo: "civil_lei_14905", juros_desde }`. Confira
     `calculo_interrompido` (por valor e no `resumo_geral`): se faltou índice em
     alguma competência, o total não cobre o período pedido.
+
+11. **Jurisprudência do STJ e do STF → conector, não memória.** Situação de tema
+    repetitivo, repercussão geral ou súmula (afetado, julgado, cancelado):
+    `consultar_precedente({ tribunal, especie, numero })`, uma chamada por tema, antes
+    de concluir sobre tese pendente (Temas 1378, 929, 1414 e 1396 na revisão
+    bancária). Antes de protocolar, `verificar_citacoes` com a peça inteira em
+    `texto` (ou em lotes de até 4 citações; tempo esgotado → repita só as que
+    faltam): o veredito vale para a citação, não para o argumento, e citação não
+    localizada pede conferência manual — nunca afirme que o julgado não existe. Só
+    campo `diverge` é erro de citação.

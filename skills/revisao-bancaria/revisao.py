@@ -7,6 +7,7 @@ Chamada de qualquer pasta, só com a biblioteca padrão (o `openpyxl` é exigido
     python3 revisao.py autoteste [--modulo M] [--verbose]
     python3 revisao.py regras --tipo T --regime R [--data-contrato D] [--data-consolidacao D]
                        [--categorias a,b] [--hoje D] [--formato resumo|padrao|completo]
+    python3 revisao.py pendencias [--regras R15,R26] [--hoje D] [--situacao "Tema 929/STJ=outra"]
     python3 revisao.py regra R15 R16 · sumula 530 541 · marcos --data-contrato D
     python3 revisao.py serie [--modalidade M | --buscar TEXTO]
     python3 revisao.py razao --contratada-pct X --media-pct Y [--unidade-contratada U] [--tipo T]
@@ -105,6 +106,17 @@ def cmd_regras(args) -> int:
     _imprimir(regras.avaliar(args.tipo, args.regime, args.data_contrato,
                              data_consolidacao=args.data_consolidacao, categorias=categorias,
                              hoje=args.hoje, formato=args.formato))
+    return 0
+
+
+def cmd_pendencias(args) -> int:
+    situacoes = {}
+    for par in args.situacao or []:
+        tema, sep, situacao = par.rpartition("=")
+        if not sep or not tema.strip():
+            raise ValueError(f"--situacao {par!r}: use \"<tema>=<situação do consultar_precedente>\"")
+        situacoes[tema.strip()] = situacao
+    _imprimir(regras.pendencias(args.regras, hoje=args.hoje, situacoes=situacoes or None))
     return 0
 
 
@@ -356,6 +368,15 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--hoje", help="AAAA-MM-DD, data da análise (padrão: hoje)")
     p.add_argument("--formato", default="padrao", help="resumo | padrao | completo (padrão: padrao)")
     p.set_defaults(func=cmd_regras)
+
+    p = sub.add_parser("pendencias", help="temas pendentes, validade e o que conferir no conector "
+                                          "(consultar_precedente)")
+    p.add_argument("--regras", help="só as pendências dessas regras, separadas por vírgula")
+    p.add_argument("--hoje", help="AAAA-MM-DD, data da análise (padrão: hoje)")
+    p.add_argument("--situacao", action="append", metavar="TEMA=SITUACAO",
+                   help="situação devolvida pelo consultar_precedente, ex.: \"Tema 929/STJ=outra\" "
+                        "(repetível); marca `mudou` quando difere da esperada")
+    p.set_defaults(func=cmd_pendencias)
 
     p = sub.add_parser("regra", help="regra integral (fundamentação)")
     p.add_argument("ids", nargs="+", metavar="ID", help="R01 ... R40")
